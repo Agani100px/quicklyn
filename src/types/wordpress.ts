@@ -45,6 +45,10 @@ export interface HomePageACF {
   counter?: CounterItem[];
   section_heading?: string;
   why_list?: WhyListItem[];
+  ["4th_section_heading"]?: string;
+  ["4th_section_sub_heading"]?: string;
+  ["4th_section_description"]?: string;
+  ["4th_section_map"]?: WPImage;
 }
 
 export interface WPPage {

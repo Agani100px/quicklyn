@@ -96,7 +96,7 @@ export function ServicesSection({
   };
 
   return (
-    <section className="relative z-20 -mt-[60px] w-full overflow-hidden bg-transparent pb-24 pt-[100px]">
+    <section className="relative z-20 -mt-[60px] w-full overflow-hidden bg-transparent pb-16 pt-[100px]">
       {/* Background texture for section 2 */}
       {bgUrl && (
         <div className="pointer-events-none absolute inset-0 z-0">
@@ -135,7 +135,7 @@ export function ServicesSection({
         </div>
 
         {/* Section heading (two lines: Our / Services) */}
-        <h2 className="hero-text-shadow mt-10 mb-[30px] text-[40px] leading-[38px] md:text-[56px] md:leading-[52px] lg:text-[68px] lg:leading-[58px] font-medium text-white">
+        <h2 className="mt-10 mb-[30px] text-[40px] leading-[38px] md:text-[56px] md:leading-[52px] lg:text-[68px] lg:leading-[58px] font-medium text-white">
           <span className="block">Our</span>
           <span className="block">Services</span>
         </h2>
@@ -161,11 +161,11 @@ export function ServicesSection({
               key={service.id}
               className="group my-[20px] flex-shrink-0 snap-center rounded-3xl bg-[#175c5e] p-[30px] text-left text-white transition-transform hover:-translate-y-1"
               style={{
-                minWidth: "60%",
-                maxWidth: "60%",
+                minWidth: "80%",
+                maxWidth: "68%",
                 minHeight: "240px",
                 marginLeft: index === 0 ? "20px" : undefined,
-              }} // card ~50% of viewport width, taller height
+              }} // card ~65-70% of viewport width, taller height
             >
               <div className="mb-3 flex items-start justify-between">
                 <h3 className="text-[23px] font-semibold">
@@ -255,9 +255,9 @@ export function ServicesSection({
         {(sectionHeading || whyList.length > 0) && (
           <div className="mt-16 w-full px-6">
             {sectionHeading && (
-              <h2 className="hero-text-shadow mb-8 text-center text-[36px] font-semibold leading-snug text-white">
-                {sectionHeading}
-              </h2>
+<h2 className="mb-8 text-center text-[36px] font-semibold leading-snug text-white">
+              {sectionHeading}
+            </h2>
             )}
 
             <div className="mx-auto w-full max-w-md space-y-3">

@@ -80,5 +80,19 @@ export const fallbackHomePage: WPPage = {
           "Save compared to average NYC rates without compromising on quality or consistency.",
       },
     ],
+    ["4th_section_heading"]: "Our Service Areas",
+    ["4th_section_sub_heading"]: "Coverage Across New York City",
+    ["4th_section_description"]:
+      "Whether you live in Manhattan, Brooklyn, Queens, the Bronx, or Staten Island, our dedicated team is equipped and ready to bring top-quality cleaning right to your doorstep.",
+    ["4th_section_map"]: {
+      ID: 67,
+      id: 67,
+      title: "Service area map",
+      filename: "Frame-1410127467-1-768x798-1.png",
+      url: "http://quicklyn-headless.local/wp-content/uploads/2026/02/Frame-1410127467-1-768x798-1.png",
+      alt: "",
+      width: 768,
+      height: 798,
+    },
   },
 };
