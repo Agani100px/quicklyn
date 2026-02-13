@@ -106,13 +106,14 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
   return (
     <section className="relative w-full overflow-hidden bg-[#226d71] pb-8 pt-16">
       <div className="relative z-10 mx-auto w-full max-w-4xl px-6">
-        <h2 className="mb-10 text-left text-[31px] font-semibold leading-tight text-white">
+        <h2 className="mb-10 ml-[23px] text-left text-[31px] font-semibold leading-tight text-white">
           Trusted by Our Community
         </h2>
 
-        {/* Curved carousel: center card prominent, sides faded and rotated */}
-        <div
-          className="relative mx-auto h-[340px] w-full overflow-hidden cursor-grab"
+        {/* Full-width carousel: no side gaps */}
+        <div className="-ml-[calc((100vw-100%)/2)] w-screen">
+          <div
+            className="relative mx-auto h-[340px] w-full overflow-hidden cursor-grab"
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
@@ -123,12 +124,12 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
           style={{ touchAction: "pan-y" }}
         >
           {testimonials.map((item, index) => {
-            const offset = index - currentIndex;
-            const isCenter = offset === 0;
-            const isVisible = Math.abs(offset) <= 1;
-
+            let offset = (index - currentIndex + count) % count;
+            if (offset > count / 2) offset -= count;
+            const isVisible = offset >= -1 && offset <= 1;
             if (!isVisible) return null;
 
+            const isCenter = offset === 0;
             const translateX = offset * 180;
             const scale = isCenter ? 1 : 0.88;
             const rotate = isCenter ? 0 : offset * 8;
@@ -138,7 +139,7 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
             return (
               <div
                 key={item.id}
-                className="absolute left-1/2 top-1/2 w-[85%] max-w-[320px] rounded-[32px] border border-[#89b0b1] bg-[#1a5d5f] px-6 py-6 shadow-lg transition-all duration-300 ease-out"
+                className="absolute left-1/2 top-1/2 w-[70%] max-w-[280px] rounded-[32px] border border-[#89b0b1] bg-[#1a5d5f] px-6 py-6 shadow-lg transition-all duration-300 ease-out"
                 style={{
                   transform: `translate(-50%, -50%) translateX(${translateX}px) scale(${scale}) rotate(${rotate}deg)`,
                   opacity,
@@ -160,6 +161,7 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
               </div>
             );
           })}
+        </div>
         </div>
 
         {/* Navigation arrows */}

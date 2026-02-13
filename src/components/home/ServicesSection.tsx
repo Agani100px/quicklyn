@@ -295,7 +295,7 @@ export function ServicesSection({
 
                     {/* Text */}
                     <div className="flex-1 text-left">
-                      <p className="hero-text-shadow text-[21px] font-medium leading-snug text-white">
+                      <p className="text-[21px] font-normal leading-snug text-white">
                         {item.list_heading}
                       </p>
                       <button
