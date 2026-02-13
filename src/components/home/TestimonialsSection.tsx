@@ -38,6 +38,7 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
   const count = testimonials.length;
   const isDraggingRef = useRef(false);
   const dragStartXRef = useRef(0);
+  const touchStartXRef = useRef(0);
 
   const goPrev = useCallback(() => {
     setCurrentIndex((i) => (i <= 0 ? count - 1 : i - 1));
@@ -77,6 +78,29 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
     isDraggingRef.current = false;
   };
 
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (event.touches.length !== 1) return;
+    isDraggingRef.current = true;
+    touchStartXRef.current = event.touches[0].clientX;
+  };
+
+  const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current || event.touches.length !== 1) return;
+    const deltaX = event.touches[0].clientX - touchStartXRef.current;
+    const threshold = 20;
+    if (deltaX > threshold) {
+      isDraggingRef.current = false;
+      goPrev();
+    } else if (deltaX < -threshold) {
+      isDraggingRef.current = false;
+      goNext();
+    }
+  };
+
+  const handleTouchEnd = () => {
+    isDraggingRef.current = false;
+  };
+
   if (!count) return null;
 
   return (
@@ -93,6 +117,9 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
           onPointerLeave={handlePointerUp}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
           style={{ touchAction: "pan-y" }}
         >
           {testimonials.map((item, index) => {
