@@ -43,7 +43,7 @@ export function ServiceAreasSection({ data }: ServiceAreasSectionProps) {
         )}
 
         {/* Text overlay on left */}
-        <div className="w-[55%] text-left">
+        <div className="w-[50%] text-left">
           {subHeading && (
             <p className="mb-3 text-[20px] font-normal leading-snug text-white">
               {subHeading}
