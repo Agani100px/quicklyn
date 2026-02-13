@@ -1,0 +1,69 @@
+import type { WPPage } from "@/types/wordpress";
+
+export const fallbackHomePage: WPPage = {
+  id: 20,
+  slug: "home",
+  title: { rendered: "Home" },
+  content: { rendered: "" },
+  acf: {
+    section_1_heading: "Premium Cleaning Services in New York City",
+    section_1_description:
+      "Trusted, vetted cleaning professionals delivering consistent, white-glove service across NYC.",
+    estimate_button_text: "Get an Estimate",
+    estimate_button_link: { title: "", url: "#", target: "" },
+    appstore: {
+      ID: 25,
+      id: 25,
+      title: "app-store",
+      filename: "app-store.png",
+      url: "http://quicklyn-headless.local/wp-content/uploads/2026/02/app-store.png",
+      alt: "",
+      width: 400,
+      height: 140,
+    },
+    google_play: {
+      ID: 24,
+      id: 24,
+      title: "google-play",
+      filename: "google-play.png",
+      url: "http://quicklyn-headless.local/wp-content/uploads/2026/02/google-play.png",
+      alt: "",
+      width: 396,
+      height: 140,
+    },
+    background_image: {
+      ID: 31,
+      id: 31,
+      title: "Mask group",
+      filename: "Mask-group.png",
+      url: "http://quicklyn-headless.local/wp-content/uploads/2026/02/Mask-group.png",
+      alt: "",
+      width: 1447,
+      height: 1091,
+    },
+    section2_background: {
+      ID: 43,
+      id: 43,
+      title: "backgsec2",
+      filename: "backgsec2-scaled.png",
+      url: "http://quicklyn-headless.local/wp-content/uploads/2026/02/backgsec2-scaled.png",
+      alt: "",
+      width: 886,
+      height: 2560,
+    },
+    counter: [
+      {
+        acf_fc_layout: "counter_item",
+        counter_number: "100",
+        counter_suffix: "K+",
+        counter_text: "Hours of Service",
+      },
+      {
+        acf_fc_layout: "counter_item",
+        counter_number: "1",
+        counter_suffix: "K+",
+        counter_text: "Highly Positive Reviews",
+      },
+    ],
+  },
+};
