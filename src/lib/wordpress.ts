@@ -111,3 +111,68 @@ export async function getTestimonials(): Promise<WPTestimonial[]> {
     return fallbackTestimonials;
   }
 }
+
+export interface WPFAQ {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: {
+    question: string;
+    answer_part_01: string;
+    link_text_01?: string;
+    link01?: { title: string; url: string; target: string };
+    link02?: string;
+    answer_part_02?: string;
+  };
+}
+
+const fallbackFaqs: WPFAQ[] = [
+  {
+    id: 93,
+    slug: "how-do-you-charge",
+    title: { rendered: "How do you charge?" },
+    acf: {
+      question: "How do you charge?",
+      answer_part_01:
+        "we charge a flat hourly rate of $50 per hour, with a 3 hour minimum per booking",
+      link_text_01: "Get A Cost Estimate",
+      link01: { title: "", url: "#", target: "" },
+      answer_part_02:
+        "time estimates shown are approximate. You are only charged for the actual time spent on the job, which may be more or less depending on the condition and size of your space. Quicklyn Signature Pro (all-in-one solutions including special requests) is $75 per hour.",
+    },
+  },
+  {
+    id: 94,
+    slug: "why-do-you-have-a-3-hour-minimum",
+    title: { rendered: "Why do you have a 3-hour minimum?" },
+    acf: {
+      question: "Why do you have a 3-hour minimum?",
+      answer_part_01:
+        "We require a 3-hour minimum per booking to ensure fair compensation for our cleaning professionals and maintain consistent service quality. Each visit involves travel time and preparation, and our professionals are paid for a minimum of three hours, even if the cleaning itself takes less time. This allows us to work with reliable, experienced cleaners and deliver a high-quality service.",
+    },
+  },
+  {
+    id: 95,
+    slug: "can-i-book-a-cleaning-without-downloading-the-app",
+    title: { rendered: "Can I book a cleaning without downloading the app?" },
+    acf: {
+      question: "Can I book a cleaning without downloading the app?",
+      answer_part_01: "Yes, you can book without the app.",
+      link_text_01: "Book a Cleaning",
+      link01: { title: "", url: "#", target: "" },
+    },
+  },
+];
+
+export async function getFaqs(): Promise<WPFAQ[]> {
+  try {
+    const res = await fetch(getApiUrl("/faq?acf_format=standard"), {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return fallbackFaqs;
+    const data: WPFAQ[] = await res.json();
+    return Array.isArray(data) && data.length > 0 ? data : fallbackFaqs;
+  } catch {
+    return fallbackFaqs;
+  }
+}

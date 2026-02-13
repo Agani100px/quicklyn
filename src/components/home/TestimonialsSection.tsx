@@ -104,7 +104,7 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
   if (!count) return null;
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#226d71] py-16">
+    <section className="relative w-full overflow-hidden bg-[#226d71] pb-8 pt-16">
       <div className="relative z-10 mx-auto w-full max-w-4xl px-6">
         <h2 className="mb-10 text-left text-[31px] font-semibold leading-tight text-white">
           Trusted by Our Community
