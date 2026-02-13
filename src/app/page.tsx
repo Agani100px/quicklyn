@@ -23,6 +23,8 @@ export default async function HomePage() {
         background={page.acf.section2_background}
         counters={page.acf.counter}
         services={services}
+        sectionHeading={page.acf.section_heading}
+        whyList={page.acf.why_list}
       />
     </main>
   );

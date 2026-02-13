@@ -65,5 +65,20 @@ export const fallbackHomePage: WPPage = {
         counter_text: "Highly Positive Reviews",
       },
     ],
+    section_heading: "Why Quicklyn",
+    why_list: [
+      {
+        acf_fc_layout: "list_points",
+        list_heading: "Pay for Time, Not Tasks",
+        list_description:
+          "Your online price is an estimate. Final pricing is based on the actual time required to complete the job.",
+      },
+      {
+        acf_fc_layout: "list_points",
+        list_heading: "Smart Pricing",
+        list_description:
+          "Save compared to average NYC rates without compromising on quality or consistency.",
+      },
+    ],
   },
 };

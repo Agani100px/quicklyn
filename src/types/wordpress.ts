@@ -23,6 +23,13 @@ export interface CounterItem {
   counter_text: string;
 }
 
+export interface WhyListItem {
+  acf_fc_layout: string;
+  icon?: WPImage;
+  list_heading: string;
+  list_description: string;
+}
+
 export interface HomePageACF {
   section_1_heading: string;
   section_1_description: string;
@@ -36,6 +43,8 @@ export interface HomePageACF {
   pop_img_3?: WPImage;
   section2_background?: WPImage;
   counter?: CounterItem[];
+  section_heading?: string;
+  why_list?: WhyListItem[];
 }
 
 export interface WPPage {

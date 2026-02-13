@@ -4,19 +4,23 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type React from "react";
-import type { CounterItem, WPImage } from "@/types/wordpress";
+import type { CounterItem, WPImage, WhyListItem } from "@/types/wordpress";
 import type { WPService } from "@/lib/wordpress";
 
 interface ServicesSectionProps {
   background?: WPImage;
   counters?: CounterItem[];
   services: WPService[];
+  sectionHeading?: string;
+  whyList?: WhyListItem[];
 }
 
 export function ServicesSection({
   background,
   counters = [],
   services,
+  sectionHeading,
+  whyList = [],
 }: ServicesSectionProps) {
   const bgUrl = background?.url;
   const trackRef = useRef<HTMLDivElement | null>(null);
@@ -24,6 +28,7 @@ export function ServicesSection({
   const isDraggingRef = useRef(false);
   const dragStartXRef = useRef(0);
   const dragStartScrollLeftRef = useRef(0);
+  const [openWhyIndex, setOpenWhyIndex] = useState<number | null>(null);
 
   // Sync active index when user scrolls / drags the carousel
   const handleScroll = () => {
@@ -37,28 +42,7 @@ export function ServicesSection({
     setActiveIndex(Math.round(approxIndex));
   };
 
-  // Auto-slide the services carousel
-  useEffect(() => {
-    if (!services.length) return;
-
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => {
-        const nextIndex = (prev + 1) % services.length;
-        const track = trackRef.current;
-        const target = track?.children[nextIndex] as HTMLElement | undefined;
-        if (target) {
-          target.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest",
-            inline: "center",
-          });
-        }
-        return nextIndex;
-      });
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, [services.length]);
+  // (Auto-slide removed so page doesn't auto-scroll to this section)
 
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     const track = trackRef.current;
@@ -264,6 +248,74 @@ export function ServicesSection({
                 <path d="M9 8H16V15" />
               </svg>
             </Link>
+          </div>
+        )}
+
+        {/* Why Quicklyn list (3rd section content) */}
+        {(sectionHeading || whyList.length > 0) && (
+          <div className="mt-16 w-full px-6">
+            {sectionHeading && (
+              <h2 className="hero-text-shadow mb-8 text-center text-[36px] font-semibold leading-snug text-white">
+                {sectionHeading}
+              </h2>
+            )}
+
+            <div className="mx-auto w-full max-w-md space-y-3">
+              {whyList.map((item, index) => {
+                const isLast = index === whyList.length - 1;
+                const isOpen = openWhyIndex === index;
+                const iconUrl = item.icon?.url;
+
+                return (
+                  <div key={`${item.list_heading}-${index}`} className="flex items-start gap-4">
+                    {/* Icon + connecting line */}
+                    <div className="flex flex-col items-center">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#175c5e] shadow-lg">
+                        {iconUrl && (
+                          <Image
+                            src={iconUrl}
+                            alt={item.icon?.alt || item.list_heading}
+                            width={40}
+                            height={40}
+                            className="h-10 w-10 object-contain"
+                            unoptimized={iconUrl.includes("quicklyn-headless.local")}
+                          />
+                        )}
+                      </div>
+                      {!isLast && <div className="mt-2 h-10 w-px bg-white/20" aria-hidden />}
+                    </div>
+
+                    {/* Text */}
+                    <div className="flex-1 text-left">
+                      <p className="hero-text-shadow text-[21px] font-medium leading-snug text-white">
+                        {item.list_heading}
+                      </p>
+                      <button
+                        type="button"
+                        className="mt-1 text-[13px] font-normal text-white/60 underline-offset-2 hover:underline"
+                        onClick={() =>
+                          setOpenWhyIndex(isOpen ? null : index)
+                        }
+                      >
+                        Learn More...
+                      </button>
+                      {item.list_description && (
+                        <div
+                          className={`overflow-hidden transition-all duration-300 ${
+                            isOpen ? "mt-2 max-h-40 opacity-100" : "max-h-0 opacity-0"
+                          }`}
+                          aria-hidden={!isOpen}
+                        >
+                          <p className="text-[14px] leading-relaxed text-white/80">
+                            {item.list_description}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
       </div>
