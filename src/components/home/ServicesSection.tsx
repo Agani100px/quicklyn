@@ -96,7 +96,7 @@ export function ServicesSection({
   };
 
   return (
-    <section className="relative z-20 -mt-[120px] w-full overflow-hidden bg-transparent pb-24 pt-[100px]">
+    <section className="relative z-20 -mt-[60px] w-full overflow-hidden bg-transparent pb-24 pt-[100px]">
       {/* Background texture for section 2 */}
       {bgUrl && (
         <div className="pointer-events-none absolute inset-0 z-0">
@@ -122,11 +122,11 @@ export function ServicesSection({
                 <div className="my-4 h-px w-full bg-white/25" aria-hidden />
               )}
               <div className="hero-text-shadow flex w-full items-center justify-between gap-4">
-                <div className="flex items-baseline gap-1 text-[74px] font-normal leading-none text-white">
+                <div className="flex items-baseline gap-1 text-[52px] md:text-[64px] font-normal leading-none text-white">
                   <span>{item.counter_number}</span>
                   <span>{item.counter_suffix}</span>
                 </div>
-                <div className="max-w-[55%] text-left text-[24px] font-normal leading-snug text-white">
+                <div className="max-w-[55%] text-left text-[18px] md:text-[22px] font-normal leading-snug text-white">
                   {item.counter_text}
                 </div>
               </div>
@@ -135,7 +135,7 @@ export function ServicesSection({
         </div>
 
         {/* Section heading (two lines: Our / Services) */}
-        <h2 className="hero-text-shadow mt-10 mb-[30px] text-[68px] leading-[58px] font-medium text-white">
+        <h2 className="hero-text-shadow mt-10 mb-[30px] text-[40px] leading-[38px] md:text-[56px] md:leading-[52px] lg:text-[68px] lg:leading-[58px] font-medium text-white">
           <span className="block">Our</span>
           <span className="block">Services</span>
         </h2>

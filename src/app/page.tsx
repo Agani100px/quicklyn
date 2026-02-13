@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getHomePage, getServices } from "@/lib/wordpress";
 import { HeroSection } from "@/components/home/HeroSection";
 import { ServicesSection } from "@/components/home/ServicesSection";
@@ -26,6 +27,19 @@ export default async function HomePage() {
         sectionHeading={page.acf.section_heading}
         whyList={page.acf.why_list}
       />
+      {/* Global floating CTA button above all sections */}
+      <Link
+        href={page.acf.estimate_button_link?.url || "#"}
+        className="fixed left-1/2 z-[9999] flex h-12 w-[224px] -translate-x-1/2 items-center justify-center rounded-full bg-[#FFDA00] shadow-xl drop-shadow-[0_6px_16px_rgba(0,0,0,0.45)] transition hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-[#FFDA00] focus:ring-offset-2 focus:ring-offset-[#297476]"
+        style={{
+          minWidth: "224px",
+          bottom: "max(36px, env(safe-area-inset-bottom, 0px) + 32px)",
+        }}
+      >
+        <span className="text-base font-semibold text-[#1B5B5D]">
+          {page.acf.estimate_button_text}
+        </span>
+      </Link>
     </main>
   );
 }

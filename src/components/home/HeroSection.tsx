@@ -179,20 +179,9 @@ export function HeroSection({ data }: HeroSectionProps) {
           </div>
 
           {/* Description */}
-          <p className="hero-text-shadow relative z-[10] mb-6 max-w-[280px] text-[16px] leading-relaxed text-white/90">
+          <p className="hero-text-shadow relative z-[20] mb-6 max-w-[280px] text-[16px] leading-relaxed text-white/90">
             {data.section_1_description}
           </p>
-
-          {/* CTA button */}
-          <Link
-            href={estimateLink}
-            className="relative z-[10] flex h-12 w-[224px] shrink-0 items-center justify-center rounded-full bg-[#FFDA00] shadow-lg transition hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-[#FFDA00] focus:ring-offset-2 focus:ring-offset-[#297476]"
-            style={{ minWidth: "224px", marginBottom: "5vh" }}
-          >
-            <span className="text-base font-semibold text-[#1B5B5D]">
-              {data.estimate_button_text}
-            </span>
-          </Link>
         </div>
       </div>
     </section>
