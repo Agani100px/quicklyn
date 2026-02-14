@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { HomePageACF } from "@/types/wordpress";
+import type { WPHeader } from "@/lib/wordpress";
 
 const PLACEHOLDER_IMAGE =
   "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&q=80";
@@ -49,14 +50,17 @@ function HamburgerIcon({ className }: { className?: string }) {
 
 interface HeroSectionProps {
   data: HomePageACF;
+  header?: WPHeader | null;
 }
 
-export function HeroSection({ data }: HeroSectionProps) {
+export function HeroSection({ data, header }: HeroSectionProps) {
   const bgUrl = data.background_image?.url || PLACEHOLDER_IMAGE;
   const appStoreUrl = data.appstore?.url ?? "";
   const googlePlayUrl = data.google_play?.url ?? "";
   const estimateLink = data.estimate_button_link?.url ?? "#";
   const isLocalImage = bgUrl.includes("quicklyn-headless.local");
+  const headerLogoUrl = header?.acf?.header_logo?.url;
+  const isLocalLogo = headerLogoUrl?.includes("quicklyn-headless.local");
 
   return (
     <section className="relative min-h-screen w-full overflow-hidden">
@@ -102,30 +106,47 @@ export function HeroSection({ data }: HeroSectionProps) {
 
       {/* Content */}
       <div
-        className="relative z-10 flex min-h-screen flex-col"
-        style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
+        className="relative z-10 flex min-h-screen flex-col pt-[100px]"
+        style={{ paddingTop: "calc(100px + env(safe-area-inset-top, 0px))" }}
       >
-        {/* Top bar */}
-        <div
-          className="flex shrink-0 justify-center px-4 py-2.5 text-center"
-          style={{ backgroundColor: "#2a7a7c" }}
-        >
-          <p className="hero-text-shadow text-[12px] text-white">
-            <span className="font-bold text-[#FFDA00]">Save 15%</span>
-            <span className="text-white">
-              {" "}
-              On your first cleaning — code QWEB15
-            </span>
-          </p>
-        </div>
+        {/* Fixed top bar + header */}
+        <div className="fixed left-0 right-0 top-0 z-[9999] flex w-full flex-col bg-transparent" style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>
+          {/* Top bar */}
+          <div
+            className="flex shrink-0 justify-center px-4 py-2.5 text-center"
+            style={{ backgroundColor: "#2a7a7c" }}
+          >
+            <p className="hero-text-shadow text-[12px] text-white">
+              <span className="font-bold text-[#FFDA00]">Save 15%</span>
+              <span className="text-white">
+                {" "}
+                On your first cleaning — code QWEB15
+              </span>
+            </p>
+          </div>
 
-        {/* Header */}
-        <header className="flex shrink-0 items-center justify-between px-6 py-3">
+          {/* Header */}
+          <header className="flex shrink-0 items-center justify-between bg-transparent px-6 py-3">
           <div className="flex items-center gap-2">
-            <LeafIcon className="text-white [filter:drop-shadow(0_1px_2px_rgba(0,0,0,0.4))]" />
-            <span className="hero-text-shadow text-lg font-medium lowercase text-white">
-              quicklyn
-            </span>
+            {headerLogoUrl ? (
+              <Link href="/" className="block">
+                <Image
+                  src={headerLogoUrl}
+                  alt="Quicklyn"
+                  width={70}
+                  height={16}
+                  className="h-5 w-auto object-contain [filter:drop-shadow(0_1px_2px_rgba(0,0,0,0.4))]"
+                  unoptimized={!!isLocalLogo}
+                />
+              </Link>
+            ) : (
+              <>
+                <LeafIcon className="text-white [filter:drop-shadow(0_1px_2px_rgba(0,0,0,0.4))]" />
+                <span className="hero-text-shadow text-lg font-medium lowercase text-white">
+                  quicklyn
+                </span>
+              </>
+            )}
           </div>
           <button
             type="button"
@@ -135,6 +156,7 @@ export function HeroSection({ data }: HeroSectionProps) {
             <HamburgerIcon className="text-white [filter:drop-shadow(0_1px_2px_rgba(0,0,0,0.4))]" />
           </button>
         </header>
+        </div>
 
         {/* Main content */}
         <div

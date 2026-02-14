@@ -242,3 +242,25 @@ export async function getFooter(): Promise<WPFooter | null> {
     return null;
   }
 }
+
+export interface WPHeader {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: {
+    header_logo?: WPImage;
+  };
+}
+
+export async function getHeader(): Promise<WPHeader | null> {
+  try {
+    const res = await fetch(getApiUrl("/header?acf_format=standard"), {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return null;
+    const data = (await res.json()) as WPHeader[];
+    return Array.isArray(data) && data.length > 0 ? data[0] : null;
+  } catch {
+    return null;
+  }
+}

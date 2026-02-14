@@ -5,6 +5,7 @@ import {
   getTestimonials,
   getFaqs,
   getAppLink,
+  getHeader,
 } from "@/lib/wordpress";
 import { HeroSection } from "@/components/home/HeroSection";
 import { ServicesSection } from "@/components/home/ServicesSection";
@@ -14,12 +15,13 @@ import { FAQSection } from "@/components/home/FAQSection";
 import { AppDownloadSection } from "@/components/home/AppDownloadSection";
 
 export default async function HomePage() {
-  const [page, services, testimonials, faqs, appLink] = await Promise.all([
+  const [page, services, testimonials, faqs, appLink, header] = await Promise.all([
     getHomePage(),
     getServices(),
     getTestimonials(),
     getFaqs(),
     getAppLink(),
+    getHeader(),
   ]);
 
   if (!page?.acf) {
@@ -35,7 +37,7 @@ export default async function HomePage() {
 
   return (
     <main className="min-h-screen">
-      <HeroSection data={page.acf} />
+      <HeroSection data={page.acf} header={header} />
       <ServicesSection
         background={page.acf.section2_background}
         counters={page.acf.counter}
