@@ -61,11 +61,9 @@ export function HeroSection({ data, header }: HeroSectionProps) {
   const estimateLink = data.estimate_button_link?.url ?? "#";
   const [isMobile, setIsMobile] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const isLocalImage = bgUrl.includes("quicklyn-headless.local");
   const headerLogoUrl = header?.acf?.header_logo?.url;
   const isLocalLogo = headerLogoUrl?.includes("quicklyn-headless.local");
-
   // Detect mobile viewport
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -79,21 +77,16 @@ export function HeroSection({ data, header }: HeroSectionProps) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Scroll behavior - only on mobile
+  // Scroll behavior - only on mobile: zoom out a bit when scrolled
   useEffect(() => {
     if (typeof window === "undefined" || !isMobile) {
       setIsCollapsed(false);
-      setScrollProgress(0);
       return;
     }
 
     const handleScroll = () => {
       const y = window.scrollY || window.pageYOffset || 0;
-      // Normalized progress 0 → 1 for smooth heading animation
-      const progress = Math.min(Math.max(y / 120, 0), 1);
-      setScrollProgress(progress);
-      // When user scrolls down a bit, collapse (zoom out + move up)
-      setIsCollapsed(progress > 0.4);
+      setIsCollapsed(y > 40);
     };
 
     handleScroll();
@@ -103,78 +96,77 @@ export function HeroSection({ data, header }: HeroSectionProps) {
 
   const handleHeroClick = () => {
     if (!isMobile) return;
-    // Toggle collapsed state on tap
     setIsCollapsed((prev) => !prev);
   };
 
+  // Background: zoomed-in by default, zooms out a bit (≈3x) and shifts when scrolled/clicked on mobile
   const bgTransform = isCollapsed
-    ? "translateX(0%) scale(1.35) rotate(-10deg)"
-    : "translateX(10%) scale(2.1) rotate(-4deg)";
+    ? "translateX(0%) scale(2.5) rotate(-42deg)" // zoom out more + extra counter-clockwise when scrolled
+    : "translateX(25%) scale(3.8) rotate(-35deg)";
+  const bgMarginTop = isCollapsed ? "18%" : "40%"; // move up a bit when zoomed out
 
-  const bgMarginTop = isCollapsed ? "5%" : "45%";
-
-  // Smooth heading animation based on scroll progress
-  const headingProgress = isMobile ? scrollProgress : 0;
-  const headingTop = "22vh";
-  const headingTranslateY = -3 * headingProgress; // 0vh → -3vh (subtle lift)
-  const headingOpacity = 0.9 + 0.1 * headingProgress; // 0.9 → 1
-  const headingZIndex = headingProgress > 0.5 ? 6 : 2;
-
-  // Teal gradient opacity fades out with scroll (1 → 0)
-  const tealOpacity = 1 - headingProgress;
+  const headingColor = isCollapsed ? "#ffffff" : "#75a4a5";
+  const headingTop = isCollapsed ? "17vh" : "20vh";
+  const tealOverlayOpacity = isCollapsed ? 0.4 : 1;
 
   return (
     <section
       className="relative min-h-screen w-full overflow-hidden"
       onClick={handleHeroClick}
     >
-      {/* Background image — zoomed, rotated, shifted */}
+      {/* Background image */}
       <div
-        className="absolute inset-0 z-0 origin-center transition-[transform,margin-top] duration-500 ease-out"
+        className="absolute inset-0 z-0 origin-center"
         style={{
           transform: bgTransform,
           marginTop: bgMarginTop,
+          transition: "transform 0.45s ease-out, margin-top 0.45s ease-out",
         }}
       >
         <Image
           src={bgUrl}
           alt=""
           fill
-          className="object-cover"
-          style={{ objectPosition: "center top" }}
+          className="object-contain"
+          style={{ objectPosition: "center center" }}
           sizes="100vw"
           priority
           unoptimized={isLocalImage}
         />
       </div>
 
-      {/* Heading layer BELOW gradient (lower z than overlay) */}
+      {/* Heading */}
       <div
-        className="absolute left-0 right-0 flex justify-center px-6 text-center transition-[opacity,transform] duration-700 ease-in-out"
+        className="absolute left-0 right-0 flex justify-center px-6 text-center"
         style={{
           top: headingTop,
-          zIndex: headingZIndex,
-          opacity: headingOpacity,
-          transform: `translateY(${headingTranslateY}vh)`,
+          zIndex: 6,
+          transition: "top 0.45s ease-out, color 0.45s ease-out",
         }}
       >
-        <h1 className="hero-text-shadow max-w-[320px] text-[35px] font-semibold leading-[35px] text-white">
+        <h1
+          className="hero-text-shadow max-w-[320px] text-[35px] font-semibold leading-[35px]"
+          style={{
+            color: headingColor,
+            transition: "color 0.45s ease-out",
+          }}
+        >
           {data.section_1_heading}
         </h1>
       </div>
 
-      {/* Overlay: teal gradient (fades out on scroll) */}
+      {/* Overlay: teal gradient (fades a bit when scrolled/clicked) */}
       <div
-        className="pointer-events-none absolute inset-0 z-[5] transition-opacity duration-700 ease-in-out"
+        className="pointer-events-none absolute inset-0 z-[5]"
         style={{
-          opacity: tealOpacity,
+          opacity: tealOverlayOpacity,
+          transition: "opacity 0.45s ease-out",
           background:
             "linear-gradient(to bottom, rgba(24, 91, 93, 1) 0%, rgba(24, 91, 93, 0.47) 47%, rgba(24, 91, 93, 0.2) 100%)",
         }}
         aria-hidden
       />
-
-      {/* Overlay: black fade (always present, does NOT fade out) */}
+      {/* Overlay: black fade (always same, no change on scroll) */}
       <div
         className="pointer-events-none absolute inset-0 z-[4]"
         style={{

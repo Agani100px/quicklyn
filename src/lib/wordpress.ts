@@ -254,8 +254,9 @@ export interface WPHeader {
 
 export async function getHeader(): Promise<WPHeader | null> {
   try {
+    // Fetch header without Next.js caching so logo updates are seen immediately
     const res = await fetch(getApiUrl("/header?acf_format=standard"), {
-      next: { revalidate: 60 },
+      cache: "no-store",
     });
     if (!res.ok) return null;
     const data = (await res.json()) as WPHeader[];
