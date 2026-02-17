@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import type { HomePageACF } from "@/types/wordpress";
@@ -58,18 +59,81 @@ export function HeroSection({ data, header }: HeroSectionProps) {
   const appStoreUrl = data.appstore?.url ?? "";
   const googlePlayUrl = data.google_play?.url ?? "";
   const estimateLink = data.estimate_button_link?.url ?? "#";
+  const [isMobile, setIsMobile] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const isLocalImage = bgUrl.includes("quicklyn-headless.local");
   const headerLogoUrl = header?.acf?.header_logo?.url;
   const isLocalLogo = headerLogoUrl?.includes("quicklyn-headless.local");
 
+  // Detect mobile viewport
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Scroll behavior - only on mobile
+  useEffect(() => {
+    if (typeof window === "undefined" || !isMobile) {
+      setIsCollapsed(false);
+      setScrollProgress(0);
+      return;
+    }
+
+    const handleScroll = () => {
+      const y = window.scrollY || window.pageYOffset || 0;
+      // Normalized progress 0 → 1 for smooth heading animation
+      const progress = Math.min(Math.max(y / 120, 0), 1);
+      setScrollProgress(progress);
+      // When user scrolls down a bit, collapse (zoom out + move up)
+      setIsCollapsed(progress > 0.4);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isMobile]);
+
+  const handleHeroClick = () => {
+    if (!isMobile) return;
+    // Toggle collapsed state on tap
+    setIsCollapsed((prev) => !prev);
+  };
+
+  const bgTransform = isCollapsed
+    ? "translateX(0%) scale(1.35) rotate(-10deg)"
+    : "translateX(10%) scale(2.1) rotate(-4deg)";
+
+  const bgMarginTop = isCollapsed ? "5%" : "45%";
+
+  // Smooth heading animation based on scroll progress
+  const headingProgress = isMobile ? scrollProgress : 0;
+  const headingTop = "22vh";
+  const headingTranslateY = -3 * headingProgress; // 0vh → -3vh (subtle lift)
+  const headingOpacity = 0.9 + 0.1 * headingProgress; // 0.9 → 1
+  const headingZIndex = headingProgress > 0.5 ? 6 : 2;
+
+  // Teal gradient opacity fades out with scroll (1 → 0)
+  const tealOpacity = 1 - headingProgress;
+
   return (
-    <section className="relative min-h-screen w-full overflow-hidden">
+    <section
+      className="relative min-h-screen w-full overflow-hidden"
+      onClick={handleHeroClick}
+    >
       {/* Background image — zoomed, rotated, shifted */}
       <div
-        className="absolute inset-0 z-0 origin-center"
+        className="absolute inset-0 z-0 origin-center transition-[transform,margin-top] duration-500 ease-out"
         style={{
-          transform: "translateX(15%) scale(1.5) rotate(-20deg)",
-          marginTop: "20%",
+          transform: bgTransform,
+          marginTop: bgMarginTop,
         }}
       >
         <Image
@@ -86,20 +150,36 @@ export function HeroSection({ data, header }: HeroSectionProps) {
 
       {/* Heading layer BELOW gradient (lower z than overlay) */}
       <div
-        className="absolute left-0 right-0 z-[2] flex justify-center px-6 text-center"
-        style={{ top: "18vh" }}
+        className="absolute left-0 right-0 flex justify-center px-6 text-center transition-[opacity,transform] duration-700 ease-in-out"
+        style={{
+          top: headingTop,
+          zIndex: headingZIndex,
+          opacity: headingOpacity,
+          transform: `translateY(${headingTranslateY}vh)`,
+        }}
       >
-        <h1 className="hero-text-shadow max-w-[320px] text-[35px] font-semibold leading-tight text-white">
+        <h1 className="hero-text-shadow max-w-[320px] text-[35px] font-semibold leading-[35px] text-white">
           {data.section_1_heading}
         </h1>
       </div>
 
-      {/* Overlay: teal gradient (100% → 47% → 20%) + black fade (0% → 80%) */}
+      {/* Overlay: teal gradient (fades out on scroll) */}
       <div
-        className="pointer-events-none absolute inset-0 z-[5]"
+        className="pointer-events-none absolute inset-0 z-[5] transition-opacity duration-700 ease-in-out"
+        style={{
+          opacity: tealOpacity,
+          background:
+            "linear-gradient(to bottom, rgba(24, 91, 93, 1) 0%, rgba(24, 91, 93, 0.47) 47%, rgba(24, 91, 93, 0.2) 100%)",
+        }}
+        aria-hidden
+      />
+
+      {/* Overlay: black fade (always present, does NOT fade out) */}
+      <div
+        className="pointer-events-none absolute inset-0 z-[4]"
         style={{
           background:
-            "linear-gradient(to bottom, rgba(24, 91, 93, 1) 0%, rgba(24, 91, 93, 0.47) 47%, rgba(24, 91, 93, 0.2) 100%), linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)",
+            "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)",
         }}
         aria-hidden
       />
