@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import type { WPService } from "@/lib/wordpress";
 
@@ -50,7 +50,10 @@ function ServiceAccordionItem({
   const note = acf.note;
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-[#528e91] bg-[rgba(217,217,217,0.13)] shadow-lg">
+    <div
+      id={`service-${service.slug}`}
+      className="overflow-hidden rounded-3xl border border-[#528e91] bg-[rgba(217,217,217,0.13)] shadow-lg scroll-mt-24"
+    >
       <button
         type="button"
         onClick={onToggle}
@@ -217,6 +220,24 @@ export function OurMainServicesSection({ services }: OurMainServicesSectionProps
   const [openId, setOpenId] = useState<number | null>(
     sortedServices.length > 0 ? sortedServices[0].id : null
   );
+
+  // On load, if URL hash is #service-{slug}, expand that accordion and scroll to it
+  useEffect(() => {
+    if (typeof window === "undefined" || !sortedServices.length) return;
+    const hash = window.location.hash?.slice(1);
+    if (!hash || !hash.startsWith("service-")) return;
+    const slug = hash.replace(/^service-/, "");
+    const service = sortedServices.find((s) => s.slug === slug);
+    if (!service) return;
+    setOpenId(service.id);
+    const el = document.getElementById(hash);
+    if (el) {
+      const scroll = () =>
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      const t = setTimeout(scroll, 350);
+      return () => clearTimeout(t);
+    }
+  }, [sortedServices]);
 
   if (!sortedServices.length) return null;
 

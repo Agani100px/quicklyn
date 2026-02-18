@@ -170,9 +170,9 @@ export function ServicesSection({
                 marginLeft: index === 0 ? "20px" : undefined,
               }}
             >
-              {/* Arrow circle fixed in top-right corner, snug to corner like reference */}
+              {/* Arrow circle: go to our-services page and expand this service */}
               <Link
-                href={service.acf?.link?.url || "#"}
+                href={`/our-services#service-${service.slug}`}
                 className="absolute right-2 top-2 z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#FFDA00] p-0 text-[#1B5B5D] transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"
               >
                 <svg
@@ -196,7 +196,7 @@ export function ServicesSection({
                 </h3>
               </div>
 
-              <p className="mb-3 text-[10px] leading-relaxed text-white/80">
+              <p className="mb-3 line-clamp-3 text-[10px] leading-relaxed text-white/80">
                 {service.acf?.service_description}
               </p>
             </article>
