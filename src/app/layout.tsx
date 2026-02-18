@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { getFooter, getAppLink } from "@/lib/wordpress";
+import { getFooter, getAppLink, getHeader } from "@/lib/wordpress";
 import { Footer } from "@/components/Footer";
+import { GlobalHeader } from "@/components/GlobalHeader";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,11 +15,16 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [footer, appLink] = await Promise.all([getFooter(), getAppLink()]);
+  const [footer, appLink, header] = await Promise.all([
+    getFooter(),
+    getAppLink(),
+    getHeader(),
+  ]);
 
   return (
     <html lang="en" className="scroll-smooth">
       <body className="font-sans antialiased">
+        <GlobalHeader header={header} />
         {children}
         <Footer data={footer} appLink={appLink} />
       </body>

@@ -51,6 +51,21 @@ export interface HomePageACF {
   ["4th_section_map"]?: WPImage;
 }
 
+export interface OurServicesACF {
+  page_heading?: string;
+  ["1st_section_background"]?: WPImage;
+  service_sub_heading?: string;
+  service_description?: string;
+}
+
+export interface OurServicesPage {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  content: { rendered: string; protected?: boolean };
+  acf: OurServicesACF;
+}
+
 export interface WPPage {
   id: number;
   slug: string;

@@ -1,4 +1,9 @@
-import type { WPImage, WPPage, HomePageACF } from "@/types/wordpress";
+import type {
+  WPImage,
+  WPPage,
+  HomePageACF,
+  OurServicesPage,
+} from "@/types/wordpress";
 import { fallbackHomePage } from "./fallback-home";
 
 const WORDPRESS_URL = process.env.WORDPRESS_URL ?? "http://quicklyn-headless.local";
@@ -21,6 +26,22 @@ export async function getHomePage(): Promise<WPPage | null> {
     return data[0] ?? fallbackHomePage;
   } catch {
     return fallbackHomePage;
+  }
+}
+
+export async function getOurServicesPage(): Promise<OurServicesPage | null> {
+  try {
+    const res = await fetch(
+      getApiUrl("/pages?slug=our-services&acf_format=standard"),
+      {
+        next: { revalidate: 60 },
+      },
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as OurServicesPage[];
+    return Array.isArray(data) && data.length > 0 ? data[0] : null;
+  } catch {
+    return null;
   }
 }
 
