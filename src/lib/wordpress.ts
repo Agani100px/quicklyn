@@ -218,7 +218,10 @@ export interface WPAppLink {
   acf: {
     heading?: string;
     sub_heading?: string;
+    /** Discount/promo code shown in ribbon (API may return as discount_code, promo_code, or code) */
     discount_code?: string;
+    promo_code?: string;
+    code?: string;
     image_01?: WPImage;
     link_01?: { title: string; url: string; target: string };
     image_02?: WPImage;

@@ -71,10 +71,10 @@ export function OurServicesExtrasSection({
                 key={`${item.extras_heading}-${index}`}
                 type="button"
                 onClick={() => goToIndex(index)}
-                className={`rounded-[8px] border border-[#7eafaf] bg-[rgba(255,255,255,0.11)] px-4 py-1.5 text-[13px] capitalize text-white transition-colors duration-200 ${
+                className={`rounded-[8px] border border-[#7eafaf] px-4 py-1.5 text-[13px] capitalize text-white transition-colors duration-200 ${
                   isActive
                     ? "bg-[#195b5d]"
-                    : "text-white/85 hover:bg-white/10"
+                    : "bg-[rgba(255,255,255,0.11)] text-white/85 hover:bg-white/10"
                 }`}
               >
                 {item.extras_heading}
