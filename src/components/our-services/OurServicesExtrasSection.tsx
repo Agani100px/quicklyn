@@ -17,14 +17,14 @@ function hasContent(value: string | undefined | null): boolean {
 export function OurServicesExtrasSection({
   extras,
 }: OurServicesExtrasSectionProps) {
-  if (!extras || extras.length === 0) return null;
-
-  const validExtras = extras.filter(
+  const validExtras = (extras ?? []).filter(
     (item) => item && item.extras_heading?.trim().length,
   );
   const [activeIndex, setActiveIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  if (!validExtras.length) return null;
 
   const active = validExtras[activeIndex] ?? validExtras[0];
   if (!active) return null;

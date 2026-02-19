@@ -13,16 +13,11 @@ export function OurServicesFeatureListSection({
   features,
   backgroundImage,
 }: OurServicesFeatureListSectionProps) {
-  if (!features || features.length === 0) return null;
-
-  const validFeatures = features.filter(
+  const validFeatures = (features ?? []).filter(
     (item) => item && item.feature_name?.trim().length,
   );
-  if (!validFeatures.length) return null;
-
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [isInView, setIsInView] = useState(false);
-
   useEffect(() => {
     const el = containerRef.current;
     if (!el || typeof window === "undefined") return;
@@ -39,6 +34,8 @@ export function OurServicesFeatureListSection({
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
+
+  if (!validFeatures.length) return null;
 
   return (
     <section className="relative bg-[#2a7a7c] pb-16 pt-4 text-white px-8">
