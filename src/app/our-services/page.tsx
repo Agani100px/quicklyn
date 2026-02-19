@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getOurServicesPage, getServices } from "@/lib/wordpress";
 import { OurServicesHero } from "@/components/our-services/OurServicesHero";
 import { OurMainServicesSection } from "@/components/our-services/OurMainServicesSection";
+import { OurServicesExtrasSection } from "@/components/our-services/OurServicesExtrasSection";
 
 export default async function OurServicesPage() {
   const [page, services] = await Promise.all([
@@ -48,6 +49,8 @@ export default async function OurServicesPage() {
       />
 
       <OurMainServicesSection services={services} />
+
+      <OurServicesExtrasSection extras={page.acf.extras_list ?? []} />
 
       {/* Floating CTA at bottom, same behaviour as home page */}
       <Link

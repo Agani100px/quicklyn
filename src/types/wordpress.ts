@@ -51,11 +51,20 @@ export interface HomePageACF {
   ["4th_section_map"]?: WPImage;
 }
 
+export interface ExtrasListItem {
+  acf_fc_layout: string;
+  extras_heading: string;
+  extras_approximate_time?: string;
+  extras_icon?: WPImage;
+  extras_description?: string;
+}
+
 export interface OurServicesACF {
   page_heading?: string;
   ["1st_section_background"]?: WPImage;
   service_sub_heading?: string;
   service_description?: string;
+  extras_list?: ExtrasListItem[];
 }
 
 export interface OurServicesPage {
