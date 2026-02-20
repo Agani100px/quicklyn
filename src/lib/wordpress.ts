@@ -9,6 +9,7 @@ import type {
   TermsAndConditionsPage,
   OurMissionPage,
   AboutUsPage,
+  BookACleaningPage,
   WPPostRaw,
 } from "@/types/wordpress";
 import { fallbackHomePage } from "./fallback-home";
@@ -116,6 +117,20 @@ export async function getAboutUsPage(): Promise<AboutUsPage | null> {
     );
     if (!res.ok) return null;
     const data = (await res.json()) as AboutUsPage[];
+    return Array.isArray(data) && data.length > 0 ? data[0] : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function getBookACleaningPage(): Promise<BookACleaningPage | null> {
+  try {
+    const res = await fetch(
+      getApiUrl("/pages?slug=book-a-cleaning&acf_format=standard"),
+      { next: { revalidate: 60 } },
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as BookACleaningPage[];
     return Array.isArray(data) && data.length > 0 ? data[0] : null;
   } catch {
     return null;
@@ -501,6 +516,7 @@ export function mapWordPressUrlToNextPath(wpUrl: string | undefined): string {
     if (path.includes("our-mission")) return "/our-mission";
     if (path.includes("about-us")) return "/about-us";
     if (path.includes("get-the-app")) return "/get-the-app";
+    if (path.includes("book-a-cleaning")) return "/book-a-cleaning";
     if (path.includes("contact-us")) return "/contact-us";
     if (path.includes("careers")) return "/careers";
     if (path.includes("terms")) return "/terms-and-conditions";

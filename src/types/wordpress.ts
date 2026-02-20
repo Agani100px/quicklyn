@@ -228,3 +228,41 @@ export interface AboutUsPage {
   content: { rendered: string; protected?: boolean };
   acf: AboutUsACF;
 }
+
+export interface BookACleaningApartmentType {
+  acf_fc_layout?: string;
+  name?: string;
+  hours?: string;
+  hourly_rate?: string;
+}
+
+export interface BookACleaningHowOften {
+  acf_fc_layout?: string;
+  how_often_name?: string;
+  times?: string;
+}
+
+export interface BookACleaningExtra {
+  acf_fc_layout?: string;
+  extras_name?: string;
+  hours?: string;
+  hourly_rate?: string;
+}
+
+export interface BookACleaningACF {
+  heading?: string | null;
+  description?: string | null;
+  background_image?: WPImage | null;
+  apartment_or_house_type?: BookACleaningApartmentType[] | null;
+  how_often?: BookACleaningHowOften[] | null;
+  extras?: BookACleaningExtra[] | null;
+  special_notes?: string | null;
+}
+
+export interface BookACleaningPage {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  content: { rendered: string; protected?: boolean };
+  acf: BookACleaningACF;
+}
