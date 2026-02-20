@@ -63,30 +63,37 @@ export function ServicesSection({
   };
 
   const touchStartXRef = useRef(0);
+  const touchStartYRef = useRef(0);
   const touchStartScrollLeftRef = useRef(0);
+  const gestureDirectionRef = useRef<"horizontal" | "vertical" | null>(null);
 
-  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
-    const track = trackRef.current;
-    if (!track || event.touches.length !== 1) return;
-    isDraggingRef.current = true;
-    touchStartXRef.current = event.touches[0].clientX;
-    touchStartScrollLeftRef.current = track.scrollLeft;
-  };
-
-  const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
-    if (!isDraggingRef.current || event.touches.length !== 1) return;
-    const track = trackRef.current;
-    if (!track) return;
-    const deltaX = event.touches[0].clientX - touchStartXRef.current;
-    track.scrollLeft = touchStartScrollLeftRef.current - deltaX;
-    event.preventDefault();
-  };
-
-  const handleTouchEnd = () => {
-    isDraggingRef.current = false;
+  const snapToNearest = useRef(() => {
     const track = trackRef.current;
     const firstCard = track?.children[0] as HTMLElement | undefined;
-    if (track && firstCard) {
+    if (!track || !firstCard) return;
+    const cardWidth = firstCard.offsetWidth;
+    const gap = 20;
+    const approxIndex = track.scrollLeft / (cardWidth + gap);
+    const nearestIndex = Math.max(
+      0,
+      Math.min(services.length - 1, Math.round(approxIndex)),
+    );
+    const target = track.children[nearestIndex] as HTMLElement | undefined;
+    if (target) {
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    }
+    setActiveIndex(nearestIndex);
+  });
+
+  useEffect(() => {
+    snapToNearest.current = () => {
+      const track = trackRef.current;
+      const firstCard = track?.children[0] as HTMLElement | undefined;
+      if (!track || !firstCard) return;
       const cardWidth = firstCard.offsetWidth;
       const gap = 20;
       const approxIndex = track.scrollLeft / (cardWidth + gap);
@@ -103,18 +110,65 @@ export function ServicesSection({
         });
       }
       setActiveIndex(nearestIndex);
-    }
-  };
+    };
+  }, [services.length]);
 
+  // iOS: native touch with direction lock so horizontal swipe works on every card and vertical scroll still works
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
+
+    const DIRECTION_THRESHOLD = 12;
+    const gap = 20;
+
+    const onTouchStart = (e: TouchEvent) => {
+      if (e.touches.length !== 1) return;
+      isDraggingRef.current = true;
+      gestureDirectionRef.current = null;
+      touchStartXRef.current = e.touches[0].clientX;
+      touchStartYRef.current = e.touches[0].clientY;
+      touchStartScrollLeftRef.current = track.scrollLeft;
+    };
+
     const onTouchMove = (e: TouchEvent) => {
       if (!isDraggingRef.current || e.touches.length !== 1) return;
-      e.preventDefault();
+      const dx = e.touches[0].clientX - touchStartXRef.current;
+      const dy = e.touches[0].clientY - touchStartYRef.current;
+      const adx = Math.abs(dx);
+      const ady = Math.abs(dy);
+
+      if (gestureDirectionRef.current === null && (adx > DIRECTION_THRESHOLD || ady > DIRECTION_THRESHOLD)) {
+        gestureDirectionRef.current = adx > ady ? "horizontal" : "vertical";
+      }
+
+      if (gestureDirectionRef.current === "horizontal") {
+        e.preventDefault();
+        track.scrollLeft = touchStartScrollLeftRef.current - dx;
+      }
     };
-    track.addEventListener("touchmove", onTouchMove, { passive: false });
-    return () => track.removeEventListener("touchmove", onTouchMove);
+
+    const onTouchEnd = () => {
+      if (!isDraggingRef.current) return;
+      if (gestureDirectionRef.current === "horizontal") {
+        snapToNearest.current();
+      }
+      isDraggingRef.current = false;
+      gestureDirectionRef.current = null;
+    };
+
+    const capture = true;
+    const passiveFalse = { capture, passive: false };
+    track.addEventListener("touchstart", onTouchStart, capture);
+    track.addEventListener("touchmove", onTouchMove, passiveFalse);
+    track.addEventListener("touchend", onTouchEnd, capture);
+    track.addEventListener("touchcancel", onTouchEnd, capture);
+
+    return () => {
+      track.removeEventListener("touchstart", onTouchStart, capture);
+      track.removeEventListener("touchmove", onTouchMove, passiveFalse);
+      track.removeEventListener("touchend", onTouchEnd, capture);
+      track.removeEventListener("touchcancel", onTouchEnd, capture);
+    };
   }, []);
 
   const endDrag = (event: React.PointerEvent<HTMLDivElement>) => {
@@ -208,7 +262,7 @@ export function ServicesSection({
           style={{
             scrollSnapType: "x mandatory",
             scrollSnapStop: "always",
-            touchAction: "pan-x pan-y",
+            touchAction: "pan-y",
             WebkitOverflowScrolling: "touch",
             columnGap: "20px", // 20px gap between cards
           }}
@@ -217,9 +271,6 @@ export function ServicesSection({
           onPointerMove={handlePointerMove}
           onPointerUp={endDrag}
           onPointerLeave={endDrag}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
         >
           {services.map((service, index) => (
             <article

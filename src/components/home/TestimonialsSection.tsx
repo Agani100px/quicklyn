@@ -42,6 +42,7 @@ export function TestimonialsSection({ testimonials, transparentBackground }: Tes
   const dragStartXRef = useRef(0);
   const touchStartXRef = useRef(0);
   const touchStartYRef = useRef(0);
+  const gestureDirectionRef = useRef<"horizontal" | "vertical" | null>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
 
   const goPrev = useCallback(() => {
@@ -82,45 +83,66 @@ export function TestimonialsSection({ testimonials, transparentBackground }: Tes
     isDraggingRef.current = false;
   };
 
-  // Native touch: allow vertical scroll (pan-y), only treat horizontal swipes as carousel. No preventDefault so iOS can scroll the page.
+  // iOS: lock gesture direction on first move. Horizontal -> we preventDefault and handle carousel; vertical -> let page scroll.
   useEffect(() => {
     const el = carouselRef.current;
     if (!el) return;
 
+    const DIRECTION_THRESHOLD = 12;
+    const SWIPE_THRESHOLD = 35;
+
     const onTouchStart = (e: TouchEvent) => {
       if (e.touches.length !== 1) return;
       isDraggingRef.current = true;
+      gestureDirectionRef.current = null;
       touchStartXRef.current = e.touches[0].clientX;
       touchStartYRef.current = e.touches[0].clientY;
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (!isDraggingRef.current || e.touches.length !== 1) return;
+      if (gestureDirectionRef.current === null) {
+        const dx = e.touches[0].clientX - touchStartXRef.current;
+        const dy = e.touches[0].clientY - touchStartYRef.current;
+        const adx = Math.abs(dx);
+        const ady = Math.abs(dy);
+        if (adx > DIRECTION_THRESHOLD || ady > DIRECTION_THRESHOLD) {
+          gestureDirectionRef.current = adx > ady ? "horizontal" : "vertical";
+        }
+      }
+      if (gestureDirectionRef.current === "horizontal") {
+        e.preventDefault();
+      }
     };
 
     const onTouchEnd = (e: TouchEvent) => {
       if (!isDraggingRef.current || !e.changedTouches?.length) {
         isDraggingRef.current = false;
+        gestureDirectionRef.current = null;
         return;
       }
-      const endX = e.changedTouches[0].clientX;
-      const endY = e.changedTouches[0].clientY;
-      const deltaX = endX - touchStartXRef.current;
-      const deltaY = endY - touchStartYRef.current;
-      const absX = Math.abs(deltaX);
-      const absY = Math.abs(deltaY);
-      const threshold = 40;
-      if (absX > absY && absX > threshold) {
-        if (deltaX > 0) goPrev();
-        else goNext();
+      if (gestureDirectionRef.current === "horizontal") {
+        const endX = e.changedTouches[0].clientX;
+        const deltaX = endX - touchStartXRef.current;
+        if (deltaX > SWIPE_THRESHOLD) goPrev();
+        else if (deltaX < -SWIPE_THRESHOLD) goNext();
       }
       isDraggingRef.current = false;
+      gestureDirectionRef.current = null;
     };
 
-    el.addEventListener("touchstart", onTouchStart, { capture: true });
-    el.addEventListener("touchend", onTouchEnd, { capture: true });
-    el.addEventListener("touchcancel", onTouchEnd, { capture: true });
+    const capture = true;
+    const passiveFalse = { capture, passive: false };
+    el.addEventListener("touchstart", onTouchStart, capture);
+    el.addEventListener("touchmove", onTouchMove, passiveFalse);
+    el.addEventListener("touchend", onTouchEnd, capture);
+    el.addEventListener("touchcancel", onTouchEnd, capture);
 
     return () => {
-      el.removeEventListener("touchstart", onTouchStart, { capture: true });
-      el.removeEventListener("touchend", onTouchEnd, { capture: true });
-      el.removeEventListener("touchcancel", onTouchEnd, { capture: true });
+      el.removeEventListener("touchstart", onTouchStart, capture);
+      el.removeEventListener("touchmove", onTouchMove, passiveFalse);
+      el.removeEventListener("touchend", onTouchEnd, capture);
+      el.removeEventListener("touchcancel", onTouchEnd, capture);
     };
   }, [goPrev, goNext]);
 
