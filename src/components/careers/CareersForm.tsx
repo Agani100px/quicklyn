@@ -56,10 +56,10 @@ export function CareersForm() {
       onSubmit={handleSubmit}
       className="w-full max-w-lg rounded-2xl border border-white/10 bg-white/5 px-8 py-10 shadow-inner backdrop-blur-sm md:px-10 md:py-12"
     >
-      <h2 className="text-center text-2xl font-bold tracking-tight text-white md:text-3xl">
+      <h2 className="text-left text-2xl font-bold tracking-tight text-white md:text-3xl">
         READY TO JOIN?
       </h2>
-      <p className="mt-2 text-center text-sm text-white/90 md:text-base">
+      <p className="mt-2 text-left text-sm text-white/90 md:text-base">
         Fill Out The Form Below. We&apos;ll Get Back To You Quickly!
       </p>
       <div className="mt-6 border-t border-dashed border-white/30 pt-6" aria-hidden />
@@ -217,7 +217,7 @@ export function CareersForm() {
       >
         Submit
         <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M7 17L17 7M17 7H7M17 7v10" />
         </svg>
       </button>
     </form>
