@@ -26,6 +26,7 @@ export default async function ContactUsPage() {
       {/* Background image from ACF — use img so it always loads and is visible */}
       {bgImage ? (
         <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={bgImage}
             alt=""

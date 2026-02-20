@@ -123,3 +123,44 @@ export interface CareersPage {
   content: { rendered: string; protected?: boolean };
   acf: CareersACF;
 }
+
+export interface BlogPostACF {
+  short_description?: string;
+  how_many_minutes_to_read?: string;
+}
+
+export interface WPPostEmbedded {
+  "wp:featuredmedia"?: Array<{ source_url: string }>;
+}
+
+export interface WPPostRaw {
+  id: number;
+  slug: string;
+  date: string;
+  link: string;
+  title: { rendered: string };
+  excerpt: { rendered: string };
+  content: { rendered: string };
+  featured_media: number;
+  acf?: BlogPostACF;
+  _embedded?: WPPostEmbedded;
+}
+
+export interface TermsListItem {
+  acf_fc_layout: string;
+  terms_title: string;
+  terms: string;
+}
+
+export interface TermsAndConditionsACF {
+  page_heading?: string;
+  terms_list?: TermsListItem[];
+}
+
+export interface TermsAndConditionsPage {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  content: { rendered: string; protected?: boolean };
+  acf: TermsAndConditionsACF;
+}

@@ -5,6 +5,8 @@ import type {
   OurServicesPage,
   ContactUsPage,
   CareersPage,
+  TermsAndConditionsPage,
+  WPPostRaw,
 } from "@/types/wordpress";
 import { fallbackHomePage } from "./fallback-home";
 
@@ -70,6 +72,132 @@ export async function getCareersPage(): Promise<CareersPage | null> {
     if (!res.ok) return null;
     const data = (await res.json()) as CareersPage[];
     return Array.isArray(data) && data.length > 0 ? data[0] : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function getTermsPage(): Promise<TermsAndConditionsPage | null> {
+  try {
+    const res = await fetch(
+      getApiUrl("/pages?slug=terms-and-conditions&acf_format=standard"),
+      { next: { revalidate: 60 } },
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as TermsAndConditionsPage[];
+    return Array.isArray(data) && data.length > 0 ? data[0] : null;
+  } catch {
+    return null;
+  }
+}
+
+export interface BlogPostItem {
+  id: number;
+  slug: string;
+  title: string;
+  link: string;
+  date: string;
+  dateFormatted: string;
+  excerpt: string;
+  shortDescription: string;
+  readTime: string;
+  featuredImageUrl: string | undefined;
+}
+
+export interface BlogPostSingle {
+  id: number;
+  slug: string;
+  title: string;
+  link: string;
+  date: string;
+  dateFormatted: string;
+  readTime: string;
+  featuredImageUrl: string | undefined;
+  content: string;
+}
+
+export async function getPosts(): Promise<BlogPostItem[]> {
+  try {
+    const res = await fetch(
+      getApiUrl("/posts?acf_format=standard&_embed&per_page=20"),
+      { next: { revalidate: 60 } },
+    );
+    if (!res.ok) return [];
+    const data = (await res.json()) as WPPostRaw[];
+    if (!Array.isArray(data)) return [];
+    return data.map((post) => {
+      const media = post._embedded?.["wp:featuredmedia"]?.[0];
+      const shortDesc =
+        post.acf?.short_description?.trim() ||
+        stripHtml(post.excerpt?.rendered ?? "").slice(0, 200);
+      const readTime = post.acf?.how_many_minutes_to_read?.trim() || "— Min Read";
+      return {
+        id: post.id,
+        slug: post.slug ?? String(post.id),
+        title: stripHtml(post.title?.rendered ?? ""),
+        link: post.link ?? "#",
+        date: post.date,
+        dateFormatted: formatPostDate(post.date),
+        excerpt: stripHtml(post.excerpt?.rendered ?? ""),
+        shortDescription: shortDesc,
+        readTime,
+        featuredImageUrl: media?.source_url,
+      };
+    });
+  } catch {
+    return [];
+  }
+}
+
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/g, "").replace(/&hellip;|&nbsp;/g, " ").trim();
+}
+
+function formatPostDate(iso: string): string {
+  try {
+    const d = new Date(iso);
+    const day = d.getDate();
+    const suffix =
+      day === 1 || day === 21 || day === 31
+        ? "st"
+        : day === 2 || day === 22
+          ? "nd"
+          : day === 3 || day === 23
+            ? "rd"
+            : "th";
+    const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December",
+    ];
+    return `${day}${suffix} ${months[d.getMonth()]}, ${d.getFullYear()}`;
+  } catch {
+    return iso;
+  }
+}
+
+export async function getPostBySlug(slug: string): Promise<BlogPostSingle | null> {
+  try {
+    const res = await fetch(
+      getApiUrl(`/posts?slug=${encodeURIComponent(slug)}&acf_format=standard&_embed`),
+      { next: { revalidate: 60 } },
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as WPPostRaw[];
+    const post = Array.isArray(data) && data.length > 0 ? data[0] : null;
+    if (!post) return null;
+    const media = post._embedded?.["wp:featuredmedia"]?.[0];
+    const readTime = post.acf?.how_many_minutes_to_read?.trim() || "— Min Read";
+    return {
+      id: post.id,
+      slug: post.slug ?? String(post.id),
+      title: stripHtml(post.title?.rendered ?? ""),
+      link: post.link ?? "#",
+      date: post.date,
+      dateFormatted: formatPostDate(post.date),
+      readTime,
+      featuredImageUrl: media?.source_url,
+      content: post.content?.rendered ?? "",
+    };
   } catch {
     return null;
   }

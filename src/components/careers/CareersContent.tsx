@@ -142,16 +142,34 @@ export function CareersContent({
           >
             {heading}
           </h1>
-          {description && (
-            <p
-              className={`mt-4 font-normal transition-opacity duration-500 ease-out ${
-                active ? "text-white" : "text-white/30"
-              }`}
-              style={{ fontSize: "12px" }}
-            >
-              {description}
-            </p>
-          )}
+          {description && (() => {
+            const paragraphs = description.split(/\n\n+/).filter(Boolean);
+            const [first, ...rest] = paragraphs;
+            return (
+              <div className="mt-4">
+                {first && (
+                  <p
+                    className={`font-normal transition-opacity duration-500 ease-out whitespace-pre-line ${
+                      active ? "text-white" : "text-white/30"
+                    }`}
+                    style={{ fontSize: "12px" }}
+                  >
+                    {first}
+                  </p>
+                )}
+                {rest.length > 0 && (
+                  <p
+                    className={`overflow-hidden font-normal whitespace-pre-line text-white transition-all duration-500 ease-out ${
+                      active ? "mt-2 max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                    }`}
+                    style={{ fontSize: "12px" }}
+                  >
+                    {rest.join("\n\n")}
+                  </p>
+                )}
+              </div>
+            );
+          })()}
         </div>
       </section>
 
