@@ -107,7 +107,7 @@ export default async function OurServicesPage() {
 
       {/* Floating CTA at bottom, same behaviour as home page */}
       <Link
-        href="#estimate"
+        href="/book-a-cleaning"
         className="fixed left-1/2 z-[9999] flex h-12 w-[224px] -translate-x-1/2 items-center justify-center rounded-full bg-[#FFDA00] shadow-xl drop-shadow-[0_6px_16px_rgba(0,0,0,0.45)] transition hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-[#FFDA00] focus:ring-offset-2 focus:ring-offset-[#297476]"
         style={{
           minWidth: "224px",

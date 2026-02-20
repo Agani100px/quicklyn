@@ -51,7 +51,7 @@ export default async function OurMissionPage() {
     bgImage ||
     "https://placehold.co/1200x600/256d6e/ffffff?text=Page+background+image";
   const headerLogoUrl = header?.acf?.header_logo?.url;
-  const estimateUrl = homePage?.acf?.estimate_button_link?.url || "/#estimate";
+  const estimateUrl = "/book-a-cleaning";
   const estimateText =
     homePage?.acf?.estimate_button_text?.trim() || "Get An Estimate";
   const missionHeading = page.acf.sub_heading?.trim() || "Our Mission";

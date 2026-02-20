@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type React from "react";
 import type { WPTestimonial } from "@/lib/wordpress";
 
@@ -41,6 +41,7 @@ export function TestimonialsSection({ testimonials, transparentBackground }: Tes
   const isDraggingRef = useRef(false);
   const dragStartXRef = useRef(0);
   const touchStartXRef = useRef(0);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   const goPrev = useCallback(() => {
     setCurrentIndex((i) => (i <= 0 ? count - 1 : i - 1));
@@ -90,6 +91,9 @@ export function TestimonialsSection({ testimonials, transparentBackground }: Tes
     if (!isDraggingRef.current || event.touches.length !== 1) return;
     const deltaX = event.touches[0].clientX - touchStartXRef.current;
     const threshold = 20;
+    if (Math.abs(deltaX) > 10) {
+      event.preventDefault();
+    }
     if (deltaX > threshold) {
       isDraggingRef.current = false;
       goPrev();
@@ -103,6 +107,20 @@ export function TestimonialsSection({ testimonials, transparentBackground }: Tes
     isDraggingRef.current = false;
   };
 
+  useEffect(() => {
+    const el = carouselRef.current;
+    if (!el) return;
+    const onTouchMove = (e: TouchEvent) => {
+      if (!isDraggingRef.current || e.touches.length !== 1) return;
+      const deltaX = e.touches[0].clientX - touchStartXRef.current;
+      if (Math.abs(deltaX) > 15) {
+        e.preventDefault();
+      }
+    };
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    return () => el.removeEventListener("touchmove", onTouchMove);
+  }, []);
+
   if (!count) return null;
 
   return (
@@ -115,16 +133,17 @@ export function TestimonialsSection({ testimonials, transparentBackground }: Tes
         {/* Full-width carousel: no side gaps */}
         <div className="-ml-[calc((100vw-100%)/2)] w-screen">
           <div
+            ref={carouselRef}
             className="relative mx-auto h-[340px] w-full overflow-hidden cursor-grab"
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerLeave={handlePointerUp}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
-          style={{ touchAction: "pan-y" }}
-        >
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerLeave={handlePointerUp}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            style={{ touchAction: "none" }}
+          >
           {testimonials.map((item, index) => {
             let offset = (index - currentIndex + count) % count;
             if (offset > count / 2) offset -= count;

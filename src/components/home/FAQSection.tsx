@@ -127,7 +127,7 @@ export function FAQSection({ faqs }: FAQSectionProps) {
             Reach Out Anytime, We&apos;re Ready To Assist!
           </p>
           <Link
-            href="/contact"
+            href="/contact-us"
             className="mt-4 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-white underline underline-offset-2 hover:text-white/90"
           >
             Contact Us

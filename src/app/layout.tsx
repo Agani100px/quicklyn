@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getFooter, getAppLink, getHeader } from "@/lib/wordpress";
+import { getFooter, getAppLink, getHeader, getSocialLinks } from "@/lib/wordpress";
 import { Footer } from "@/components/Footer";
 import { GlobalHeader } from "@/components/GlobalHeader";
 import "./globals.css";
@@ -15,10 +15,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [footer, appLink, header] = await Promise.all([
+  const [footer, appLink, header, socialLinks] = await Promise.all([
     getFooter(),
     getAppLink(),
     getHeader(),
+    getSocialLinks(),
   ]);
 
   return (
@@ -26,7 +27,7 @@ export default async function RootLayout({
       <body className="font-sans antialiased">
         <GlobalHeader header={header} />
         {children}
-        <Footer data={footer} appLink={appLink} />
+        <Footer data={footer} appLink={appLink} socialLinks={socialLinks} />
       </body>
     </html>
   );

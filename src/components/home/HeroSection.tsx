@@ -58,7 +58,7 @@ export function HeroSection({ data, header }: HeroSectionProps) {
   const bgUrl = data.background_image?.url || PLACEHOLDER_IMAGE;
   const appStoreUrl = data.appstore?.url ?? "";
   const googlePlayUrl = data.google_play?.url ?? "";
-  const estimateLink = data.estimate_button_link?.url ?? "#";
+  const estimateLink = "/book-a-cleaning";
   const [isMobile, setIsMobile] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const isLocalImage =

@@ -61,11 +61,12 @@ export default async function BookACleaningPage() {
           <img
             src={backgroundImage}
             alt=""
-            className="fixed inset-0 z-0 h-full w-full object-cover object-top opacity-90"
+            className="fixed inset-0 z-0 h-full w-full object-cover object-top"
             aria-hidden
           />
+          {/* Very light teal tint so white text stays readable; was /25 and dimmed the image */}
           <div
-            className="fixed inset-0 z-0 bg-[#1a5d5f]/25"
+            className="fixed inset-0 z-0 bg-[#1a5d5f]/10"
             aria-hidden
           />
         </>

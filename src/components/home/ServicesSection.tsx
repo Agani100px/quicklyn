@@ -62,6 +62,61 @@ export function ServicesSection({
     track.scrollLeft = dragStartScrollLeftRef.current - deltaX;
   };
 
+  const touchStartXRef = useRef(0);
+  const touchStartScrollLeftRef = useRef(0);
+
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    const track = trackRef.current;
+    if (!track || event.touches.length !== 1) return;
+    isDraggingRef.current = true;
+    touchStartXRef.current = event.touches[0].clientX;
+    touchStartScrollLeftRef.current = track.scrollLeft;
+  };
+
+  const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current || event.touches.length !== 1) return;
+    const track = trackRef.current;
+    if (!track) return;
+    const deltaX = event.touches[0].clientX - touchStartXRef.current;
+    track.scrollLeft = touchStartScrollLeftRef.current - deltaX;
+    event.preventDefault();
+  };
+
+  const handleTouchEnd = () => {
+    isDraggingRef.current = false;
+    const track = trackRef.current;
+    const firstCard = track?.children[0] as HTMLElement | undefined;
+    if (track && firstCard) {
+      const cardWidth = firstCard.offsetWidth;
+      const gap = 20;
+      const approxIndex = track.scrollLeft / (cardWidth + gap);
+      const nearestIndex = Math.max(
+        0,
+        Math.min(services.length - 1, Math.round(approxIndex)),
+      );
+      const target = track.children[nearestIndex] as HTMLElement | undefined;
+      if (target) {
+        target.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+          inline: "center",
+        });
+      }
+      setActiveIndex(nearestIndex);
+    }
+  };
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+    const onTouchMove = (e: TouchEvent) => {
+      if (!isDraggingRef.current || e.touches.length !== 1) return;
+      e.preventDefault();
+    };
+    track.addEventListener("touchmove", onTouchMove, { passive: false });
+    return () => track.removeEventListener("touchmove", onTouchMove);
+  }, []);
+
   const endDrag = (event: React.PointerEvent<HTMLDivElement>) => {
     const track = trackRef.current;
     if (track) {
@@ -153,7 +208,8 @@ export function ServicesSection({
           style={{
             scrollSnapType: "x mandatory",
             scrollSnapStop: "always",
-            touchAction: "pan-y",
+            touchAction: "pan-x pan-y",
+            WebkitOverflowScrolling: "touch",
             columnGap: "20px", // 20px gap between cards
           }}
           onScroll={handleScroll}
@@ -161,6 +217,9 @@ export function ServicesSection({
           onPointerMove={handlePointerMove}
           onPointerUp={endDrag}
           onPointerLeave={endDrag}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
           {services.map((service, index) => (
             <article
@@ -236,7 +295,7 @@ export function ServicesSection({
 
             {/* Learn more text + arrow, aligned right */}
             <Link
-              href={services[0]?.acf?.link?.url || "#"}
+              href="/our-services"
               className="flex items-center gap-2 text-base font-medium text-white"
             >
               <span>Learn more</span>

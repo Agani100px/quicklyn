@@ -485,6 +485,29 @@ export async function getFooter(): Promise<WPFooter | null> {
   }
 }
 
+export interface WPSocialLink {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: {
+    social_media_name?: string;
+    social_media_link?: WPLink;
+  };
+}
+
+export async function getSocialLinks(): Promise<WPSocialLink[]> {
+  try {
+    const res = await fetch(getApiUrl("/social-links?acf_format=standard"), {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return [];
+    const data = (await res.json()) as WPSocialLink[];
+    return Array.isArray(data) ? data : [];
+  } catch {
+    return [];
+  }
+}
+
 export interface WPHeaderNavItem {
   acf_fc_layout?: string;
   menu_item_name?: string;
