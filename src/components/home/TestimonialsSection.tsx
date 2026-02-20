@@ -81,43 +81,51 @@ export function TestimonialsSection({ testimonials, transparentBackground }: Tes
     isDraggingRef.current = false;
   };
 
-  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
-    if (event.touches.length !== 1) return;
-    isDraggingRef.current = true;
-    touchStartXRef.current = event.touches[0].clientX;
-  };
-
-  const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
-    if (!isDraggingRef.current || event.touches.length !== 1) return;
-    event.preventDefault();
-  };
-
-  const handleTouchEnd = (event: React.TouchEvent<HTMLDivElement>) => {
-    if (!isDraggingRef.current || !event.changedTouches?.length) {
-      isDraggingRef.current = false;
-      return;
-    }
-    const endX = event.changedTouches[0].clientX;
-    const deltaX = endX - touchStartXRef.current;
-    const threshold = 40;
-    if (deltaX > threshold) {
-      goPrev();
-    } else if (deltaX < -threshold) {
-      goNext();
-    }
-    isDraggingRef.current = false;
-  };
-
+  // Native touch handlers (capture phase) so iOS gets events before scroll and we can preventDefault reliably
   useEffect(() => {
     const el = carouselRef.current;
     if (!el) return;
+
+    const onTouchStart = (e: TouchEvent) => {
+      if (e.touches.length !== 1) return;
+      isDraggingRef.current = true;
+      touchStartXRef.current = e.touches[0].clientX;
+    };
+
     const onTouchMove = (e: TouchEvent) => {
       if (!isDraggingRef.current || e.touches.length !== 1) return;
       e.preventDefault();
     };
-    el.addEventListener("touchmove", onTouchMove, { passive: false, capture: true });
-    return () => el.removeEventListener("touchmove", onTouchMove, { capture: true });
-  }, []);
+
+    const onTouchEnd = (e: TouchEvent) => {
+      if (!isDraggingRef.current || !e.changedTouches?.length) {
+        isDraggingRef.current = false;
+        return;
+      }
+      const endX = e.changedTouches[0].clientX;
+      const deltaX = endX - touchStartXRef.current;
+      const threshold = 40;
+      if (deltaX > threshold) {
+        goPrev();
+      } else if (deltaX < -threshold) {
+        goNext();
+      }
+      isDraggingRef.current = false;
+    };
+
+    const opts: AddEventListenerOptions = { capture: true, passive: false };
+    el.addEventListener("touchstart", onTouchStart, opts);
+    el.addEventListener("touchmove", onTouchMove, opts);
+    el.addEventListener("touchend", onTouchEnd, opts);
+    el.addEventListener("touchcancel", onTouchEnd, opts);
+
+    return () => {
+      el.removeEventListener("touchstart", onTouchStart, { capture: true });
+      el.removeEventListener("touchmove", onTouchMove, { capture: true });
+      el.removeEventListener("touchend", onTouchEnd, { capture: true });
+      el.removeEventListener("touchcancel", onTouchEnd, { capture: true });
+    };
+  }, [goPrev, goNext]);
 
   if (!count) return null;
 
@@ -132,15 +140,17 @@ export function TestimonialsSection({ testimonials, transparentBackground }: Tes
         <div className="-ml-[calc((100vw-100%)/2)] w-screen">
           <div
             ref={carouselRef}
-            className="relative mx-auto h-[340px] w-full overflow-hidden cursor-grab"
+            className="relative mx-auto h-[340px] w-full overflow-hidden cursor-grab touch-none select-none"
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerLeave={handlePointerUp}
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
-            style={{ touchAction: "none" }}
+            style={{
+              touchAction: "none",
+              WebkitTouchCallout: "none",
+              WebkitUserSelect: "none",
+              userSelect: "none",
+            }}
           >
           {testimonials.map((item, index) => {
             let offset = (index - currentIndex + count) % count;
@@ -158,7 +168,7 @@ export function TestimonialsSection({ testimonials, transparentBackground }: Tes
             return (
               <div
                 key={item.id}
-                className="absolute left-1/2 top-1/2 w-[70%] max-w-[280px] rounded-[32px] border border-[#89b0b1] bg-[#1a5d5f] px-6 py-6 shadow-lg transition-all duration-300 ease-out"
+                className="absolute left-1/2 top-1/2 w-[70%] max-w-[280px] touch-none rounded-[32px] border border-[#89b0b1] bg-[#1a5d5f] px-6 py-6 shadow-lg transition-all duration-300 ease-out"
                 style={{
                   transform: `translate(-50%, -50%) translateX(${translateX}px) scale(${scale}) rotate(${rotate}deg)`,
                   opacity,
