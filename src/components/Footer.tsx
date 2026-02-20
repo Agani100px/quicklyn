@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { WPFooter, WPAppLink } from "@/lib/wordpress";
+import { mapWordPressUrlToNextPath } from "@/lib/wordpress";
 
 interface FooterProps {
   data: WPFooter | null;
@@ -94,30 +95,32 @@ export function Footer({ data, appLink }: FooterProps) {
         {/* Two columns of navigation: 60% / 40% */}
         <div className="mb-10 grid gap-x-8 gap-y-1" style={{ gridTemplateColumns: "60% 40%" }}>
           <nav className="flex flex-col gap-2" aria-label="Footer navigation">
-            {leftNav.map((item) => (
-              <Link
-                key={item.menu_name}
-                href={item.page_link?.url || "#"}
-                target={item.page_link?.target || "_self"}
-                rel={item.page_link?.target === "_blank" ? "noopener noreferrer" : undefined}
-                className="text-[13px] text-white/90 transition hover:text-white"
-              >
-                {item.menu_name}
-              </Link>
-            ))}
+            {leftNav.map((item) => {
+              const href = mapWordPressUrlToNextPath(item.page_link?.url);
+              return (
+                <Link
+                  key={item.menu_name}
+                  href={href}
+                  className="text-[13px] text-white/90 transition hover:text-white"
+                >
+                  {item.menu_name}
+                </Link>
+              );
+            })}
           </nav>
           <nav className="flex flex-col gap-2" aria-label="Footer navigation secondary">
-            {rightNav.map((item) => (
-              <Link
-                key={item.menu_name}
-                href={item.page_link?.url || "#"}
-                target={item.page_link?.target || "_self"}
-                rel={item.page_link?.target === "_blank" ? "noopener noreferrer" : undefined}
-                className="text-[13px] text-white/90 transition hover:text-white"
-              >
-                {item.menu_name}
-              </Link>
-            ))}
+            {rightNav.map((item) => {
+              const href = mapWordPressUrlToNextPath(item.page_link?.url);
+              return (
+                <Link
+                  key={item.menu_name}
+                  href={href}
+                  className="text-[13px] text-white/90 transition hover:text-white"
+                >
+                  {item.menu_name}
+                </Link>
+              );
+            })}
           </nav>
         </div>
 
