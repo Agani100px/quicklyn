@@ -106,3 +106,20 @@ export interface ContactUsPage {
   content: { rendered: string; protected?: boolean };
   acf: ContactUsACF;
 }
+
+export interface CareersACF {
+  /** API typo: haeding */
+  haeding?: string;
+  description?: string;
+  image_1?: WPImage;
+  image_2?: WPImage;
+  image_3?: WPImage;
+}
+
+export interface CareersPage {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  content: { rendered: string; protected?: boolean };
+  acf: CareersACF;
+}

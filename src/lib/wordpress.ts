@@ -4,6 +4,7 @@ import type {
   HomePageACF,
   OurServicesPage,
   ContactUsPage,
+  CareersPage,
 } from "@/types/wordpress";
 import { fallbackHomePage } from "./fallback-home";
 
@@ -54,6 +55,20 @@ export async function getContactUsPage(): Promise<ContactUsPage | null> {
     );
     if (!res.ok) return null;
     const data = (await res.json()) as ContactUsPage[];
+    return Array.isArray(data) && data.length > 0 ? data[0] : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function getCareersPage(): Promise<CareersPage | null> {
+  try {
+    const res = await fetch(
+      getApiUrl("/pages?slug=careers&acf_format=standard"),
+      { next: { revalidate: 60 } },
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as CareersPage[];
     return Array.isArray(data) && data.length > 0 ? data[0] : null;
   } catch {
     return null;
