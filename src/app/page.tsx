@@ -12,7 +12,7 @@ import { ServicesSection } from "@/components/home/ServicesSection";
 import { ServiceAreasSection } from "@/components/home/ServiceAreasSection";
 import { TestimonialsSection } from "@/components/home/TestimonialsSection";
 import { FAQSection } from "@/components/home/FAQSection";
-import { AppDownloadSection } from "@/components/home/AppDownloadSection";
+import { HomeAppDownloadSection } from "@/components/home/HomeAppDownloadSection";
 
 export default async function HomePage() {
   const [page, services, testimonials, faqs, appLink, header] = await Promise.all([
@@ -48,7 +48,7 @@ export default async function HomePage() {
       <ServiceAreasSection data={page.acf} />
       <TestimonialsSection testimonials={testimonials} />
       <FAQSection faqs={faqs} />
-      <AppDownloadSection data={appLink} />
+      <HomeAppDownloadSection data={appLink} />
       {/* Global floating CTA button above all sections */}
       <Link
         href={page.acf.estimate_button_link?.url || "#"}

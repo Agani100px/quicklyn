@@ -22,21 +22,14 @@ export default async function ContactUsPage() {
   const bgImage = page.acf.background_image?.url;
 
   return (
-    <main className="relative min-h-screen text-white">
-      {/* Background image from endpoint — CSS background so it always loads (avoids Next Image domain/encoding issues) */}
+    <main className="relative min-h-screen overflow-hidden bg-[#2a7a7c] text-white">
+      {/* Background image from ACF — use img so it always loads and is visible */}
       {bgImage ? (
         <>
-          <div
-            className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage: `url(${encodeURI(bgImage)})`,
-            }}
-            role="img"
-            aria-hidden
-          />
-          <div
-            className="absolute inset-0 z-0"
-            style={{ backgroundColor: "rgba(42, 122, 124, 0.12)" }}
+          <img
+            src={bgImage}
+            alt=""
+            className="absolute inset-0 z-0 h-full w-full object-cover object-center"
             aria-hidden
           />
         </>

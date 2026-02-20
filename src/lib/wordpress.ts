@@ -245,6 +245,7 @@ export interface WPAppLink {
     booking_link?: { title: string; url: string; target: string };
     description?: string;
     background_image?: WPImage;
+    back_image?: WPImage;
   };
 }
 
