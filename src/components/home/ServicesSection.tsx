@@ -9,6 +9,7 @@ import type { WPService } from "@/lib/wordpress";
 
 interface ServicesSectionProps {
   background?: WPImage;
+  backgroundDesktop?: WPImage;
   counters?: CounterItem[];
   services: WPService[];
   sectionHeading?: string;
@@ -17,12 +18,47 @@ interface ServicesSectionProps {
 
 export function ServicesSection({
   background,
+  backgroundDesktop,
   counters = [],
   services,
   sectionHeading,
   whyList = [],
 }: ServicesSectionProps) {
   const bgUrl = background?.url;
+  const bgDesktopUrl = backgroundDesktop?.url || bgUrl;
+  const isSignatureService = (service: WPService) => {
+    const normalizedId = String(service.acf?.id || service.slug || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "");
+    const titleText = (service.acf?.service_heading || service.title?.rendered || "").toLowerCase();
+    return normalizedId.includes("signaturepro") || titleText.includes("signature");
+  };
+  const findServiceByKeywords = (keywords: string[]) =>
+    services.find((service) => {
+      const text = (
+        `${service.acf?.service_heading || ""} ${service.title?.rendered || ""}`
+      ).toLowerCase();
+      return keywords.every((kw) => text.includes(kw));
+    });
+  const orderedDesktopServices = (() => {
+    const preferred = [
+      findServiceByKeywords(["deep"]),
+      findServiceByKeywords(["apartment"]),
+      findServiceByKeywords(["move"]),
+      findServiceByKeywords(["airbnb"]),
+      findServiceByKeywords(["signature"]),
+    ].filter(Boolean) as WPService[];
+    const used = new Set(preferred.map((s) => s.id));
+    const fill = services.filter((s) => !used.has(s.id)).slice(0, Math.max(0, 5 - preferred.length));
+    return [...preferred, ...fill].slice(0, 5);
+  })();
+  const desktopCardSlots = [
+    "leftTop",
+    "topCenter",
+    "rightTop",
+    "leftBottom",
+    "rightBottom",
+  ] as const;
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -184,29 +220,43 @@ export function ServicesSection({
   }, [snapToNearest]);
 
   return (
-    <section className="relative z-20 -mt-[60px] w-full overflow-hidden bg-transparent pb-16 pt-[100px]">
+    <section className="relative z-20 -mt-[60px] w-full overflow-hidden bg-transparent pb-16 pt-[100px] md:-mt-[90px] md:pt-[120px]">
       {/* Background texture for section 2 */}
-      {bgUrl && (
+      {(bgUrl || bgDesktopUrl) && (
         <div className="pointer-events-none absolute inset-0 z-0">
-          <Image
-            src={bgUrl}
-            alt=""
-            fill
-            className="object-cover"
-            style={{ objectPosition: "center top" }}
-            sizes="100vw"
-            priority={false}
-            unoptimized={
-            bgUrl.includes("quicklyn-headless.local") ||
-            bgUrl.includes("quick.rootholdings")
-          }
-          />
+          {bgUrl && (
+            <Image
+              src={bgUrl}
+              alt=""
+              fill
+              className="object-cover md:hidden"
+              style={{ objectPosition: "center top" }}
+              sizes="100vw"
+              priority={false}
+              unoptimized={
+                bgUrl.includes("quicklyn-headless.local") ||
+                bgUrl.includes("quick.rootholdings")
+              }
+            />
+          )}
+          {bgDesktopUrl && (
+            <div
+              className="absolute inset-0 hidden md:block"
+              style={{
+                backgroundImage: `url(${bgDesktopUrl})`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center top",
+                backgroundSize: "cover",
+              }}
+              aria-hidden
+            />
+          )}
         </div>
       )}
 
       <div className="relative z-10 mx-auto flex w-full flex-col items-center px-6 text-center">
-        {/* Counters stacked vertically with line between rows */}
-        <div className="mx-auto mb-10 flex w-full max-w-[240px] flex-col gap-4 px-0 text-left">
+        {/* Counters - mobile unchanged */}
+        <div className="mx-auto mb-10 flex w-full max-w-[240px] flex-col gap-4 px-0 text-left md:hidden">
           {(counters ?? []).map((item, index) => (
             <div key={`${item.counter_text}-${index}`} className="w-full">
               {index > 0 && (
@@ -214,13 +264,13 @@ export function ServicesSection({
               )}
               <div className="hero-text-shadow flex w-full items-center justify-between gap-4">
                 <div
-                  className="flex items-baseline gap-1 text-[52px] md:text-[64px] leading-none text-white"
+                  className="flex items-baseline gap-1 text-[52px] leading-none text-white"
                   style={{ fontWeight: 200 }}
                 >
                   <span style={{ fontWeight: 200 }}>{item.counter_number}</span>
                   <span style={{ fontWeight: 200 }}>{item.counter_suffix}</span>
                 </div>
-                <div className="max-w-[55%] text-left text-[18px] md:text-[22px] font-normal leading-snug text-white">
+                <div className="max-w-[55%] text-left text-[18px] font-normal leading-snug text-white">
                   {item.counter_text}
                 </div>
               </div>
@@ -228,16 +278,156 @@ export function ServicesSection({
           ))}
         </div>
 
-        {/* Section heading (two lines: Our / Services) */}
-        <h2 className="mt-10 mb-[30px] text-[68px] font-medium leading-[58px] text-white">
+        {/* Counters - desktop/tablet reference style */}
+        {(counters ?? []).length > 0 && (
+          <div className="mb-10 hidden w-full max-w-[800px] items-center justify-center md:flex lg:mb-12">
+            <div className="flex w-full items-stretch justify-center rounded-none px-2 text-left">
+              {(counters ?? []).map((item, index) => (
+                <div
+                  key={`desktop-${item.counter_text}-${index}`}
+                  className="flex min-w-0 flex-1 items-center justify-center px-6 py-1 lg:px-8"
+                >
+                  {index > 0 && (
+                    <div className="mr-6 h-[52px] w-px bg-white/45 lg:mr-8 lg:h-[64px]" aria-hidden />
+                  )}
+                  <div className="hero-text-shadow flex min-w-0 items-center gap-4 lg:gap-5">
+                    <div
+                      className="flex flex-shrink-0 items-baseline leading-none text-white"
+                      style={{ fontWeight: 200 }}
+                    >
+                      <span className="text-[54px] tracking-[-0.03em] lg:text-[72px]">
+                        {item.counter_number}
+                      </span>
+                      <span className="ml-1 text-[40px] tracking-[-0.02em] lg:text-[54px]">
+                        {item.counter_suffix}
+                      </span>
+                    </div>
+                    <div className="min-w-0 max-w-[160px] text-left text-[16px] font-normal leading-tight text-white/95 lg:max-w-[210px] lg:text-[20px]">
+                      {item.counter_text}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Section heading (mobile only) */}
+        <h2 className="mt-10 mb-[30px] text-[68px] font-medium leading-[58px] text-white md:hidden">
           <span className="block">Our</span>
           <span className="block">Services</span>
         </h2>
 
+        {/* Desktop / tablet services layout */}
+        <div className="relative hidden w-full max-w-[1100px] md:block">
+          <div className="relative mx-auto h-[420px] w-full lg:h-[520px]">
+            <div className="pointer-events-none absolute inset-0 z-0 flex flex-col items-center justify-center">
+              <span className="hero-text-shadow block text-center text-[120px] font-medium leading-[0.82] tracking-[-0.05em] text-white/90 lg:text-[180px]">
+                Our
+              </span>
+              <span className="hero-text-shadow -mt-2 block text-center text-[120px] font-medium leading-[0.82] tracking-[-0.05em] text-white/90 lg:-mt-4 lg:text-[180px]">
+                Services
+              </span>
+            </div>
+
+            {orderedDesktopServices.map((service, idx) => {
+              const slot = desktopCardSlots[idx];
+              const title = service.acf?.service_heading || service.title?.rendered || "Service";
+              const desc = service.acf?.service_description || "";
+              const isSignature = isSignatureService(service);
+              const cardPos =
+                slot === "leftTop"
+                  ? "left-[2%] top-[14%] w-[22%] min-w-[170px] max-w-[240px] lg:left-[4%] lg:top-[13%] lg:max-w-[260px]"
+                  : slot === "topCenter"
+                    ? "left-1/2 top-[7%] w-[38%] min-w-[260px] max-w-[420px] -translate-x-1/2 lg:top-[6%] lg:max-w-[440px]"
+                    : slot === "rightTop"
+                      ? "right-[2%] top-[21%] w-[28%] min-w-[220px] max-w-[320px] lg:right-[5%] lg:top-[20%] lg:max-w-[340px]"
+                      : slot === "leftBottom"
+                        ? "left-[6%] top-[62%] w-[32%] min-w-[240px] max-w-[360px] lg:left-[8%] lg:top-[62%] lg:max-w-[380px]"
+                        : "right-[14%] top-[72%] w-[28%] min-w-[220px] max-w-[300px] lg:right-[12%] lg:top-[72%] lg:max-w-[320px]";
+
+              return (
+                <article
+                  key={`desktop-card-${service.id}`}
+                  className={`absolute z-10 rounded-[22px] bg-[#175c5e]/95 px-5 py-4 text-left shadow-[0_8px_18px_rgba(0,0,0,0.18)] backdrop-blur-[2px] lg:rounded-[26px] lg:px-7 lg:py-5 ${cardPos}`}
+                >
+                  <Link
+                    href={`/our-services#service-${service.slug}`}
+                    className={`absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full text-[#1B5B5D] transition hover:opacity-95 lg:h-7 lg:w-7 ${
+                      isSignature ? "bg-[#FFDA00]" : "bg-white/90"
+                    }`}
+                    aria-label={`Open ${title}`}
+                  >
+                    <svg
+                      aria-hidden
+                      viewBox="0 0 24 24"
+                      className="h-4 w-4 lg:h-4 lg:w-4"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M8 16L16 8" />
+                      <path d="M9 8H16V15" />
+                    </svg>
+                  </Link>
+
+                  <h3
+                    className={`pr-8 text-[20px] font-medium leading-[1.05] tracking-[-0.02em] text-white lg:text-[28px] ${
+                      isSignature ? "text-[#FFDA00]" : ""
+                    }`}
+                  >
+                    <span>{title}</span>
+                    {isSignature && (
+                      <span className="ml-1 inline-flex align-middle text-[#FFDA00]" aria-hidden>
+                        <svg
+                          viewBox="0 0 24 24"
+                          className="h-4 w-4 lg:h-5 lg:w-5"
+                          fill="currentColor"
+                        >
+                          <path d="M12 1l1.8 5.2L19 8l-5.2 1.8L12 15l-1.8-5.2L5 8l5.2-1.8L12 1z" />
+                          <path d="M19 13l.9 2.6 2.6.9-2.6.9L19 20l-.9-2.6-2.6-.9 2.6-.9L19 13z" />
+                        </svg>
+                      </span>
+                    )}
+                  </h3>
+
+                  <p className="mt-3 line-clamp-3 text-[12px] leading-relaxed text-white/90 lg:mt-4 lg:text-[14px]">
+                    {desc}
+                  </p>
+                </article>
+              );
+            })}
+
+            <div className="absolute bottom-[14%] left-1/2 z-20 -translate-x-1/2 lg:bottom-[16%]">
+              <Link
+                href="/our-services"
+                className="flex items-center gap-2 text-[18px] font-medium text-white lg:text-[22px]"
+              >
+                <span>Learn More</span>
+                <svg
+                  aria-hidden
+                  viewBox="0 0 24 24"
+                  className="h-5 w-5 lg:h-6 lg:w-6"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M8 16L16 8" />
+                  <path d="M9 8H16V15" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+        </div>
+
         {/* Services cards carousel — viewport + transform (no native scroll) so iOS swipe works with document-level touch */}
         <div
           ref={viewportRef}
-          className="mt-[10px] overflow-hidden cursor-grab"
+          className="mt-[10px] w-full overflow-hidden cursor-grab md:hidden"
           style={{ touchAction: "pan-y" }}
         >
           <div
@@ -285,8 +475,20 @@ export function ServicesSection({
               </Link>
 
               <div className="mb-3 pr-10">
-                <h3 className="text-[18px] font-semibold">
-                  {service.acf?.service_heading || service.title.rendered}
+                <h3
+                  className={`text-[18px] font-semibold ${
+                    isSignatureService(service) ? "text-[#FFDA00]" : ""
+                  }`}
+                >
+                  <span>{service.acf?.service_heading || service.title.rendered}</span>
+                  {isSignatureService(service) && (
+                    <span className="ml-1 inline-flex align-middle text-[#FFDA00]" aria-hidden>
+                      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+                        <path d="M12 1l1.8 5.2L19 8l-5.2 1.8L12 15l-1.8-5.2L5 8l5.2-1.8L12 1z" />
+                        <path d="M19 13l.9 2.6 2.6.9-2.6.9L19 20l-.9-2.6-2.6-.9 2.6-.9L19 13z" />
+                      </svg>
+                    </span>
+                  )}
                 </h3>
               </div>
 
@@ -307,7 +509,7 @@ export function ServicesSection({
 
         {/* Carousel bullets + Learn more link */}
         {services.length > 1 && (
-          <div className="mt-4 flex w-full items-center justify-between px-6">
+          <div className="mt-4 flex w-full items-center justify-between px-6 md:hidden">
             <div className="flex items-center gap-2">
               {services.map((_, index) => (
                 <button
@@ -434,4 +636,3 @@ export function ServicesSection({
     </section>
   );
 }
-

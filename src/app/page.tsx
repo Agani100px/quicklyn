@@ -36,10 +36,11 @@ export default async function HomePage() {
   }
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-[#195b5d]">
       <HeroSection data={page.acf} header={header} />
       <ServicesSection
         background={page.acf.section2_background}
+        backgroundDesktop={page.acf.section_2_background_desktop}
         counters={page.acf.counter}
         services={services}
         sectionHeading={page.acf.section_heading}

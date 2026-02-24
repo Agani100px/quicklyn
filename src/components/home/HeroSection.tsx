@@ -64,8 +64,15 @@ export function HeroSection({ data, header }: HeroSectionProps) {
   const isLocalImage =
     bgUrl.includes("quicklyn-headless.local") ||
     bgUrl.includes("quick.rootholdings");
-  const headerLogoUrl = header?.acf?.header_logo?.url;
-  const isLocalLogo = headerLogoUrl?.includes("quicklyn-headless.local");
+  const popImg1 = data.pop_img_1?.url;
+  const popImg2 = data.pop_img_2?.url;
+  const popImg3 = data.pop_img_3?.url;
+  const desktopHeadingParts = (data.section_1_heading || "")
+    .replace(/Premium\s+/i, "Premium\n")
+    .replace(/Services\s+in/i, "Services\nin")
+    .split(/\n+/)
+    .map((part) => part.trim())
+    .filter(Boolean);
   // Detect mobile viewport
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -112,126 +119,253 @@ export function HeroSection({ data, header }: HeroSectionProps) {
   const tealOverlayOpacity = isCollapsed ? 0.4 : 1;
 
   return (
-    <section
-      className="relative min-h-screen w-full overflow-hidden"
-      onClick={handleHeroClick}
-    >
-      {/* Background image */}
-      <div
-        className="absolute inset-0 z-0 origin-center"
-        style={{
-          transform: bgTransform,
-          marginTop: bgMarginTop,
-          transition: "transform 0.45s ease-out, margin-top 0.45s ease-out",
-        }}
+    <>
+      <section
+        className="relative min-h-screen w-full overflow-hidden md:hidden"
+        onClick={handleHeroClick}
       >
-        <Image
-          src={bgUrl}
-          alt=""
-          fill
-          className="object-contain"
-          style={{ objectPosition: "center center" }}
-          sizes="100vw"
-          priority
-          unoptimized={isLocalImage}
-        />
-      </div>
-
-      {/* Heading */}
-      <div
-        className="absolute left-0 right-0 flex justify-center px-6 text-center"
-        style={{
-          top: headingTop,
-          zIndex: 6,
-          transition: "top 0.45s ease-out, color 0.45s ease-out",
-        }}
-      >
-        <h1
-          className="hero-text-shadow max-w-[320px] text-[35px] font-semibold leading-[35px]"
+        {/* Background image */}
+        <div
+          className="absolute inset-0 z-0 origin-center"
           style={{
-            color: headingColor,
-            transition: "color 0.45s ease-out",
+            transform: bgTransform,
+            marginTop: bgMarginTop,
+            transition: "transform 0.45s ease-out, margin-top 0.45s ease-out",
           }}
         >
-          {data.section_1_heading}
-        </h1>
-      </div>
+          <Image
+            src={bgUrl}
+            alt=""
+            fill
+            className="object-contain"
+            style={{ objectPosition: "center center" }}
+            sizes="100vw"
+            priority
+            unoptimized={isLocalImage}
+          />
+        </div>
 
-      {/* Overlay: teal gradient (fades a bit when scrolled/clicked) */}
-      <div
-        className="pointer-events-none absolute inset-0 z-[5]"
-        style={{
-          opacity: tealOverlayOpacity,
-          transition: "opacity 0.45s ease-out",
-          background:
-            "linear-gradient(to bottom, rgba(24, 91, 93, 1) 0%, rgba(24, 91, 93, 0.47) 47%, rgba(24, 91, 93, 0.2) 100%)",
-        }}
-        aria-hidden
-      />
-      {/* Overlay: black fade (always same, no change on scroll) */}
-      <div
-        className="pointer-events-none absolute inset-0 z-[4]"
-        style={{
-          background:
-            "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)",
-        }}
-        aria-hidden
-      />
-
-      {/* Content */}
-      <div
-        className="relative z-10 flex min-h-screen flex-col pt-[100px]"
-        style={{ paddingTop: "calc(100px + env(safe-area-inset-top, 0px))" }}
-      >
-        {/* Main content */}
+        {/* Heading */}
         <div
-          className="flex flex-1 flex-col items-center px-6 pb-0 text-center"
-          style={{ paddingTop: "max(0px, calc(18vh - 120px))" }}
+          className="absolute left-0 right-0 flex justify-center px-6 text-center"
+          style={{
+            top: headingTop,
+            zIndex: 6,
+            transition: "top 0.45s ease-out, color 0.45s ease-out",
+          }}
         >
-          {/* Spacer between (separate) heading layer and badges */}
-          <div className="min-h-[40vh] shrink-0" aria-hidden />
+          <h1
+            className="hero-text-shadow max-w-[320px] text-[35px] font-semibold leading-[35px]"
+            style={{
+              color: headingColor,
+              transition: "color 0.45s ease-out",
+            }}
+          >
+            {data.section_1_heading}
+          </h1>
+        </div>
 
-          {/* Store badges */}
-          <div className="mb-6 mt-8 flex flex-wrap items-center justify-center gap-[14px]">
-            {appStoreUrl && (
-              <Link
-                href="#"
-                className="relative z-[10] block transition hover:opacity-95"
-              >
-                <Image
-                  src={appStoreUrl}
-                  alt="Download on the App Store"
-                  width={122}
-                  height={46}
-                  className="h-[46px] w-auto object-contain"
-                  unoptimized={isLocalImage}
-                />
-              </Link>
-            )}
-            {googlePlayUrl && (
-              <Link
-                href="#"
-                className="relative z-[10] block transition hover:opacity-95"
-              >
-                <Image
-                  src={googlePlayUrl}
-                  alt="GET IT ON Google Play"
-                  width={122}
-                  height={46}
-                  className="h-[46px] w-auto object-contain"
-                  unoptimized={isLocalImage}
-                />
-              </Link>
-            )}
+        {/* Overlay: teal gradient (fades a bit when scrolled/clicked) */}
+        <div
+          className="pointer-events-none absolute inset-0 z-[5]"
+          style={{
+            opacity: tealOverlayOpacity,
+            transition: "opacity 0.45s ease-out",
+            background:
+              "linear-gradient(to bottom, rgba(24, 91, 93, 1) 0%, rgba(24, 91, 93, 0.47) 47%, rgba(24, 91, 93, 0.2) 100%)",
+          }}
+          aria-hidden
+        />
+        {/* Overlay: black fade (always same, no change on scroll) */}
+        <div
+          className="pointer-events-none absolute inset-0 z-[4]"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)",
+          }}
+          aria-hidden
+        />
+
+        {/* Content */}
+        <div
+          className="relative z-10 flex min-h-screen flex-col pt-[100px]"
+          style={{ paddingTop: "calc(100px + env(safe-area-inset-top, 0px))" }}
+        >
+          {/* Main content */}
+          <div
+            className="flex flex-1 flex-col items-center px-6 pb-0 text-center"
+            style={{ paddingTop: "max(0px, calc(18vh - 120px))" }}
+          >
+            {/* Spacer between (separate) heading layer and badges */}
+            <div className="min-h-[40vh] shrink-0" aria-hidden />
+
+            {/* Store badges */}
+            <div className="mb-6 mt-8 flex flex-wrap items-center justify-center gap-[14px]">
+              {appStoreUrl && (
+                <Link
+                  href="#"
+                  className="relative z-[10] block transition hover:opacity-95"
+                >
+                  <Image
+                    src={appStoreUrl}
+                    alt="Download on the App Store"
+                    width={122}
+                    height={46}
+                    className="h-[46px] w-auto object-contain"
+                    unoptimized={isLocalImage}
+                  />
+                </Link>
+              )}
+              {googlePlayUrl && (
+                <Link
+                  href="#"
+                  className="relative z-[10] block transition hover:opacity-95"
+                >
+                  <Image
+                    src={googlePlayUrl}
+                    alt="GET IT ON Google Play"
+                    width={122}
+                    height={46}
+                    className="h-[46px] w-auto object-contain"
+                    unoptimized={isLocalImage}
+                  />
+                </Link>
+              )}
+            </div>
+
+            {/* Description */}
+            <p className="hero-text-shadow relative z-[20] mb-6 max-w-[280px] text-[16px] leading-relaxed text-white/90">
+              {data.section_1_description}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="relative hidden overflow-hidden bg-[#1a5d5f] md:block">
+        <div className="relative min-h-[900px] lg:min-h-[980px]">
+          <Image
+            src={bgUrl}
+            alt=""
+            fill
+            priority
+            className="object-cover object-center md:[transform:translateX(10%)_translateY(-4%)_scaleX(-1)_scale(1.08)]"
+            sizes="100vw"
+            unoptimized={isLocalImage}
+          />
+
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(90deg, rgba(25,91,93,1) 0%, rgba(25,91,93,0) 100%)",
+            }}
+            aria-hidden
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to top, rgba(25,91,93,1) 0%, rgba(25,91,93,0) 45%)",
+            }}
+            aria-hidden
+          />
+
+          <div className="relative z-10 mx-auto flex min-h-[900px] w-full max-w-[1320px] items-center px-8 pb-24 pt-[95px] lg:min-h-[980px] lg:px-8 lg:pt-[112px]">
+            <div className="grid w-full grid-cols-12 items-center gap-6 lg:gap-8">
+              <div className="col-span-6 pr-2 md:-translate-y-6 lg:col-span-6 lg:-translate-y-8">
+                <h1 className="hero-text-shadow max-w-[560px] text-[45px] font-semibold leading-[0.98] tracking-[-0.03em] text-white lg:max-w-[560px] lg:text-[45px] lg:leading-[0.95]">
+                  {desktopHeadingParts.length > 0 ? (
+                    desktopHeadingParts.map((part, index) => (
+                      <span key={`${part}-${index}`} className="block">
+                        {part}
+                      </span>
+                    ))
+                  ) : (
+                    data.section_1_heading
+                  )}
+                </h1>
+
+                <p className="hero-text-shadow mt-6 max-w-[500px] text-[19px] leading-[1.45] text-white/90 lg:mt-7 lg:max-w-[500px] lg:text-[20px]">
+                  {data.section_1_description}
+                </p>
+
+                <div className="mt-8 flex flex-wrap items-center gap-4 lg:mt-10">
+                  {googlePlayUrl && (
+                    <Link href="#" className="transition hover:opacity-95">
+                      <div className="rounded-xl bg-white/90 p-1.5 shadow-[0_10px_18px_rgba(0,0,0,0.18)]">
+                        <Image
+                          src={googlePlayUrl}
+                          alt="Get it on Google Play"
+                          width={180}
+                          height={60}
+                          className="h-[48px] w-auto object-contain lg:h-[52px]"
+                          unoptimized={isLocalImage}
+                        />
+                      </div>
+                    </Link>
+                  )}
+                  {appStoreUrl && (
+                    <Link href="#" className="transition hover:opacity-95">
+                      <div className="rounded-xl bg-white/90 p-1.5 shadow-[0_10px_18px_rgba(0,0,0,0.18)]">
+                        <Image
+                          src={appStoreUrl}
+                          alt="Download on the App Store"
+                          width={180}
+                          height={60}
+                          className="h-[48px] w-auto object-contain lg:h-[52px]"
+                          unoptimized={isLocalImage}
+                        />
+                      </div>
+                    </Link>
+                  )}
+                </div>
+              </div>
+
+              <div className="relative col-span-5 h-[440px] lg:col-span-5 lg:h-[520px]">
+                {popImg2 && (
+                  <div className="absolute right-[16%] top-[18%] z-20 rotate-[6deg] lg:right-[15%] lg:top-[17%]">
+                    <Image
+                      src={popImg2}
+                      alt=""
+                      width={345}
+                      height={172}
+                      className="h-auto w-[180px] lg:w-[235px]"
+                      unoptimized={isLocalImage}
+                    />
+                  </div>
+                )}
+
+                {popImg1 && (
+                  <div className="absolute left-[10%] top-[38%] z-20 -rotate-[11deg] lg:left-[9%] lg:top-[35%]">
+                    <Image
+                      src={popImg1}
+                      alt=""
+                      width={265}
+                      height={300}
+                      className="h-auto w-[170px] lg:w-[215px]"
+                      unoptimized={isLocalImage}
+                    />
+                  </div>
+                )}
+
+                {popImg3 && (
+                  <div className="absolute right-[8%] top-[56%] z-20 rotate-[8deg] lg:right-[8%] lg:top-[54%]">
+                    <Image
+                      src={popImg3}
+                      alt=""
+                      width={298}
+                      height={359}
+                      className="h-auto w-[188px] lg:w-[230px]"
+                      unoptimized={isLocalImage}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
-          {/* Description */}
-          <p className="hero-text-shadow relative z-[20] mb-6 max-w-[280px] text-[16px] leading-relaxed text-white/90">
-            {data.section_1_description}
-          </p>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
-

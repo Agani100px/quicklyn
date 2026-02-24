@@ -81,3 +81,17 @@
   content: "";
   margin-top: 0.5em;
 }
+
+@keyframes desktopPromoMarquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.desktop-promo-marquee {
+  width: max-content;
+  animation: desktopPromoMarquee 28s linear infinite;
+}
