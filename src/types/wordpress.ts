@@ -70,6 +70,10 @@ export interface FeatureListItem {
 export interface OurServicesACF {
   page_heading?: string;
   ["1st_section_background"]?: WPImage;
+  /** Legacy desktop background field (kept for backwards compatibility) */
+  desktop_background_image?: WPImage;
+  /** New desktop background image for 1st section */
+  ["1st_section_desktop_background"]?: WPImage;
   service_sub_heading?: string;
   service_description?: string;
   extras_list?: ExtrasListItem[];

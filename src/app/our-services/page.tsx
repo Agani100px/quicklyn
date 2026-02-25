@@ -27,13 +27,19 @@ export default async function OurServicesPage() {
   const {
     page_heading,
     ["1st_section_background"]: heroImage,
+    ["1st_section_desktop_background"]: desktopHeroImageNew,
+    desktop_background_image: desktopHeroImageLegacy,
     service_sub_heading,
     service_description,
   } = page.acf;
 
   const heroImageUrl = heroImage?.url;
+  const desktopHeroImage = desktopHeroImageNew ?? desktopHeroImageLegacy ?? heroImage;
+  const desktopHeroImageUrl = desktopHeroImage?.url;
   const isLocalHero =
-    !!heroImageUrl && heroImageUrl.includes("quicklyn-headless.local");
+    (!!heroImageUrl && heroImageUrl.includes("quicklyn-headless.local")) ||
+    (!!desktopHeroImageUrl &&
+      desktopHeroImageUrl.includes("quicklyn-headless.local"));
 
   const descriptionParagraphs =
     service_description
@@ -49,8 +55,30 @@ export default async function OurServicesPage() {
         descriptionParagraphs={descriptionParagraphs}
         heroImageUrl={heroImageUrl}
         heroImageAlt={heroImage?.alt || undefined}
+        desktopHeroImageUrl={desktopHeroImageUrl}
+        desktopHeroImageAlt={desktopHeroImage?.alt || undefined}
         isLocalHero={isLocalHero}
       />
+
+      {/* Desktop / tablet intro text section (service sub heading + description) */}
+      {(service_sub_heading || descriptionParagraphs.length > 0) && (
+        <section className="hidden bg-[#2a7a7c] text-white md:block">
+          <div className="mx-auto flex w-full max-w-[1180px] items-start gap-10 px-6 py-20 lg:px-6 lg:py-24">
+            <div className="w-[40%] max-w-[420px] py-6">
+              {service_sub_heading && (
+                <h2 className="text-[40px] leading-[1.1] font-normal text-white">
+                  {service_sub_heading}
+                </h2>
+              )}
+            </div>
+            <div className="w-[60%] max-w-[520px] space-y-4 py-6 text-[16px] leading-[1.7] text-white/90">
+              {descriptionParagraphs.map((p, idx) => (
+                <p key={idx}>{p}</p>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <OurMainServicesSection services={services} />
 
@@ -121,4 +149,3 @@ export default async function OurServicesPage() {
     </main>
   );
 }
-

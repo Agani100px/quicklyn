@@ -57,19 +57,21 @@ function ServiceAccordionItem({
   return (
     <div
       id={`service-${service.slug}`}
-      className="overflow-hidden rounded-3xl border border-[#528e91] bg-[rgba(217,217,217,0.13)] shadow-lg scroll-mt-24"
+      className="overflow-hidden rounded-3xl border border-[#528e91] bg-[rgba(217,217,217,0.13)] shadow-lg scroll-mt-24 md:rounded-none md:border-0 md:bg-transparent md:shadow-none"
     >
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-start justify-between gap-4 p-5 text-left transition hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-[#226d71]"
+        className="flex w-full items-start justify-between gap-4 px-5 py-8 md:px-0 md:py-9 text-left transition hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-white/30 focus:ring-offset-2 focus:ring-offset-[#226d71]"
         aria-expanded={isOpen}
         aria-controls={`service-content-${service.id}`}
         id={`service-header-${service.id}`}
       >
-        <div className="min-w-0 flex-1">
+        <div className="min-w-0 flex-1 md:flex md:items-center md:gap-10">
           <h3
-            className={`text-[22px] ${isSigPro ? "font-semibold text-[#ffda00]" : "font-normal text-white"}`}
+            className={`text-[22px] leading-snug md:text-[33px] md:leading-[38px] md:w-[42%] ${
+              isSigPro ? "font-semibold text-[#ffda00]" : "font-normal text-white"
+            }`}
           >
             {heading}
             {isSigPro ? (
@@ -89,18 +91,31 @@ function ServiceAccordionItem({
             ) : null}
           </h3>
           {hasContent(headerDescription) ? (
-            <p className="mt-1 line-clamp-3 text-[12px] font-normal text-white/90">
+            <p className="mt-1 line-clamp-3 text-[12px] font-normal text-white/90 md:mt-0 md:w-[50%] md:text-[16px] md:leading-[27px]">
               {headerDescription}
             </p>
           ) : null}
         </div>
         <span
-          className={`flex h-8 w-8 shrink-0 items-center justify-center transition-transform duration-300 ease-out ${isSigPro ? "text-[#ffda00]" : "text-white/90"}`}
+          className={`flex h-12 w-12 shrink-0 items-center justify-center transition-transform duration-300 ease-out ${
+            isSigPro ? "text-[#ffda00]" : "text-white/90"
+          }`}
           style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
           aria-hidden
         >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M6 9l6 6 6-6" />
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.4"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            {/* Lucide-style ArrowDown */}
+            <path d="M12 5v14" />
+            <path d="M19 12l-7 7-7-7" />
           </svg>
         </span>
       </button>
@@ -251,18 +266,20 @@ export function OurMainServicesSection({ services }: OurMainServicesSectionProps
       className="bg-[#2a7a7c] -mt-8 pt-0 pb-12 md:pb-16"
       aria-labelledby="main-services-heading"
     >
-      <div className="mx-auto max-w-3xl px-4 sm:px-6">
+      {/* Heading aligned with main content width */}
+      <div className="mx-auto w-full max-w-[1180px] px-4 sm:px-6">
         <h2
           id="main-services-heading"
-          className="mb-8 text-center text-white"
+          className="mb-14 text-left text-white"
         >
-          <span className="block text-[32px] font-normal leading-tight">
-            Our Main
-          </span>
-          <span className="block text-[57px] font-semibold uppercase leading-tight">
-            Services
+          <span className="block text-[48px] font-semibold leading-[1.05] md:text-[110px] md:leading-[1]">
+            Our Main Services
           </span>
         </h2>
+      </div>
+
+      {/* Mobile accordion: existing boxed layout */}
+      <div className="mx-auto mt-4 max-w-3xl px-4 sm:px-6 md:hidden">
         <div className="space-y-4">
           {sortedServices.map((service) => (
             <ServiceAccordionItem
@@ -275,6 +292,28 @@ export function OurMainServicesSection({ services }: OurMainServicesSectionProps
             />
           ))}
         </div>
+      </div>
+
+      {/* Desktop / tablet accordion: full-width hover strip with centered content */}
+      <div className="hidden md:block">
+        {sortedServices.map((service) => (
+          <div
+            key={service.id}
+            className="transition-colors duration-200 hover:bg-[rgba(0,0,0,0.14)]"
+          >
+            <div className="mx-auto w-full max-w-[1180px] px-6">
+              <ServiceAccordionItem
+                service={service}
+                isOpen={openId === service.id}
+                onToggle={() =>
+                  setOpenId((prev) =>
+                    prev === service.id ? null : service.id,
+                  )
+                }
+              />
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );
