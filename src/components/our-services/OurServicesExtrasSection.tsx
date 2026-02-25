@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import type { ExtrasListItem } from "@/types/wordpress";
 
@@ -55,14 +56,19 @@ export function OurServicesExtrasSection({
     }, 150);
   };
 
+  const firstParagraphRaw = strippedDescription
+    ? strippedDescription.split(/\n\n+/)[0]?.trim() ?? ""
+    : "";
+  const firstParagraph = firstParagraphRaw.replace(/<[^>]+>/g, "").trim();
+
   return (
     <section className="bg-[#2a7a7c] pb-16 pt-10 text-white">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6">
+      {/* Mobile: unchanged layout */}
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 md:hidden">
         <h2 className="mb-6 text-center text-[44px] font-semibold tracking-normal">
           The Extras
         </h2>
 
-        {/* Extras tabs */}
         <div className="mb-8 flex flex-wrap items-center justify-center gap-3">
           {validExtras.map((item, index) => {
             const isActive = index === activeIndex;
@@ -83,7 +89,6 @@ export function OurServicesExtrasSection({
           })}
         </div>
 
-        {/* Active extra content */}
         <article
           className="relative rounded-3xl px-6 py-8 transition-opacity duration-300 ease-out"
           style={{ opacity: isTransitioning ? 0 : 1 }}
@@ -142,7 +147,6 @@ export function OurServicesExtrasSection({
             </button>
           )}
 
-          {/* Bottom navigation arrows (carousel style) */}
           {validExtras.length > 1 && (
             <div className="mt-6 flex items-center justify-center gap-4">
               <button
@@ -188,7 +192,108 @@ export function OurServicesExtrasSection({
           )}
         </article>
       </div>
+
+      {/* Desktop: two-column layout per image */}
+      <div className="mx-auto hidden max-w-[1180px] px-6 md:block">
+        <h2 className="mb-8 text-center text-[96px] font-semibold tracking-normal">
+          The Extras
+        </h2>
+
+        <div className="mb-10 flex flex-wrap items-center justify-center gap-3">
+          {validExtras.map((item, index) => {
+            const isActive = index === activeIndex;
+            return (
+              <button
+                key={`desktop-${item.extras_heading}-${index}`}
+                type="button"
+                onClick={() => goToIndex(index)}
+                className={`border-0 bg-transparent px-4 py-2 text-[27px] capitalize transition-colors duration-200 hover:font-semibold ${
+                  isActive ? "font-semibold text-[#ffda00]" : "text-white/85"
+                }`}
+              >
+                {item.extras_heading}
+              </button>
+            );
+          })}
+        </div>
+
+        <article
+          className="relative grid grid-cols-1 gap-10 pt-[40px] transition-opacity duration-300 ease-out lg:grid-cols-[1fr_1fr]"
+          style={{ opacity: isTransitioning ? 0 : 1 }}
+        >
+          {/* Left: title, icon, intro description */}
+          <div className="flex flex-col">
+            <div className="flex items-start gap-4">
+              <h3 className="text-[36px] font-semibold leading-tight text-white lg:text-[42px]">
+                {extras_heading}
+              </h3>
+              {extras_icon?.url && (
+                <div className="shrink-0">
+                  <Image
+                    src={extras_icon.url}
+                    alt={extras_icon.alt || extras_heading}
+                    width={extras_icon.width || 72}
+                    height={extras_icon.height || 72}
+                    className="h-14 w-14 object-contain lg:h-16 lg:w-16"
+                    unoptimized={extras_icon.url.includes(
+                      "quick.rootholdings.com.mv",
+                    )}
+                  />
+                </div>
+              )}
+            </div>
+            {firstParagraph && (
+              <p className="mt-4 max-w-none text-[14px] leading-[1.6] text-white/90 lg:text-[15px]">
+                {firstParagraph}
+              </p>
+            )}
+          </div>
+
+          {/* Right: Approximate Time + arrows in one row, then full description */}
+          <div className="flex flex-col">
+            <div className="mb-6 flex flex-wrap items-start justify-between gap-4 border-b border-white/25 pb-6">
+              {hasContent(extras_approximate_time) && (
+                <div>
+                  <p className="text-[14px] font-semibold text-white">
+                    Approximate Time:
+                  </p>
+                  <p className="mt-1 text-[14px] text-white/90">
+                    {extras_approximate_time}
+                  </p>
+                </div>
+              )}
+
+              {validExtras.length > 1 && (
+                <div className="flex items-center gap-3 shrink-0">
+                  <button
+                    type="button"
+                    aria-label="Previous extra"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-transparent text-white hover:bg-white/10 transition-colors"
+                    onClick={() => goToIndex(activeIndex - 1)}
+                  >
+                    <ArrowLeft className="h-5 w-5" strokeWidth={2} />
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Next extra"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-transparent text-white hover:bg-white/10 transition-colors"
+                    onClick={() => goToIndex(activeIndex + 1)}
+                  >
+                    <ArrowRight className="h-5 w-5" strokeWidth={2} />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {hasContent(extras_description) && (
+              <div
+                className="max-w-none text-[14px] leading-[1.6] text-white/90 [&_p]:mb-2 [&_ul]:list-disc [&_ul]:ml-5 [&_ul]:mb-3 [&_li]:mb-1 [&_h3]:mb-2 [&_h3]:text-[12px] [&_h3]:font-semibold [&_h3]:uppercase [&_h3]:tracking-wide [&_h3]:text-white"
+                dangerouslySetInnerHTML={{ __html: extras_description! }}
+              />
+            )}
+          </div>
+        </article>
+      </div>
     </section>
   );
 }
-

@@ -7,6 +7,10 @@ import type { WPAppLink } from "@/lib/wordpress";
 
 interface HomeAppDownloadSectionProps {
   data: WPAppLink | null;
+  /** Optional section background color (e.g. "#2a7a7c" for our-services page). Defaults to #226d71. */
+  sectionBackgroundColor?: string;
+  /** When true, removes bottom padding so there is no gap before the footer (e.g. our-services page). */
+  tightBottom?: boolean;
 }
 
 type LottiePlayer = {
@@ -69,7 +73,13 @@ function loadLottiePlayer() {
   return lottieScriptPromise;
 }
 
-export function HomeAppDownloadSection({ data }: HomeAppDownloadSectionProps) {
+const DEFAULT_SECTION_BG = "#226d71";
+
+export function HomeAppDownloadSection({
+  data,
+  sectionBackgroundColor = DEFAULT_SECTION_BG,
+  tightBottom = false,
+}: HomeAppDownloadSectionProps) {
   const lottieMountRef = useRef<HTMLDivElement | null>(null);
   const lottieAnimationRef = useRef<LottieAnimation | null>(null);
   const lottieHideTimeoutRef = useRef<number | null>(null);
@@ -285,7 +295,10 @@ export function HomeAppDownloadSection({ data }: HomeAppDownloadSectionProps) {
   };
 
   return (
-    <section className="relative isolate z-[100] mt-0 w-full overflow-x-hidden overflow-y-visible bg-[#226d71] py-16 md:pt-[7.5rem] lg:pt-[9rem]">
+    <section
+      className={`relative isolate z-[100] mt-0 w-full overflow-x-hidden overflow-y-visible md:pt-[7.5rem] lg:pt-[9rem] ${tightBottom ? "pb-0 pt-16" : "py-16"}`}
+      style={{ backgroundColor: sectionBackgroundColor }}
+    >
       <div className="pointer-events-none absolute inset-0 hidden md:block" aria-hidden>
         <div className="absolute inset-0 opacity-20 [background-image:linear-gradient(120deg,transparent_0%,transparent_22%,rgba(255,255,255,0.05)_22%,rgba(255,255,255,0.05)_34%,transparent_34%,transparent_48%,rgba(255,255,255,0.04)_48%,rgba(255,255,255,0.04)_62%,transparent_62%,transparent_100%)]" />
       </div>
@@ -305,8 +318,7 @@ export function HomeAppDownloadSection({ data }: HomeAppDownloadSectionProps) {
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              background:
-                "linear-gradient(to bottom, transparent 0%, #226d71 100%)",
+              background: `linear-gradient(to bottom, transparent 0%, ${sectionBackgroundColor} 100%)`,
             }}
           />
         </div>
