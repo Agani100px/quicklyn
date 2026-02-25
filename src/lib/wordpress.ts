@@ -426,6 +426,7 @@ export interface WPAppLink {
     discount_code?: string;
     promo_code?: string;
     code?: string;
+    code_only?: string;
     image_01?: WPImage;
     link_01?: { title: string; url: string; target: string };
     image_02?: WPImage;
@@ -471,6 +472,7 @@ export interface WPFooter {
     download_text?: string;
     copyright_and_branding?: string;
     footer_background?: WPImage;
+    footer_background_desktop?: WPImage;
   };
 }
 

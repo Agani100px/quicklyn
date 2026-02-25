@@ -93,222 +93,419 @@ export function Footer({ data, appLink, socialLinks = [] }: FooterProps) {
       (appStoreUrl.includes("quicklyn-headless.local") ||
         appStoreUrl.includes("quick.rootholdings")));
   const footerBgUrl = acf.footer_background?.url;
+  const footerBgDesktopUrl = acf.footer_background_desktop?.url;
+  const footerBgIsLocal =
+    (footerBgUrl &&
+      (footerBgUrl.includes("quicklyn-headless.local") ||
+        footerBgUrl.includes("quick.rootholdings"))) ||
+    (footerBgDesktopUrl &&
+      (footerBgDesktopUrl.includes("quicklyn-headless.local") ||
+        footerBgDesktopUrl.includes("quick.rootholdings")));
 
   return (
     <footer
-      className="relative w-full overflow-hidden  text-white"
-      style={{
-        backgroundColor: footerBgUrl ? undefined : "#0f1419",
-        ...(footerBgUrl && {
-          backgroundImage: `url(${footerBgUrl})`,
-          backgroundPosition: "left top",
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-        }),
-      }}
+      className="relative w-full overflow-hidden text-white"
+      style={{ backgroundColor: "#0f1419" }}
     >
-      <div className="relative z-10 mx-auto max-w-5xl px-6 pb-[100px] pt-[90px]">
-        {/* Logo + description */}
-        <div className="mb-10">
-          {logo && (
-            <Link href="/" className="mb-4 inline-block">
-              <Image
-                src={logo}
-                alt="Quicklyn"
-                width={120}
-                height={28}
-                className="h-7 w-auto object-contain"
-                unoptimized={
-                logo.includes("quicklyn-headless.local") ||
-                logo.includes("quick.rootholdings")
-              }
-              />
-            </Link>
-          )}
-          {description && (
-            <p className="max-w-md text-[12px] leading-relaxed text-white/95">
-              {highlightNewYork(description)}
-            </p>
-          )}
+      <div className="pointer-events-none absolute inset-0 z-0 hidden bg-[#226d71] md:block" aria-hidden />
+      {footerBgUrl && (
+        <div className="pointer-events-none absolute inset-0 z-0 md:hidden" aria-hidden>
+          <Image
+            src={footerBgUrl}
+            alt=""
+            fill
+            className="object-cover object-left-top"
+            sizes="100vw"
+            unoptimized={!!footerBgIsLocal}
+          />
         </div>
-
-        {/* Two columns of navigation: 60% / 40% */}
-        <div className="mb-10 grid gap-x-8 gap-y-1" style={{ gridTemplateColumns: "60% 40%" }}>
-          <nav className="flex flex-col gap-2" aria-label="Footer navigation">
-            {leftNav.map((item) => {
-              const href = mapWordPressUrlToNextPath(item.page_link?.url);
-              return (
-                <Link
-                  key={item.menu_name}
-                  href={href}
-                  className="text-[13px] text-white/90 transition hover:text-white"
-                >
-                  {item.menu_name}
-                </Link>
-              );
-            })}
-          </nav>
-          <nav className="flex flex-col gap-2" aria-label="Footer navigation secondary">
-            {rightNav.map((item) => {
-              const href = mapWordPressUrlToNextPath(item.page_link?.url);
-              return (
-                <Link
-                  key={item.menu_name}
-                  href={href}
-                  className="text-[13px] text-white/90 transition hover:text-white"
-                >
-                  {item.menu_name}
-                </Link>
-              );
-            })}
-          </nav>
+      )}
+      {(footerBgDesktopUrl || footerBgUrl) && (
+        <div className="pointer-events-none absolute inset-0 z-0 hidden md:block" aria-hidden>
+          <Image
+            src={footerBgDesktopUrl || footerBgUrl || ""}
+            alt=""
+            fill
+            className="object-cover object-left-top"
+            sizes="100vw"
+            unoptimized={!!footerBgIsLocal}
+          />
         </div>
+      )}
+      <div className="relative z-10 hidden md:block">
+        <div className="mx-auto flex min-h-[720px] max-w-[1320px] items-center px-10 pb-[70px] pt-[110px] lg:min-h-[820px] lg:px-14 lg:pb-[70px] lg:pt-[130px]">
+          <div className="grid w-full translate-y-8 grid-cols-[260px_1px_minmax(0,1fr)] gap-10 lg:translate-y-10 lg:grid-cols-[300px_1px_minmax(0,1fr)] lg:gap-14">
+            <div className="flex min-h-[360px] flex-col">
+              <div>
+                {logo && (
+                  <Link href="/" className="mb-5 inline-block">
+                    <Image
+                      src={logo}
+                      alt="Quicklyn"
+                      width={140}
+                      height={32}
+                      className="h-8 w-auto object-contain"
+                      unoptimized={
+                        logo.includes("quicklyn-headless.local") ||
+                        logo.includes("quick.rootholdings")
+                      }
+                    />
+                  </Link>
+                )}
+                {description && (
+                  <p className="max-w-[210px] text-[12px] leading-relaxed text-white/90">
+                    {highlightNewYork(description)}
+                  </p>
+                )}
+              </div>
 
-        {/* Contact email & phone (above newsletter) */}
-        {(contactEmail || contactPhone) && (
-          <div className="mb-8 flex flex-col gap-3 text-left">
-            {contactEmail && (
-              <a
-                href={`mailto:${contactEmail}`}
-                className="flex items-center gap-3 text-[13px] text-white/95 transition hover:text-white"
-              >
-                <svg
-                  className="h-5 w-5 shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  aria-hidden
+              <div className="mt-auto pt-12">
+                <p className="mb-3 text-[11px] text-white/75">{subscriptionText}</p>
+                <form
+                  className="flex w-full max-w-[210px] overflow-hidden rounded border border-white/35"
+                  onSubmit={(e) => e.preventDefault()}
+                  data-lpignore="true"
+                  data-form-type="other"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    className="w-[72%] min-w-0 border-0 bg-transparent px-3 py-2 text-[11px] text-white placeholder:text-white/45 focus:outline-none focus:ring-0"
+                    aria-label="Email for newsletter"
+                    autoComplete="off"
+                    data-lpignore="true"
                   />
-                </svg>
-                <span>{contactEmail}</span>
-              </a>
+                  <button
+                    type="submit"
+                    className="w-[28%] shrink-0 border-l border-white/35 bg-white px-2 py-2 text-[9px] font-medium uppercase tracking-wide text-[#141414]"
+                  >
+                    Submit
+                  </button>
+                </form>
+                <p className="mt-7 max-w-[240px] text-[10px] text-white/55">{copyrightText}</p>
+              </div>
+            </div>
+
+            <div className="w-px self-stretch bg-white/20" />
+
+            <div className="flex min-h-[360px] flex-col">
+              <div className="grid grid-cols-3 gap-x-10 gap-y-3 pt-4 lg:gap-x-14">
+                <nav className="flex flex-col gap-3" aria-label="Footer navigation">
+                  {leftNav.map((item) => {
+                    const href = mapWordPressUrlToNextPath(item.page_link?.url);
+                    return (
+                      <Link
+                        key={item.menu_name}
+                        href={href}
+                        className="text-[12px] text-white/90 transition hover:text-white"
+                      >
+                        {item.menu_name}
+                      </Link>
+                    );
+                  })}
+                </nav>
+                <nav className="flex flex-col gap-3" aria-label="Footer navigation secondary">
+                  {rightNav.slice(0, Math.ceil(rightNav.length / 2)).map((item) => {
+                    const href = mapWordPressUrlToNextPath(item.page_link?.url);
+                    return (
+                      <Link
+                        key={item.menu_name}
+                        href={href}
+                        className="text-[12px] text-white/90 transition hover:text-white"
+                      >
+                        {item.menu_name}
+                      </Link>
+                    );
+                  })}
+                </nav>
+                <nav className="flex flex-col gap-3" aria-label="Footer navigation tertiary">
+                  {rightNav.slice(Math.ceil(rightNav.length / 2)).map((item) => {
+                    const href = mapWordPressUrlToNextPath(item.page_link?.url);
+                    return (
+                      <Link
+                        key={item.menu_name}
+                        href={href}
+                        className="text-[12px] text-white/90 transition hover:text-white"
+                      >
+                        {item.menu_name}
+                      </Link>
+                    );
+                  })}
+                </nav>
+              </div>
+
+              <div className="mt-auto flex items-end justify-between gap-8 pt-10">
+                <div className="flex items-center gap-5">
+                  {socialLinks.map((item) => {
+                    const url = item.acf?.social_media_link?.url?.trim();
+                    const name = (item.acf?.social_media_name || item.title?.rendered || item.slug || "").trim();
+                    const label = name || "Social link";
+                    const target = item.acf?.social_media_link?.target || "_blank";
+                    const rel = target === "_blank" ? "noopener noreferrer" : undefined;
+                    if (!url) return null;
+                    return (
+                      <a
+                        key={item.id}
+                        href={url}
+                        target={target}
+                        rel={rel}
+                        aria-label={label}
+                        className="text-white/85 transition hover:text-white"
+                      >
+                        <SocialIcon slug={item.slug || name} className="h-4 w-4" />
+                      </a>
+                    );
+                  })}
+                </div>
+
+                <div className="flex items-center gap-3">
+                  {googlePlayUrl && (
+                    <Link
+                      href={googlePlayLink}
+                      target={appLink?.acf?.link_01?.target || "_blank"}
+                      rel="noopener noreferrer"
+                      className="focus:outline-none"
+                      aria-label={downloadText}
+                    >
+                      <Image
+                        src={googlePlayUrl}
+                        alt="Get it on Google Play"
+                        width={124}
+                        height={40}
+                        className="h-9 w-auto object-contain"
+                        unoptimized={!!isLocal}
+                      />
+                    </Link>
+                  )}
+                  {appStoreUrl && (
+                    <Link
+                      href={appStoreLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="focus:outline-none"
+                      aria-label={downloadText}
+                    >
+                      <Image
+                        src={appStoreUrl}
+                        alt="Download on the App Store"
+                        width={124}
+                        height={40}
+                        className="h-9 w-auto object-contain"
+                        unoptimized={!!isLocal}
+                      />
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative z-10 md:hidden">
+        <div className="mx-auto max-w-5xl px-6 pb-[100px] pt-[90px]">
+          {/* Logo + description */}
+          <div className="mb-10">
+            {logo && (
+              <Link href="/" className="mb-4 inline-block">
+                <Image
+                  src={logo}
+                  alt="Quicklyn"
+                  width={120}
+                  height={28}
+                  className="h-7 w-auto object-contain"
+                  unoptimized={
+                  logo.includes("quicklyn-headless.local") ||
+                  logo.includes("quick.rootholdings")
+                }
+                />
+              </Link>
             )}
-            {contactPhone && (
-              <a
-                href={`tel:${contactPhone.replace(/\D/g, "")}`}
-                className="flex items-center gap-3 text-[13px] text-white/95 transition hover:text-white"
-              >
-                <svg
-                  className="h-5 w-5 shrink-0"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  aria-hidden
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                  />
-                </svg>
-                <span>{contactPhone}</span>
-              </a>
+            {description && (
+              <p className="max-w-md text-[12px] leading-relaxed text-white/95">
+                {highlightNewYork(description)}
+              </p>
             )}
           </div>
-        )}
 
-        {/* Newsletter */}
-        <div className="mb-10 text-left">
-          <h3 className="mb-4 text-base font-medium text-white">{subscriptionText}</h3>
-          <form
-            className="flex w-full overflow-hidden rounded-lg border border-[#AAAAAA]"
-            onSubmit={(e) => e.preventDefault()}
-            data-lpignore="true"
-            data-form-type="other"
-          >
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-[72%] min-w-0 border-0 bg-[#1E1E1E] px-4 py-2.5 text-sm text-white placeholder:text-[#888888] focus:border-0 focus:outline-none focus:ring-0"
-              aria-label="Email for newsletter"
-              autoComplete="off"
+          {/* Two columns of navigation: 60% / 40% */}
+          <div className="mb-10 grid gap-x-8 gap-y-1" style={{ gridTemplateColumns: "60% 40%" }}>
+            <nav className="flex flex-col gap-2" aria-label="Footer navigation">
+              {leftNav.map((item) => {
+                const href = mapWordPressUrlToNextPath(item.page_link?.url);
+                return (
+                  <Link
+                    key={item.menu_name}
+                    href={href}
+                    className="text-[13px] text-white/90 transition hover:text-white"
+                  >
+                    {item.menu_name}
+                  </Link>
+                );
+              })}
+            </nav>
+            <nav className="flex flex-col gap-2" aria-label="Footer navigation secondary">
+              {rightNav.map((item) => {
+                const href = mapWordPressUrlToNextPath(item.page_link?.url);
+                return (
+                  <Link
+                    key={item.menu_name}
+                    href={href}
+                    className="text-[13px] text-white/90 transition hover:text-white"
+                  >
+                    {item.menu_name}
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+
+          {/* Contact email & phone (above newsletter) */}
+          {(contactEmail || contactPhone) && (
+            <div className="mb-8 flex flex-col gap-3 text-left">
+              {contactEmail && (
+                <a
+                  href={`mailto:${contactEmail}`}
+                  className="flex items-center gap-3 text-[13px] text-white/95 transition hover:text-white"
+                >
+                  <svg
+                    className="h-5 w-5 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    aria-hidden
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    />
+                  </svg>
+                  <span>{contactEmail}</span>
+                </a>
+              )}
+              {contactPhone && (
+                <a
+                  href={`tel:${contactPhone.replace(/\D/g, "")}`}
+                  className="flex items-center gap-3 text-[13px] text-white/95 transition hover:text-white"
+                >
+                  <svg
+                    className="h-5 w-5 shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                    aria-hidden
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                    />
+                  </svg>
+                  <span>{contactPhone}</span>
+                </a>
+              )}
+            </div>
+          )}
+
+          {/* Newsletter */}
+          <div className="mb-10 text-left">
+            <h3 className="mb-4 text-base font-medium text-white">{subscriptionText}</h3>
+            <form
+              className="flex w-full overflow-hidden rounded-lg border border-[#AAAAAA]"
+              onSubmit={(e) => e.preventDefault()}
               data-lpignore="true"
-            />
-            <button
-              type="submit"
-              className="w-[28%] shrink-0 border-0 border-l border-[#AAAAAA] bg-white px-4 py-2.5 text-sm font-medium text-[#1E1E1E] transition hover:bg-gray-50"
+              data-form-type="other"
             >
-              SUBMIT
-            </button>
-          </form>
-        </div>
-
-        {/* App download */}
-        <div className="mb-8 text-center">
-          <p className="mb-4 text-[13px] font-medium uppercase tracking-wide text-white/95">
-            {downloadText}
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            {googlePlayUrl && (
-              <Link
-                href={googlePlayLink}
-                target={appLink?.acf?.link_01?.target || "_blank"}
-                rel="noopener noreferrer"
-                className="focus:outline-none"
+              <input
+                type="email"
+                placeholder="Email"
+                className="w-[72%] min-w-0 border-0 bg-[#1E1E1E] px-4 py-2.5 text-sm text-white placeholder:text-[#888888] focus:border-0 focus:outline-none focus:ring-0"
+                aria-label="Email for newsletter"
+                autoComplete="off"
+                data-lpignore="true"
+              />
+              <button
+                type="submit"
+                className="w-[28%] shrink-0 border-0 border-l border-[#AAAAAA] bg-white px-4 py-2.5 text-sm font-medium text-[#1E1E1E] transition hover:bg-gray-50"
               >
-                <Image
-                  src={googlePlayUrl}
-                  alt="Get it on Google Play"
-                  width={140}
-                  height={48}
-                  className="h-12 w-auto object-contain"
-                  unoptimized={!!isLocal}
-                />
-              </Link>
-            )}
-            {appStoreUrl && (
-              <Link
-                href={appStoreLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="focus:outline-none"
-              >
-                <Image
-                  src={appStoreUrl}
-                  alt="Download on the App Store"
-                  width={140}
-                  height={48}
-                  className="h-12 w-auto object-contain"
-                  unoptimized={!!isLocal}
-                />
-              </Link>
-            )}
+                SUBMIT
+              </button>
+            </form>
           </div>
-        </div>
 
-        {/* Social icons from API */}
-        <div className="mb-8 flex justify-center gap-6">
-          {socialLinks.map((item) => {
-            const url = item.acf?.social_media_link?.url?.trim();
-            const name = (item.acf?.social_media_name || item.title?.rendered || item.slug || "").trim();
-            const label = name || "Social link";
-            const target = item.acf?.social_media_link?.target || "_blank";
-            const rel = target === "_blank" ? "noopener noreferrer" : undefined;
-            if (!url) return null;
-            return (
-              <a
-                key={item.id}
-                href={url}
-                target={target}
-                rel={rel}
-                aria-label={label}
-                className="text-white/80 transition hover:text-white"
-              >
-                <SocialIcon slug={item.slug || name} className="h-6 w-6" />
-              </a>
-            );
-          })}
-        </div>
+          {/* App download */}
+          <div className="mb-8 text-center">
+            <p className="mb-4 text-[13px] font-medium uppercase tracking-wide text-white/95">
+              {downloadText}
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-4">
+              {googlePlayUrl && (
+                <Link
+                  href={googlePlayLink}
+                  target={appLink?.acf?.link_01?.target || "_blank"}
+                  rel="noopener noreferrer"
+                  className="focus:outline-none"
+                >
+                  <Image
+                    src={googlePlayUrl}
+                    alt="Get it on Google Play"
+                    width={140}
+                    height={48}
+                    className="h-12 w-auto object-contain"
+                    unoptimized={!!isLocal}
+                  />
+                </Link>
+              )}
+              {appStoreUrl && (
+                <Link
+                  href={appStoreLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="focus:outline-none"
+                >
+                  <Image
+                    src={appStoreUrl}
+                    alt="Download on the App Store"
+                    width={140}
+                    height={48}
+                    className="h-12 w-auto object-contain"
+                    unoptimized={!!isLocal}
+                  />
+                </Link>
+              )}
+            </div>
+          </div>
 
-        {/* Copyright */}
-        <p className="text-center text-xs text-white/70">{copyrightText}</p>
+          {/* Social icons from API */}
+          <div className="mb-8 flex justify-center gap-6">
+            {socialLinks.map((item) => {
+              const url = item.acf?.social_media_link?.url?.trim();
+              const name = (item.acf?.social_media_name || item.title?.rendered || item.slug || "").trim();
+              const label = name || "Social link";
+              const target = item.acf?.social_media_link?.target || "_blank";
+              const rel = target === "_blank" ? "noopener noreferrer" : undefined;
+              if (!url) return null;
+              return (
+                <a
+                  key={item.id}
+                  href={url}
+                  target={target}
+                  rel={rel}
+                  aria-label={label}
+                  className="text-white/80 transition hover:text-white"
+                >
+                  <SocialIcon slug={item.slug || name} className="h-6 w-6" />
+                </a>
+              );
+            })}
+          </div>
+
+          {/* Copyright */}
+          <p className="text-center text-xs text-white/70">{copyrightText}</p>
+        </div>
       </div>
     </footer>
   );

@@ -158,104 +158,210 @@ export function TestimonialsSection({ testimonials, transparentBackground }: Tes
 
   return (
     <section className={`relative w-full overflow-hidden pb-8 pt-16 ${transparentBackground ? "" : "bg-[#226d71]"}`}>
-      <div className="relative z-10 mx-auto w-full max-w-4xl px-6">
-        <h2 className="mb-10 ml-[23px] text-left text-[31px] font-semibold leading-tight text-white">
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-6">
+        <h2 className="mb-10 ml-[23px] text-left text-[31px] font-semibold leading-tight text-white md:hidden">
           Trusted by Our Community
         </h2>
 
-        {/* Full-width carousel: no side gaps */}
-        <div className="-ml-[calc((100vw-100%)/2)] w-screen">
-          <div
-            ref={carouselRef}
-            className="relative mx-auto h-[420px] w-full overflow-hidden cursor-grab select-none"
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerLeave={handlePointerUp}
-            style={{
-              touchAction: "pan-y",
-              WebkitUserSelect: "none",
-              userSelect: "none",
-              WebkitTouchCallout: "none",
-            }}
-          >
-          {testimonials.map((item, index) => {
-            let offset = (index - currentIndex + count) % count;
-            if (offset > count / 2) offset -= count;
-            const isVisible = offset >= -1 && offset <= 1;
-            if (!isVisible) return null;
+        {/* Desktop / Tablet testimonials */}
+        <div className="hidden md:block">
+          <h2 className="mx-auto mb-8 max-w-md text-center text-[32px] font-semibold leading-[1.05] text-white lg:mb-10 lg:text-[44px]">
+            Trusted by
+            <br />
+            Our Community
+          </h2>
 
-            const isCenter = offset === 0;
-            const translateX = offset * 180;
-            const scale = isCenter ? 1 : 0.88;
-            const rotate = isCenter ? 0 : offset * 8;
-            const opacity = isCenter ? 1 : 0.45;
-            const zIndex = isCenter ? 10 : 1;
+          <div className="relative mx-auto h-[330px] w-full max-w-[1180px] overflow-visible lg:h-[400px]">
+            <div className="pointer-events-none absolute inset-x-0 top-[68px] hidden h-px bg-white/35 lg:top-[78px]" />
+            {testimonials.map((item, index) => {
+              let offset = (index - currentIndex + count) % count;
+              if (offset > count / 2) offset -= count;
+              const isVisible = offset >= -2 && offset <= 2;
+              if (!isVisible) return null;
 
-            return (
-              <div
-                key={item.id}
-                className="absolute left-1/2 top-1/2 w-[70%] max-w-[280px] select-none rounded-[32px] border border-[#89b0b1] bg-[#1a5d5f] px-6 py-6 shadow-lg transition-all duration-300 ease-out"
-                style={{
-                  transform: `translate(-50%, -50%) translateX(${translateX}px) scale(${scale}) rotate(${rotate}deg)`,
-                  opacity,
-                  zIndex,
-                }}
-              >
-                <QuoteIcon className="absolute left-4 top-4 h-6 w-6 text-white/80" />
-                <QuoteIcon className="absolute bottom-4 right-4 h-6 w-6 rotate-180 text-white/80" />
+              const isCenter = offset === 0;
+              const translateX =
+                offset === 0 ? 0 : offset === -1 ? -340 : offset === 1 ? 340 : offset === -2 ? -650 : 650;
+              const translateY = isCenter ? 8 : 26;
+              const scale = isCenter ? 1 : offset === -1 || offset === 1 ? 0.92 : 0.82;
+              const rotate = isCenter ? 0 : offset < 0 ? -14 : 14;
+              const opacity = isCenter ? 1 : offset === -1 || offset === 1 ? 0.92 : 0.35;
+              const zIndex = isCenter ? 30 : offset === -1 || offset === 1 ? 20 : 10;
+              const cardWidthClass = isCenter
+                ? "w-[360px] lg:w-[430px]"
+                : "w-[320px] lg:w-[390px]";
+              const quoteScaleClass = isCenter ? "h-7 w-7" : "h-6 w-6";
+              const contentPadding = isCenter ? "px-10 py-7 lg:px-12 lg:py-8" : "px-8 py-7 lg:px-10 lg:py-8";
+              const cardClasses = isCenter
+                ? "border-white/65 bg-[#1b6668]/95"
+                : "border-white/50 bg-[#1b6668]/88";
 
-                <div className="relative pt-2 text-center">
-                  <StarRating count={parseInt(item.acf?.stars || "5", 10)} />
-                  <p className="mb-4 min-h-[100px] text-[14px] leading-relaxed text-white">
-                    {item.acf?.testimonial?.trim() || item.title.rendered}
-                  </p>
-                  <p className="text-[14px] font-medium text-white">
-                    {item.acf?.name?.trim() || item.title.rendered}
-                  </p>
+              return (
+                <div
+                  key={item.id}
+                  className={`absolute left-1/2 top-1/2 select-none rounded-[34px] border shadow-[0_14px_30px_rgba(0,0,0,0.12)] transition-all duration-300 ease-out lg:rounded-[38px] ${cardWidthClass} ${contentPadding} ${cardClasses}`}
+                  style={{
+                    transform: `translate(-50%, -50%) translateX(${translateX}px) translateY(${translateY}px) scale(${scale}) rotate(${rotate}deg)`,
+                    opacity,
+                    zIndex,
+                  }}
+                >
+                  <QuoteIcon className={`absolute left-6 top-5 text-white/90 ${quoteScaleClass}`} />
+                  <QuoteIcon className={`absolute bottom-5 right-6 rotate-180 text-white/90 ${quoteScaleClass}`} />
+
+                  <div className="relative pt-2 text-center">
+                    <StarRating count={parseInt(item.acf?.stars || "5", 10)} />
+                    <p
+                      className={`mx-auto mb-4 text-white/95 ${
+                        isCenter
+                          ? "min-h-[112px] max-w-[250px] text-[12px] leading-[1.55] lg:min-h-[136px] lg:max-w-[286px] lg:text-[14px]"
+                          : "min-h-[100px] max-w-[220px] text-[11px] leading-[1.55] lg:min-h-[124px] lg:max-w-[260px] lg:text-[13px]"
+                      }`}
+                    >
+                      {item.acf?.testimonial?.trim() || item.title.rendered}
+                    </p>
+                    <p className={`${isCenter ? "text-[12px] lg:text-[13px]" : "text-[11px] lg:text-[12px]"} font-medium text-white/90`}>
+                      {item.acf?.name?.trim() || item.title.rendered}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
+              );
+            })}
+          </div>
+
+          <div className="mt-3 flex items-center justify-center gap-3 lg:mt-4 lg:gap-4">
+            <button
+              type="button"
+              onClick={goPrev}
+              aria-label="Previous testimonial"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/60 text-white/90 transition hover:bg-white/10 lg:h-10 lg:w-10"
+            >
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={goNext}
+              aria-label="Next testimonial"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/60 text-white/90 transition hover:bg-white/10 lg:h-10 lg:w-10"
+            >
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
         </div>
 
-        {/* Navigation arrows */}
-        <div className="mt-8 flex items-center justify-center gap-6">
-          <button
-            type="button"
-            onClick={goPrev}
-            aria-label="Previous testimonial"
-            className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-white text-white transition hover:bg-white/10"
-          >
-            <svg
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              aria-hidden
+        {/* Mobile layout (unchanged) */}
+        <div className="md:hidden">
+          <div className="-ml-[calc((100vw-100%)/2)] w-screen">
+            <div
+              ref={carouselRef}
+              className="relative mx-auto h-[420px] w-full overflow-hidden cursor-grab select-none"
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerLeave={handlePointerUp}
+              style={{
+                touchAction: "pan-y",
+                WebkitUserSelect: "none",
+                userSelect: "none",
+                WebkitTouchCallout: "none",
+              }}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            onClick={goNext}
-            aria-label="Next testimonial"
-            className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-white text-white transition hover:bg-white/10"
-          >
-            <svg
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-              aria-hidden
+            {testimonials.map((item, index) => {
+              let offset = (index - currentIndex + count) % count;
+              if (offset > count / 2) offset -= count;
+              const isVisible = offset >= -1 && offset <= 1;
+              if (!isVisible) return null;
+
+              const isCenter = offset === 0;
+              const translateX = offset * 180;
+              const scale = isCenter ? 1 : 0.88;
+              const rotate = isCenter ? 0 : offset * 8;
+              const opacity = isCenter ? 1 : 0.45;
+              const zIndex = isCenter ? 10 : 1;
+
+              return (
+                <div
+                  key={item.id}
+                  className="absolute left-1/2 top-1/2 w-[70%] max-w-[280px] select-none rounded-[32px] border border-[#89b0b1] bg-[#1a5d5f] px-6 py-6 shadow-lg transition-all duration-300 ease-out"
+                  style={{
+                    transform: `translate(-50%, -50%) translateX(${translateX}px) scale(${scale}) rotate(${rotate}deg)`,
+                    opacity,
+                    zIndex,
+                  }}
+                >
+                  <QuoteIcon className="absolute left-4 top-4 h-6 w-6 text-white/80" />
+                  <QuoteIcon className="absolute bottom-4 right-4 h-6 w-6 rotate-180 text-white/80" />
+
+                  <div className="relative pt-2 text-center">
+                    <StarRating count={parseInt(item.acf?.stars || "5", 10)} />
+                    <p className="mb-4 min-h-[100px] text-[14px] leading-relaxed text-white">
+                      {item.acf?.testimonial?.trim() || item.title.rendered}
+                    </p>
+                    <p className="text-[14px] font-medium text-white">
+                      {item.acf?.name?.trim() || item.title.rendered}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          </div>
+
+          {/* Navigation arrows */}
+          <div className="mt-8 flex items-center justify-center gap-6">
+            <button
+              type="button"
+              onClick={goPrev}
+              aria-label="Previous testimonial"
+              className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-white text-white transition hover:bg-white/10"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              onClick={goNext}
+              aria-label="Next testimonial"
+              className="flex h-12 w-12 items-center justify-center rounded-full border-2 border-white text-white transition hover:bg-white/10"
+            >
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
     </section>

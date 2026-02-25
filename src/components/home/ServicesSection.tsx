@@ -256,8 +256,7 @@ export function ServicesSection({
 
       const maxTranslate = Math.max(0, trackEl.scrollWidth - viewportEl.clientWidth);
       whyDesktopMaxTranslateRef.current = maxTranslate;
-      const scrollDistance = Math.max(window.innerHeight * 0.9, maxTranslate * 1.2);
-      setWhyDesktopOuterHeight(window.innerHeight + scrollDistance);
+      setWhyDesktopOuterHeight(window.innerHeight);
       setWhyDesktopProgress(whyDesktopProgressRef.current);
     };
 
@@ -806,14 +805,22 @@ export function ServicesSection({
           </div>
           <div
             ref={whyDesktopSectionRef}
-            className="relative mt-16 hidden w-full md:mt-2 md:block"
+            className="relative mt-16 hidden w-full md:mt-0 md:block"
             style={whyDesktopOuterHeight ? { height: `${whyDesktopOuterHeight}px` } : undefined}
           >
             <div className="sticky top-0 h-screen">
-              <div className="mx-auto flex h-full w-full max-w-[1220px] items-center px-8 lg:px-6">
-                <div className="grid w-full grid-cols-12 items-center gap-6 lg:gap-10">
-                  <div className="col-span-4">
-                    <div className="mx-auto flex max-w-[330px] flex-col items-start">
+              <div className="mx-auto h-full w-full max-w-[1280px] px-8 lg:px-6">
+                <div className="relative h-full">
+                  <div className="absolute inset-y-0 left-0 z-20 w-[42%] min-w-[300px] max-w-[470px]">
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background:
+                          "linear-gradient(90deg, rgba(42,122,124,0.98) 76%, rgba(42,122,124,0.75) 86%, rgba(42,122,124,0.18) 96%, rgba(42,122,124,0) 100%)",
+                      }}
+                      aria-hidden
+                    />
+                    <div className="relative flex h-full flex-col justify-center pl-4 pr-10 lg:pl-6 lg:pr-16">
                       <div className="mb-6 lg:mb-8">
                         {whyIconUrl ? (
                           <Image
@@ -854,17 +861,17 @@ export function ServicesSection({
                     </div>
                   </div>
 
-                  <div className="col-span-8">
-                    <div ref={whyDesktopViewportRef} className="ml-auto max-w-[560px] overflow-hidden lg:max-w-[640px]">
+                  <div className="relative z-10 flex h-full items-center">
+                    <div ref={whyDesktopViewportRef} className="w-full overflow-hidden">
                       <div
                         ref={whyDesktopTrackRef}
-                        className="flex will-change-transform"
+                        className="flex will-change-transform pl-[34%] lg:pl-[38%]"
                         style={{ transform: `translate3d(${whyDesktopTranslateX}px, 0, 0)` }}
                       >
                         {whyList.map((item, index) => (
                           <article
                             key={`why-desktop-${item.list_heading}-${index}`}
-                            className="flex h-[340px] w-[300px] flex-shrink-0 flex-col justify-start border border-white/25 px-6 py-8 text-left text-white lg:h-[380px] lg:w-[360px] lg:px-10 lg:py-10"
+                            className="flex h-[340px] w-[320px] flex-shrink-0 flex-col justify-start border border-white/25 px-6 py-8 text-left text-white lg:h-[380px] lg:w-[380px] lg:px-10 lg:py-10"
                           >
                             <h4 className="text-[22px] font-semibold leading-tight text-white lg:text-[28px]">
                               {item.list_heading}
@@ -874,6 +881,7 @@ export function ServicesSection({
                             </p>
                           </article>
                         ))}
+                        <div className="h-[340px] w-[220px] flex-shrink-0 border-y border-transparent lg:h-[380px] lg:w-[260px]" aria-hidden />
                       </div>
                     </div>
                   </div>
