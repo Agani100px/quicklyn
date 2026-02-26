@@ -37,7 +37,7 @@ export function TermsAccordion({ items }: TermsAccordionProps) {
               aria-controls={`terms-content-${index}`}
               id={`terms-heading-${index}`}
             >
-              <span className="text-sm font-semibold uppercase tracking-wide md:text-base">
+              <span className="text-sm font-semibold uppercase tracking-wide md:text-[23px]">
                 {number}. {title}
               </span>
               <span
