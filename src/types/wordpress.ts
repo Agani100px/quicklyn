@@ -181,11 +181,15 @@ export interface OurMissionTeamItem {
 export interface OurMissionACF {
   page_heading?: string;
   hero_image?: WPImage;
+  /** Desktop hero background (used in 1st section on desktop/tablet only). */
+  desktop_background?: WPImage;
   sub_heading?: string;
   description?: string;
   section_image?: WPImage;
   commitment_heading?: string;
   commitment_description?: string;
+  /** Optional background image for commitment section (desktop). */
+  commitment_background_image?: WPImage;
   team?: OurMissionTeamItem[];
   background_check_icon?: WPImage;
   background_check_heading?: string;

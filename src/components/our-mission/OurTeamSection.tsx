@@ -49,7 +49,13 @@ export function OurTeamSection({
       <div className="mx-auto max-w-5xl">
         {/* Our Team heading + line */}
         <div className="flex items-center gap-4">
-          <h2 className="text-2xl font-bold text-white md:text-3xl">
+          <h2 className="text-2xl font-bold text-white md:hidden">
+            Our Team
+          </h2>
+          <h2
+            className="hidden font-semibold text-white md:block"
+            style={{ fontSize: "100px", lineHeight: "80px" }}
+          >
             Our Team
           </h2>
           <span
@@ -78,7 +84,7 @@ export function OurTeamSection({
                     }}
                   >
                     <div
-                      className="relative h-36 w-36 overflow-hidden rounded-full md:h-44 md:w-44"
+                      className="relative h-44 w-44 overflow-hidden rounded-full md:h-56 md:w-56"
                       style={{
                         filter: "drop-shadow(0 3px 8px rgba(0,0,0,0.25))",
                       }}
@@ -116,9 +122,9 @@ export function OurTeamSection({
           </div>
         )}
 
-        {/* Background Checked Team */}
+        {/* Background Checked Team — mobile (unchanged) */}
         {hasBackgroundCheck && (
-          <div className="mt-12 md:mt-16">
+          <div className="mt-4 md:hidden">
             <div className="flex flex-row flex-wrap items-center gap-3 md:gap-4">
               {backgroundCheckIconUrl && (
                 <div className="flex-shrink-0">
@@ -145,6 +151,63 @@ export function OurTeamSection({
                 {backgroundCheckDescription}
               </p>
             )}
+          </div>
+        )}
+
+        {/* Background Checked Team — desktop: horizontal block, heading 2 lines, 33/37px semibold, description 16/25px regular */}
+        {hasBackgroundCheck && (
+          <div className="mt-4 hidden px-6 py-6 md:block lg:px-8 lg:py-8">
+            <div className="flex flex-row flex-wrap items-center gap-6 lg:gap-8">
+              {backgroundCheckIconUrl && (
+                <div className="flex-shrink-0">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={backgroundCheckIconUrl}
+                    alt=""
+                    className="h-16 w-16 object-contain [filter:brightness(0)_invert(1)] lg:h-20 lg:w-20"
+                    aria-hidden
+                  />
+                </div>
+              )}
+              {backgroundCheckHeading && (
+                <h3
+                  className="flex-1 font-semibold text-white"
+                  style={{ fontSize: "33px", lineHeight: "37px" }}
+                >
+                  {(() => {
+                    const t = backgroundCheckHeading.trim();
+                    if (t === "Background Checked Team")
+                      return (
+                        <>
+                          <span className="block">Background</span>
+                          <span className="block">Checked Team</span>
+                        </>
+                      );
+                    const words = t.split(/\s+/);
+                    if (words.length <= 2)
+                      return words.map((w, i) => (
+                        <span key={i} className="block">
+                          {w}
+                        </span>
+                      ));
+                    return (
+                      <>
+                        <span className="block">{words[0]}</span>
+                        <span className="block">{words.slice(1).join(" ")}</span>
+                      </>
+                    );
+                  })()}
+                </h3>
+              )}
+              {backgroundCheckDescription && (
+                <p
+                  className="max-w-xl flex-1 font-normal text-white"
+                  style={{ fontSize: "16px", lineHeight: "25px" }}
+                >
+                  {backgroundCheckDescription}
+                </p>
+              )}
+            </div>
           </div>
         )}
       </div>
