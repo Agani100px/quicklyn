@@ -7,9 +7,57 @@ const TRANSITION_MS = 500;
 
 interface AboutUsExecutiveTeamProps {
   team: AboutUsTeamMember[];
+  layout?: "mobile" | "desktop";
 }
 
-export function AboutUsExecutiveTeam({ team }: AboutUsExecutiveTeamProps) {
+function MemberCard({
+  photoUrl,
+  name,
+  designation,
+  index,
+}: {
+  photoUrl: string | undefined;
+  name: string;
+  designation: string;
+  index: number;
+}) {
+  if (!name && !designation && !photoUrl) return null;
+  return (
+    <div key={index} className="flex flex-col items-center text-center">
+      {photoUrl && (
+        <div className="relative h-40 w-40 shrink-0 overflow-hidden rounded-full border-2 border-[#D9D9D9] bg-gray-200 lg:h-44 lg:w-44">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={photoUrl}
+            alt={name || "Team member"}
+            className="h-full w-full object-cover"
+          />
+        </div>
+      )}
+      {!photoUrl && (
+        <div className="h-40 w-40 shrink-0 rounded-full border-2 border-[#D9D9D9] bg-white/10 lg:h-44 lg:w-44" aria-hidden />
+      )}
+      {name && (
+        <p
+          className="mt-4 font-semibold text-white"
+          style={{ fontSize: "20px", lineHeight: "28px" }}
+        >
+          {name}
+        </p>
+      )}
+      {designation && (
+        <p
+          className="mt-1 max-w-[240px] text-white/95"
+          style={{ fontSize: "14px", lineHeight: "20px" }}
+        >
+          {designation}
+        </p>
+      )}
+    </div>
+  );
+}
+
+export function AboutUsExecutiveTeam({ team, layout = "mobile" }: AboutUsExecutiveTeamProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
 
@@ -27,6 +75,46 @@ export function AboutUsExecutiveTeam({ team }: AboutUsExecutiveTeamProps) {
   const transition = `opacity ${TRANSITION_MS}ms ease-out, transform ${TRANSITION_MS}ms ease-out`;
   const opacity = inView ? 1 : 0.2;
   const transform = inView ? "translateY(-16px)" : "translateY(0)";
+
+  if (layout === "desktop") {
+    return (
+      <section ref={sectionRef} className="mt-16 w-full pb-16 lg:mt-20 lg:pb-20">
+        {/* Title between horizontal lines */}
+        <div className="flex items-center gap-6">
+          <span className="h-px flex-1 bg-white/40" aria-hidden />
+          <h2
+            className="text-center font-medium text-white"
+            style={{ fontSize: "clamp(32px,4vw,42px)", lineHeight: "1.2" }}
+          >
+            Executive Team
+          </h2>
+          <span className="h-px flex-1 bg-white/40" aria-hidden />
+        </div>
+
+        <div className="mt-12 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3 lg:gap-12">
+          {team.map((member, index) => {
+            const photoUrl =
+              member.profile_picture &&
+              typeof member.profile_picture === "object" &&
+              "url" in member.profile_picture
+                ? (member.profile_picture as { url?: string }).url
+                : undefined;
+            const name = (member.name || "").trim();
+            const designation = (member.designation || "").trim();
+            return (
+              <MemberCard
+                key={index}
+                photoUrl={photoUrl}
+                name={name}
+                designation={designation}
+                index={index}
+              />
+            );
+          })}
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section

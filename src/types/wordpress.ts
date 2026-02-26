@@ -225,6 +225,9 @@ export interface AboutUsACF {
   description?: string | null;
   features?: AboutUsFeatureItem[] | null;
   page_background?: WPImage | null;
+  /** Desktop/tablet background image (ACF may use desktop_background or desktop_background_image) */
+  desktop_background?: WPImage | null;
+  desktop_background_image?: WPImage | null;
   executive_team?: AboutUsTeamMember[] | null;
   investor_title?: string | null;
   investor_description?: string | null;

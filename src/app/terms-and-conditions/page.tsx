@@ -44,7 +44,7 @@ export default async function TermsAndConditionsPage() {
       <div className="hidden md:block">
         <div className="mx-auto w-full max-w-[1180px] px-6 pt-44 pb-28 lg:pt-48">
           <h1
-            className="text-left font-semibold uppercase tracking-wide text-white"
+            className="capitalize text-left font-semibold text-white"
             style={{ fontSize: "64px", lineHeight: "72px" }}
           >
             {heading}

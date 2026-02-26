@@ -28,6 +28,7 @@ interface AboutUsInvestorRelationsProps {
   investorParagraphs: string[];
   contactUrl: string;
   contactLabel: string;
+  layout?: "mobile" | "desktop";
 }
 
 export function AboutUsInvestorRelations({
@@ -35,6 +36,7 @@ export function AboutUsInvestorRelations({
   investorParagraphs,
   contactUrl,
   contactLabel,
+  layout = "mobile",
 }: AboutUsInvestorRelationsProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
@@ -53,6 +55,62 @@ export function AboutUsInvestorRelations({
   const transition = `opacity ${TRANSITION_MS}ms ease-out, transform ${TRANSITION_MS}ms ease-out`;
   const opacity = inView ? 1 : 0.12;
   const transform = inView ? "scale(1)" : "scale(0.5)";
+
+  if (layout === "desktop") {
+    return (
+      <section
+        ref={sectionRef}
+        className="mt-20 pb-24 lg:mt-24 lg:pb-28"
+        style={{
+          opacity,
+          transform,
+          transition,
+        }}
+      >
+        <div className="mx-auto max-w-[1180px] px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-20">
+            {/* Left: heading + CTA, button aligned to description bottom via flex */}
+            <div className="flex h-full flex-col justify-between">
+              {investorTitle && (
+                <h2
+                  className="text-left font-normal text-white"
+                  style={{ fontSize: "96px", lineHeight: "89px" }}
+                >
+                  {investorTitle}
+                </h2>
+              )}
+              {contactUrl && (
+                <div className="mt-8 lg:mt-0">
+                  <Link
+                    href={contactUrl}
+                    className="inline-flex items-center gap-2 rounded-full border border-white/70 bg-transparent px-7 py-3 text-sm font-medium text-white shadow-[0_14px_36px_rgba(0,0,0,0.35)] transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/60"
+                  >
+                    <PaperPlaneIcon className="h-5 w-5" />
+                    <span>{contactLabel}</span>
+                  </Link>
+                </div>
+              )}
+            </div>
+
+            {/* Right: description paragraphs */}
+            {investorParagraphs.length > 0 && (
+              <div className="space-y-5 text-left text-white/95 lg:ml-auto lg:max-w-[520px]">
+                {investorParagraphs.map((p, i) => (
+                  <p
+                    key={i}
+                    className="font-normal"
+                    style={{ fontSize: "19px", lineHeight: "32px" }}
+                  >
+                    {p}
+                  </p>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section

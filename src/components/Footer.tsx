@@ -70,6 +70,7 @@ export function Footer({ data, appLink, socialLinks = [] }: FooterProps) {
 
   const pathname = usePathname();
   const isCareersPage = pathname === "/careers";
+  const isContactUsPage = pathname === "/contact-us";
 
   const acf = data.acf;
   const logo = acf.logo?.url;
@@ -110,7 +111,7 @@ export function Footer({ data, appLink, socialLinks = [] }: FooterProps) {
     <footer
       className={`relative w-full overflow-hidden text-white ${
         isCareersPage ? "z-20 md:-mt-[320px] lg:-mt-[420px]" : ""
-      }`}
+      } ${isContactUsPage ? "md:-mt-48 lg:-mt-64" : ""}`}
     >
       <div className="pointer-events-none absolute inset-0 z-0 hidden md:block" aria-hidden />
       {footerBgUrl && (
