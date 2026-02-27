@@ -155,7 +155,7 @@ export function GlobalHeader({ header }: GlobalHeaderProps) {
 
           <div className="mx-auto w-full max-w-[1180px] px-6 pt-6 lg:pt-7">
             <header className="flex items-center rounded-full border border-white/15 bg-[#1c6a6f]/90 px-5 py-3 shadow-[0_10px_30px_rgba(0,0,0,0.25)] backdrop-blur-md lg:px-8">
-              <div className="min-w-[150px]">
+              <div className="flex min-h-[44px] min-w-[150px] items-center lg:min-h-[48px]">
                 {headerLogoUrl ? (
                   <Link href="/" className="inline-flex items-center">
                     <Image
@@ -181,7 +181,8 @@ export function GlobalHeader({ header }: GlobalHeaderProps) {
                         <Link
                           key={`${label}-${index}`}
                           href={href}
-                          className="text-sm font-semibold text-white transition hover:text-white/80 lg:text-[15px]"
+                          className="font-semibold text-white transition duration-200 hover:text-[#ffda00]"
+                          style={{ fontSize: "19px" }}
                         >
                           {label}
                         </Link>
@@ -191,7 +192,8 @@ export function GlobalHeader({ header }: GlobalHeaderProps) {
                       <Link
                         key={item.href}
                         href={item.href}
-                        className="text-sm font-semibold text-white transition hover:text-white/80 lg:text-[15px]"
+                        className="font-semibold text-white transition duration-200 hover:text-[#ffda00]"
+                        style={{ fontSize: "19px" }}
                       >
                         {item.label}
                       </Link>

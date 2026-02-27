@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import CountUp from "react-countup";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type React from "react";
 import type { CounterItem, WPImage, WhyListItem } from "@/types/wordpress";
@@ -438,7 +439,12 @@ export function ServicesSection({
                   className="flex items-baseline gap-1 text-[52px] leading-none text-white"
                   style={{ fontWeight: 200 }}
                 >
-                  <span style={{ fontWeight: 200 }}>{item.counter_number}</span>
+                  <span style={{ fontWeight: 200 }}>
+                    <CountUp
+                      end={Number(item.counter_number) || 0}
+                      duration={1.5}
+                    />
+                  </span>
                   <span style={{ fontWeight: 200 }}>{item.counter_suffix}</span>
                 </div>
                 <div className="max-w-[55%] text-left text-[18px] font-normal leading-snug text-white">
@@ -449,39 +455,58 @@ export function ServicesSection({
           ))}
         </div>
 
-        {/* Counters - desktop/tablet reference style */}
-        {(counters ?? []).length > 0 && (
-          <div className="mb-10 hidden w-full max-w-[800px] items-center justify-center md:flex lg:mb-12">
-            <div className="flex w-full items-stretch justify-center rounded-none px-2 text-left">
-              {(counters ?? []).map((item, index) => (
-                <div
-                  key={`desktop-${item.counter_text}-${index}`}
-                  className="flex min-w-0 flex-1 items-center justify-center px-6 py-1 lg:px-8"
-                >
-                  {index > 0 && (
-                    <div className="mr-6 h-[52px] w-px bg-white/45 lg:mr-8 lg:h-[64px]" aria-hidden />
-                  )}
-                  <div className="hero-text-shadow flex min-w-0 items-center gap-4 lg:gap-5">
-                    <div
-                      className="flex flex-shrink-0 items-baseline leading-none text-white"
-                      style={{ fontWeight: 200 }}
-                    >
-                      <span className="text-[54px] tracking-[-0.03em] lg:text-[72px]">
-                        {item.counter_number}
-                      </span>
-                      <span className="ml-1 text-[40px] tracking-[-0.02em] lg:text-[54px]">
-                        {item.counter_suffix}
-                      </span>
-                    </div>
-                    <div className="min-w-0 max-w-[160px] text-left text-[16px] font-normal leading-tight text-white/95 lg:max-w-[210px] lg:text-[20px]">
-                      {item.counter_text}
-                    </div>
+        {/* Counters - desktop/tablet: 2 columns, 2 counters each (when available) */}
+        {(counters ?? []).length > 0 &&
+          (() => {
+            const items = counters ?? [];
+            const mid = Math.ceil(items.length / 2);
+            const left = items.slice(0, mid);
+            const right = items.slice(mid);
+            const columns = [left, right];
+            return (
+              <div className="mb-10 hidden w-full max-w-[820px] md:block lg:mb-12">
+                <div className="px-4 py-4 lg:px-6 lg:py-5">
+                  <div className="flex flex-col gap-6 md:flex-row">
+                    {columns.map((colItems, colIndex) => (
+                      <div
+                        key={`counter-col-${colIndex}`}
+                        className={`flex flex-col gap-4 ${
+                          colIndex === 0
+                            ? "md:w-[45%] md:pl-[30px] md:items-end md:text-right"
+                            : "md:w-[55%] md:border-l md:border-white/25 md:pl-10"
+                        }`}
+                      >
+                        {colItems.map((item, index) => (
+                          <div
+                            key={`desktop-${item.counter_text}-${colIndex}-${index}`}
+                            className="hero-text-shadow flex min-w-0 items-center gap-4 lg:gap-5"
+                          >
+                            <div
+                              className="flex flex-shrink-0 items-baseline leading-none text-white"
+                              style={{ fontWeight: 200 }}
+                            >
+                              <span className="text-[54px] tracking-[-0.03em] lg:text-[72px]">
+                                <CountUp
+                                  end={Number(item.counter_number) || 0}
+                                  duration={1.5}
+                                />
+                              </span>
+                              <span className="ml-1 text-[40px] tracking-[-0.02em] lg:text-[54px]">
+                                {item.counter_suffix}
+                              </span>
+                            </div>
+                            <div className="min-w-0 max-w-[160px] text-left text-[16px] font-normal leading-tight text-white/95 lg:max-w-[210px] lg:text-[20px]">
+                              {item.counter_text}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
+              </div>
+            );
+          })()}
 
         {/* Section heading (mobile only) */}
         <h2 className="mt-10 mb-[30px] text-[68px] font-medium leading-[58px] text-white md:hidden">

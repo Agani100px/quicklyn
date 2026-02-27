@@ -61,6 +61,7 @@ export function HeroSection({ data, header }: HeroSectionProps) {
   const estimateLink = "/book-a-cleaning";
   const [isMobile, setIsMobile] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [desktopIntroDone, setDesktopIntroDone] = useState(false);
   const isLocalImage =
     bgUrl.includes("quicklyn-headless.local") ||
     bgUrl.includes("quick.rootholdings");
@@ -102,6 +103,12 @@ export function HeroSection({ data, header }: HeroSectionProps) {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isMobile]);
+
+  // Desktop intro: render background slightly zoomed out / rotated on first paint,
+  // then immediately snap to the final position once the page has loaded.
+  useEffect(() => {
+    setDesktopIntroDone(true);
+  }, []);
 
   const handleHeroClick = () => {
     if (!isMobile) return;
@@ -248,13 +255,32 @@ export function HeroSection({ data, header }: HeroSectionProps) {
             alt=""
             fill
             priority
-            className="object-cover object-center md:[transform:translateX(10%)_translateY(-4%)_scaleX(-1)_scale(1.08)]"
+            className="object-cover object-center"
             sizes="100vw"
             unoptimized={isLocalImage}
+            style={{
+              transform: desktopIntroDone
+                ? "translateX(10%) translateY(-4%) scaleX(-1) scale(1.08)"
+                : "translateX(14%) translateY(2%) scaleX(-1) scale(0.94) rotate(8deg)",
+              transition: "transform 0.4s ease-out",
+              transformOrigin: "center center",
+            }}
+          />
+
+          {/* Intro gradient: bottom-left → top-right, fades out after load */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              opacity: desktopIntroDone ? 0 : 1,
+              transition: "opacity 0.45s ease-out",
+              background:
+                "linear-gradient(to top right, #000000 0%, rgba(24,91,93,0.5) 100%)",
+            }}
+            aria-hidden
           />
 
           <div
-            className="absolute inset-0"
+            className="absolute inset-0 pointer-events-none"
             style={{
               background:
                 "linear-gradient(90deg, rgba(25,91,93,1) 0%, rgba(25,91,93,0) 100%)",
@@ -262,7 +288,23 @@ export function HeroSection({ data, header }: HeroSectionProps) {
             aria-hidden
           />
           <div
-            className="absolute inset-0"
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(90deg, #206c70 0%, rgba(32,108,112,0.2) 30%, transparent 100%)",
+            }}
+            aria-hidden
+          />
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                "linear-gradient(90deg, #206c70 0%, rgba(32,108,112,0.2) 30%, transparent 100%)",
+            }}
+            aria-hidden
+          />
+          <div
+            className="absolute inset-0 pointer-events-none"
             style={{
               background:
                 "linear-gradient(to top, rgba(25,91,93,1) 0%, rgba(25,91,93,0) 45%)",
@@ -292,7 +334,7 @@ export function HeroSection({ data, header }: HeroSectionProps) {
                 <div className="mt-8 flex flex-wrap items-center gap-4 lg:mt-10">
                   {googlePlayUrl && (
                     <Link href="#" className="transition hover:opacity-95">
-                      <div className="rounded-xl bg-white/90 p-1.5 shadow-[0_10px_18px_rgba(0,0,0,0.18)]">
+                      <div className="rounded-xl bg-white/90 p-0 shadow-[0_10px_18px_rgba(0,0,0,0.18)]">
                         <Image
                           src={googlePlayUrl}
                           alt="Get it on Google Play"
@@ -306,7 +348,7 @@ export function HeroSection({ data, header }: HeroSectionProps) {
                   )}
                   {appStoreUrl && (
                     <Link href="#" className="transition hover:opacity-95">
-                      <div className="rounded-xl bg-white/90 p-1.5 shadow-[0_10px_18px_rgba(0,0,0,0.18)]">
+                      <div className="rounded-xl bg-white/90 p-0 shadow-[0_10px_18px_rgba(0,0,0,0.18)]">
                         <Image
                           src={appStoreUrl}
                           alt="Download on the App Store"
