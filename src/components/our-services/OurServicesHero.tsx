@@ -25,6 +25,7 @@ export function OurServicesHero({
   isLocalHero,
 }: OurServicesHeroProps) {
   const [isActive, setIsActive] = useState(false);
+  const [desktopIntroDone, setDesktopIntroDone] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -37,6 +38,11 @@ export function OurServicesHero({
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Desktop intro animation: mark as done after first render
+  useEffect(() => {
+    setDesktopIntroDone(true);
   }, []);
 
   // Split sub-heading so the last four words can be bolded
@@ -84,7 +90,10 @@ export function OurServicesHero({
               priority
               unoptimized={isLocalHero}
               style={{
-                transform: "scale(1.35) translateY(6%)",
+                transform: desktopIntroDone
+                  ? "translateX(0%) translateY(6%) scale(1.35)"
+                  : "translateX(30%) translateY(6%) scale(1.35)",
+                transition: "transform 0.6s ease-out",
                 transformOrigin: "center center",
               }}
             />
@@ -93,7 +102,14 @@ export function OurServicesHero({
 
         <div className="relative z-10 mx-auto flex min-h-[620px] w-full max-w-[1320px] items-end justify-between px-10 pb-0 pt-36 lg:min-h-[700px] lg:px-14 lg:pb-4 lg:pt-40">
           <div className="flex w-full max-w-[520px] flex-col items-start">
-            <h1 className="hero-text-shadow text-left font-semibold tracking-[-0.06em] text-white text-[240px] leading-[180px]">
+            <h1
+              className="hero-text-shadow text-left font-semibold tracking-[-0.06em] text-white text-[240px] leading-[180px]"
+              style={{
+                opacity: desktopIntroDone ? 1 : 0,
+                transform: desktopIntroDone ? "translateY(0)" : "translateY(-80px)",
+                transition: "opacity 0.7s ease-out, transform 0.7s ease-out",
+              }}
+            >
               <span className="block">{desktopHeadingTop}</span>
               <span className="block">{desktopHeadingBottom}</span>
             </h1>

@@ -91,7 +91,7 @@ function ServiceAccordionItem({
             ) : null}
           </h3>
           {hasContent(headerDescription) ? (
-            <p className="mt-1 line-clamp-3 text-[12px] font-normal text-white/90 md:mt-0 md:w-[50%] md:text-[16px] md:leading-[27px]">
+            <p className="mt-1 line-clamp-3 text-[12px] font-normal text-white/90 transition-transform duration-500 md:mt-0 md:w-[50%] md:text-[16px] md:leading-[27px] md:group-hover:-translate-x-2">
               {headerDescription}
             </p>
           ) : null}
@@ -237,9 +237,7 @@ export function OurMainServicesSection({ services }: OurMainServicesSectionProps
     return [...list, sig];
   }, [services]);
 
-  const [openId, setOpenId] = useState<number | null>(
-    sortedServices.length > 0 ? sortedServices[0].id : null
-  );
+  const [openId, setOpenId] = useState<number | null>(null);
 
   // On load, if URL hash is #service-{slug}, expand that accordion and scroll to it
   useEffect(() => {
@@ -299,7 +297,7 @@ export function OurMainServicesSection({ services }: OurMainServicesSectionProps
         {sortedServices.map((service) => (
           <div
             key={service.id}
-            className="transition-colors duration-200 hover:bg-[rgba(0,0,0,0.14)]"
+            className="group transition-colors duration-500 ease-out hover:bg-[rgba(0,0,0,0.14)]"
           >
             <div className="mx-auto w-full max-w-[1180px] px-6">
               <ServiceAccordionItem
