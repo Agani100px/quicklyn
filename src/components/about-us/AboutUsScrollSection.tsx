@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const TRANSITION_MS = 400;
-const SCROLL_THRESHOLD = 50;
 
 function FeatureRow({ title, iconUrl }: { title: string; iconUrl?: string }) {
   return (
@@ -44,10 +43,8 @@ export function AboutUsScrollSection({
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > SCROLL_THRESHOLD);
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    const t = setTimeout(() => setScrolled(true), 150);
+    return () => clearTimeout(t);
   }, []);
 
   const transition = `opacity ${TRANSITION_MS}ms ease-out, transform ${TRANSITION_MS}ms ease-out`;
@@ -66,7 +63,7 @@ export function AboutUsScrollSection({
     <>
       {/* Header: heading + logo — high transparency until scroll, then full opacity + move up */}
       <header
-        className="mt-[60px] text-center"
+        className="mt-24 text-center"
         style={{
           opacity: headerOpacity,
           transform: headerTransform,

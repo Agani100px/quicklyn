@@ -5,6 +5,7 @@ import type {
   BookACleaningExtra,
 } from "@/types/wordpress";
 import { BookACleaningForm } from "@/components/book-a-cleaning/BookACleaningForm";
+import { ContactPageContent } from "@/components/contact/ContactPageContent";
 
 export const metadata = {
   title: "Book a cleaning | Quicklyn",
@@ -72,6 +73,7 @@ export default async function BookACleaningPage() {
         </>
       )}
 
+      <ContactPageContent>
       <main className="relative z-10 pt-24 pb-8">
         {/* Header */}
         <header className="px-6 pb-6 text-center">
@@ -102,6 +104,7 @@ export default async function BookACleaningPage() {
           </p>
         )}
       </main>
+      </ContactPageContent>
     </div>
   );
 }

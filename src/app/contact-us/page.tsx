@@ -1,6 +1,7 @@
 import { getContactUsPage, getSocialLinks } from "@/lib/wordpress";
 import type { WPSocialLink } from "@/lib/wordpress";
 import { ContactForm } from "@/components/contact/ContactForm";
+import { ContactPageContent } from "@/components/contact/ContactPageContent";
 import Link from "next/link";
 
 function ContactSocialIcon({ slug, className }: { slug: string; className?: string }) {
@@ -57,8 +58,8 @@ export default async function ContactUsPage() {
 
   return (
     <main className="relative min-h-screen overflow-hidden text-white">
-
-      {/* Mobile: unchanged */}
+      <ContactPageContent>
+      {/* Mobile */}
       <div className="relative z-10 mx-auto max-w-2xl px-8 pt-32 pb-12 md:hidden md:px-12 md:pt-44 md:pb-16">
         <header className="text-center">
           <h1
@@ -176,6 +177,7 @@ export default async function ContactUsPage() {
           </div>
         </div>
       </div>
+      </ContactPageContent>
     </main>
   );
 }

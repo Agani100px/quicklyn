@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface GetTheAppContentProps {
   headingDisplay: string;
@@ -37,29 +37,13 @@ export function GetTheAppContent({
   phoneImageUrl,
   backImageUrl,
 }: GetTheAppContentProps) {
-  const [hasScrolled, setHasScrolled] = useState(false);
-  const [sentinelOutOfView, setSentinelOutOfView] = useState(false);
+  const [active, setActive] = useState(false);
   const [isCopyHovered, setIsCopyHovered] = useState(false);
   const [copyTooltipLabel, setCopyTooltipLabel] = useState("Copy");
-  const sentinelRef = useRef<HTMLDivElement>(null);
-
-  const active = hasScrolled && sentinelOutOfView;
 
   useEffect(() => {
-    const handleScroll = () => setHasScrolled(true);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const sentinel = sentinelRef.current;
-    if (!sentinel) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setSentinelOutOfView(!entry.isIntersecting),
-      { threshold: 0 },
-    );
-    observer.observe(sentinel);
-    return () => observer.disconnect();
+    const t = setTimeout(() => setActive(true), 150);
+    return () => clearTimeout(t);
   }, []);
 
   const codeOnly = discountCodeLabel?.trim() || "";
@@ -154,13 +138,7 @@ export function GetTheAppContent({
         <div className="absolute inset-0 z-0 bg-[#2a7a7c]" aria-hidden />
       )}
 
-      <div
-        ref={sentinelRef}
-        className="absolute left-0 right-0 top-20 h-px w-full pointer-events-none"
-        aria-hidden
-      />
-
-      {/* Mobile layout (unchanged) */}
+      {/* Mobile layout */}
       <div className="relative z-10 flex min-h-screen flex-col items-center px-6 pt-[20%] pb-12 md:hidden">
         {phoneImageUrl && (
           <div
