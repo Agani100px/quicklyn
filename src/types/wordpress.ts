@@ -52,6 +52,8 @@ export interface HomePageACF {
   ["4th_section_sub_heading"]?: string;
   ["4th_section_description"]?: string;
   ["4th_section_map"]?: WPImage;
+  desktop_map_without_pin?: WPImage;
+  desktop_map_with_pin?: WPImage;
 }
 
 export interface ExtrasListItem {

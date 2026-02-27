@@ -19,26 +19,6 @@ export function ServiceAreasSection({ data }: ServiceAreasSectionProps) {
   const desktopMapRef = useRef<HTMLDivElement | null>(null);
   const [isMapInView, setIsMapInView] = useState(false);
 
-  if (!heading && !subHeading && !description && !map) return null;
-
-  const mapUrl = map?.url;
-  const isLocalMap =
-    !!mapUrl &&
-    (mapUrl.includes("quicklyn-headless.local") ||
-      mapUrl.includes("quick.rootholdings"));
-
-  const desktopMapWithoutPinUrl = desktopMapWithoutPin?.url;
-  const isDesktopMapWithoutPinLocal =
-    !!desktopMapWithoutPinUrl &&
-    (desktopMapWithoutPinUrl.includes("quicklyn-headless.local") ||
-      desktopMapWithoutPinUrl.includes("quick.rootholdings"));
-
-  const desktopMapWithPinUrl = desktopMapWithPin?.url;
-  const isDesktopMapWithPinLocal =
-    !!desktopMapWithPinUrl &&
-    (desktopMapWithPinUrl.includes("quicklyn-headless.local") ||
-      desktopMapWithPinUrl.includes("quick.rootholdings"));
-
   useEffect(() => {
     const el = desktopMapRef.current;
     if (!el) return;
@@ -61,6 +41,26 @@ export function ServiceAreasSection({ data }: ServiceAreasSectionProps) {
       observer.disconnect();
     };
   }, []);
+
+  if (!heading && !subHeading && !description && !map) return null;
+
+  const mapUrl = map?.url;
+  const isLocalMap =
+    !!mapUrl &&
+    (mapUrl.includes("quicklyn-headless.local") ||
+      mapUrl.includes("quick.rootholdings"));
+
+  const desktopMapWithoutPinUrl = desktopMapWithoutPin?.url;
+  const isDesktopMapWithoutPinLocal =
+    !!desktopMapWithoutPinUrl &&
+    (desktopMapWithoutPinUrl.includes("quicklyn-headless.local") ||
+      desktopMapWithoutPinUrl.includes("quick.rootholdings"));
+
+  const desktopMapWithPinUrl = desktopMapWithPin?.url;
+  const isDesktopMapWithPinLocal =
+    !!desktopMapWithPinUrl &&
+    (desktopMapWithPinUrl.includes("quicklyn-headless.local") ||
+      desktopMapWithPinUrl.includes("quick.rootholdings"));
 
   return (
     <section className="relative w-full overflow-hidden bg-[#297a7c] pb-16 pt-14">

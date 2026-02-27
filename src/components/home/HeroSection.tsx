@@ -62,6 +62,7 @@ export function HeroSection({ data, header }: HeroSectionProps) {
   const [isMobile, setIsMobile] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [desktopIntroDone, setDesktopIntroDone] = useState(false);
+  const [mobileLoadIntroDone, setMobileLoadIntroDone] = useState(false);
   const isLocalImage =
     bgUrl.includes("quicklyn-headless.local") ||
     bgUrl.includes("quick.rootholdings");
@@ -87,21 +88,14 @@ export function HeroSection({ data, header }: HeroSectionProps) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Scroll behavior - only on mobile: zoom out a bit when scrolled
+  // Mobile: on load show zoomed in, then animate to zoomed out (no scroll trigger)
   useEffect(() => {
-    if (typeof window === "undefined" || !isMobile) {
-      setIsCollapsed(false);
-      return;
-    }
-
-    const handleScroll = () => {
-      const y = window.scrollY || window.pageYOffset || 0;
-      setIsCollapsed(y > 40);
-    };
-
-    handleScroll();
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    if (!isMobile) return;
+    const t = setTimeout(() => {
+      setMobileLoadIntroDone(true);
+      setIsCollapsed(true);
+    }, 100);
+    return () => clearTimeout(t);
   }, [isMobile]);
 
   // Desktop intro: render background slightly zoomed out / rotated on first paint,
@@ -110,27 +104,19 @@ export function HeroSection({ data, header }: HeroSectionProps) {
     setDesktopIntroDone(true);
   }, []);
 
-  const handleHeroClick = () => {
-    if (!isMobile) return;
-    setIsCollapsed((prev) => !prev);
-  };
-
-  // Background: zoomed-in by default, zooms out a bit (≈3x) and shifts when scrolled/clicked on mobile
-  const bgTransform = isCollapsed
-    ? "translateX(0%) scale(2.5) rotate(-42deg)" // zoom out more + extra counter-clockwise when scrolled
+  // Mobile: on load show zoomed in then animate to zoomed out (no scroll or tap)
+  const mobileCollapsedDisplay = !mobileLoadIntroDone ? false : isCollapsed;
+  const bgTransform = mobileCollapsedDisplay
+    ? "translateX(0%) scale(2.5) rotate(-42deg)"
     : "translateX(25%) scale(3.8) rotate(-35deg)";
-  const bgMarginTop = isCollapsed ? "18%" : "40%"; // move up a bit when zoomed out
-
-  const headingColor = isCollapsed ? "#ffffff" : "#75a4a5";
-  const headingTop = isCollapsed ? "17vh" : "20vh";
-  const tealOverlayOpacity = isCollapsed ? 0.4 : 1;
+  const bgMarginTop = mobileCollapsedDisplay ? "18%" : "40%";
+  const headingColor = mobileCollapsedDisplay ? "#ffffff" : "#75a4a5";
+  const headingTop = mobileCollapsedDisplay ? "17vh" : "20vh";
+  const tealOverlayOpacity = mobileCollapsedDisplay ? 0.4 : 1;
 
   return (
     <>
-      <section
-        className="relative min-h-screen w-full overflow-hidden md:hidden"
-        onClick={handleHeroClick}
-      >
+      <section className="relative min-h-screen w-full overflow-hidden md:hidden">
         {/* Background image */}
         <div
           className="absolute inset-0 z-0 origin-center"

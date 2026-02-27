@@ -460,6 +460,7 @@ export function ServicesSection({
                 >
                   <span style={{ fontWeight: 200 }}>
                     <CountUp
+                      start={0}
                       end={Number(item.counter_number) || 0}
                       duration={1.5}
                     />
@@ -506,6 +507,7 @@ export function ServicesSection({
                             >
                               <span className="text-[54px] tracking-[-0.03em] lg:text-[72px]">
                                 <CountUp
+                                  start={0}
                                   end={Number(item.counter_number) || 0}
                                   duration={1.5}
                                 />
@@ -677,10 +679,10 @@ export function ServicesSection({
           {services.map((service, index) => (
             <article
               key={service.id}
-              className="group relative my-[20px] flex-shrink-0 select-none overflow-visible rounded-2xl bg-[#175c5e] p-6 text-left text-white transition-transform hover:-translate-y-1"
+              className="group relative my-[20px] flex-shrink-0 select-none overflow-visible rounded-2xl bg-[#175c5e] p-5 text-left text-white transition-transform hover:-translate-y-1"
               style={{
-                minWidth: "61%",
-                maxWidth: "53%",
+                minWidth: "78%",
+                maxWidth: "78%",
                 minHeight: "180px",
                 marginLeft: index === 0 ? "20px" : undefined,
               }}
@@ -706,7 +708,7 @@ export function ServicesSection({
 
               <div className="mb-3 pr-10">
                 <h3
-                  className={`text-[18px] font-semibold ${
+                  className={`text-[23px] font-normal leading-[26px] ${
                     isSignatureService(service) ? "text-[#FFDA00]" : ""
                   }`}
                 >
@@ -722,7 +724,7 @@ export function ServicesSection({
                 </h3>
               </div>
 
-              <p className="mb-3 line-clamp-3 text-[10px] leading-relaxed text-white/80">
+              <p className="mb-3 line-clamp-3 text-[12px] leading-normal text-white/80">
                 {service.acf?.service_description}
               </p>
             </article>

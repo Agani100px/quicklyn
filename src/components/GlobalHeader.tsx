@@ -115,16 +115,16 @@ export function GlobalHeader({ header }: GlobalHeaderProps) {
                 <Image
                   src={headerLogoUrl}
                   alt="Quicklyn"
-                  width={70}
-                  height={16}
-                  className="h-5 w-auto object-contain [filter:drop-shadow(0_1px_2px_rgba(0,0,0,0.4))]"
+                  width={88}
+                  height={20}
+                  className="h-7 w-auto object-contain [filter:drop-shadow(0_1px_2px_rgba(0,0,0,0.4))]"
                   unoptimized={!!isLocalLogo}
                 />
               </Link>
             ) : (
               <>
                 <LeafIcon className="text-white [filter:drop-shadow(0_1px_2px_rgba(0,0,0,0.4))]" />
-                <span className="hero-text-shadow text-lg font-medium lowercase text-white">
+                <span className="hero-text-shadow text-xl font-medium lowercase text-white">
                   quicklyn
                 </span>
               </>
