@@ -59,9 +59,7 @@ export function HeroSection({ data, header }: HeroSectionProps) {
   const appStoreUrl = data.appstore?.url ?? "";
   const googlePlayUrl = data.google_play?.url ?? "";
   const estimateLink = "/book-a-cleaning";
-  const [isMobile, setIsMobile] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const [mobileLoadIntroDone, setMobileLoadIntroDone] = useState(false);
+  const [mobileIntroDone, setMobileIntroDone] = useState(false);
   const [desktopGradientFadedOut, setDesktopGradientFadedOut] = useState(false);
   const isLocalImage =
     bgUrl.includes("quicklyn-headless.local") ||
@@ -75,43 +73,34 @@ export function HeroSection({ data, header }: HeroSectionProps) {
     .split(/\n+/)
     .map((part) => part.trim())
     .filter(Boolean);
-  // Detect mobile viewport
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   // Mobile: on load show zoomed in, then animate to zoomed out (no scroll trigger)
   useEffect(() => {
-    if (!isMobile) return;
     const t = setTimeout(() => {
-      setMobileLoadIntroDone(true);
-      setIsCollapsed(true);
-    }, 100);
+      setMobileIntroDone(true);
+    }, 0);
     return () => clearTimeout(t);
-  }, [isMobile]);
+  }, []);
 
   // Desktop/tablet: gradient overlay visible initially, fades out when page loads
   useEffect(() => {
     setDesktopGradientFadedOut(true);
   }, []);
 
-  // Mobile: on load show zoomed in then animate to zoomed out (no scroll or tap)
-  const mobileCollapsedDisplay = !mobileLoadIntroDone ? false : isCollapsed;
-  const bgTransform = mobileCollapsedDisplay
-    ? "translateX(0%) scale(2.5) rotate(-42deg)"
-    : "translateX(25%) scale(3.8) rotate(-35deg)";
-  const bgMarginTop = mobileCollapsedDisplay ? "18%" : "40%";
-  const headingColor = mobileCollapsedDisplay ? "#ffffff" : "#75a4a5";
-  const headingTop = mobileCollapsedDisplay ? "17vh" : "20vh";
-  const tealOverlayOpacity = mobileCollapsedDisplay ? 0.4 : 1;
+  // Mobile: pre-load state (before intro) and final state (after intro)
+  const mobileIntroActive = !mobileIntroDone;
+  // Before page load on mobile: image is ~50% more zoomed than the final state
+  // and shifted ~10% to the left, but uses the SAME rotation as the final state.
+  // After intro: use the tuned final transform (slightly scaled up, rotation -12deg).
+  const bgTransform = mobileIntroActive
+    ? "translate(-10%, -8%) scale(4.65) rotate(-12deg)"
+    : "translate(-40%, -8%) scale(3.3) rotate(-12deg)";
+  // Keep the background image flush with the top so it can fill the full viewport height
+  const bgMarginTop = "0%";
+  // Mobile heading: before load it's 20px lower and slightly transparent; after load it moves up and becomes fully opaque
+  const headingColor = "#ffffff";
+  const headingTop = mobileIntroActive ? "calc(17vh + 20px)" : "17vh";
+  const headingOpacity = mobileIntroActive ? 0.7 : 1;
+  const tealOverlayOpacity = 0.4;
 
   return (
     <>
@@ -122,7 +111,7 @@ export function HeroSection({ data, header }: HeroSectionProps) {
           style={{
             transform: bgTransform,
             marginTop: bgMarginTop,
-            transition: "transform 0.45s ease-out, margin-top 0.45s ease-out",
+            transition: "transform 0.6s ease-out",
           }}
         >
           <Image
@@ -137,46 +126,78 @@ export function HeroSection({ data, header }: HeroSectionProps) {
           />
         </div>
 
+        {/* Mobile teal overlay over the hero background (slightly transparent at all times) */}
+        <div
+          className="pointer-events-none absolute inset-0 z-[1]"
+          style={{
+            backgroundColor: "rgba(42, 122, 124, 0.4)",
+          }}
+          aria-hidden
+        />
+
+        {/* Mobile bottom black gradient overlays over the hero image (stacked for stronger effect).
+            All start fully transparent before page load, then fade in when the intro completes. */}
+        <div
+          className="pointer-events-none absolute inset-0 z-[2]"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 100%)",
+            opacity: mobileIntroActive ? 0 : 1,
+            transition: "opacity 0.6s ease-out",
+          }}
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-0 z-[3]"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 100%)",
+            opacity: mobileIntroActive ? 0 : 1,
+            transition: "opacity 0.6s ease-out",
+          }}
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-0 z-[4]"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 100%)",
+            opacity: mobileIntroActive ? 0 : 1,
+            transition: "opacity 0.6s ease-out",
+          }}
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute inset-0 z-[5]"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0) 100%)",
+            opacity: mobileIntroActive ? 0 : 1,
+            transition: "opacity 0.6s ease-out",
+          }}
+          aria-hidden
+        />
+
         {/* Heading */}
         <div
           className="absolute left-0 right-0 flex justify-center px-6 text-center"
           style={{
             top: headingTop,
             zIndex: 6,
-            transition: "top 0.45s ease-out, color 0.45s ease-out",
+            transition: "top 0.6s ease-out",
           }}
         >
           <h1
-            className="hero-text-shadow max-w-[320px] text-[35px] font-semibold leading-[35px]"
+            className="hero-text-shadow max-w-[320px] text-[35px] font-semibold leading-[39px] tracking-[-0.02em]"
             style={{
               color: headingColor,
-              transition: "color 0.45s ease-out",
+              opacity: headingOpacity,
+              transition: "opacity 0.6s ease-out",
             }}
           >
             {data.section_1_heading}
           </h1>
         </div>
-
-        {/* Overlay: teal gradient (fades a bit when scrolled/clicked) */}
-        <div
-          className="pointer-events-none absolute inset-0 z-[5]"
-          style={{
-            opacity: tealOverlayOpacity,
-            transition: "opacity 0.45s ease-out",
-            background:
-              "linear-gradient(to bottom, rgba(24, 91, 93, 1) 0%, rgba(24, 91, 93, 0.47) 47%, rgba(24, 91, 93, 0.2) 100%)",
-          }}
-          aria-hidden
-        />
-        {/* Overlay: black fade (always same, no change on scroll) */}
-        <div
-          className="pointer-events-none absolute inset-0 z-[4]"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.8) 100%)",
-          }}
-          aria-hidden
-        />
 
         {/* Content */}
         <div

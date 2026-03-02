@@ -38,16 +38,16 @@ export default async function HomePage() {
   return (
     <main className="min-h-screen bg-[#195b5d]">
       <HeroSection data={page.acf} header={header} />
-      <div className="-mt-[100px]">
-      <ServicesSection
-        background={page.acf.section2_background}
-        backgroundDesktop={page.acf.section_2_background_desktop}
-        counters={page.acf.counter}
-        services={services}
-        sectionHeading={page.acf.section_heading}
-        whyList={page.acf.why_list}
-        whyIcon={page.acf.why_icon}
-      />
+      <div className="md:-mt-[100px]">
+        <ServicesSection
+          background={page.acf.section2_background}
+          backgroundDesktop={page.acf.section_2_background_desktop}
+          counters={page.acf.counter}
+          services={services}
+          sectionHeading={page.acf.section_heading}
+          whyList={page.acf.why_list}
+          whyIcon={page.acf.why_icon}
+        />
       </div>
       <ServiceAreasSection data={page.acf} />
       <TestimonialsSection testimonials={testimonials} />

@@ -411,7 +411,7 @@ export function ServicesSection({
   }, [whyList.length]);
 
   return (
-    <section className="relative z-20 -mt-[210px] w-full overflow-x-hidden overflow-y-visible bg-transparent pb-16 pt-[100px] md:-mt-[260px] md:pt-[120px]">
+    <section className="relative z-20 -mt-[10vh] w-full overflow-x-hidden overflow-y-visible bg-transparent pb-16 pt-[100px] md:-mt-[260px] md:pt-[120px]">
       {/* Background texture for section 2 */}
       {(bgUrl || bgDesktopUrl) && (
         <div className="pointer-events-none absolute inset-0 z-0">
