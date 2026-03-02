@@ -386,8 +386,8 @@ export function OurMainServicesSection({ services, appLink }: OurMainServicesSec
               SERVICES
             </span>
           </span>
-          {/* Desktop / tablet: original styling preserved */}
-          <span className="hidden text-[48px] font-semibold leading-[1.05] md:block md:text-[110px] md:leading-[1]">
+          {/* Desktop / tablet: scaled down on tablet, original on desktop */}
+          <span className="hidden text-[40px] font-semibold leading-[1.05] md:block md:text-[80px] md:leading-[1.02] lg:text-[110px] lg:leading-[1]">
             Our Main Services
           </span>
         </h2>

@@ -91,7 +91,7 @@ export function AboutUsExecutiveTeam({ team, layout = "mobile" }: AboutUsExecuti
           <span className="h-px flex-1 bg-white/40" aria-hidden />
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3 lg:gap-12">
+        <div className="mt-12 grid grid-cols-1 gap-10 md:grid-cols-3 lg:mt-16 lg:grid-cols-3 lg:gap-12">
           {team.map((member, index) => {
             const photoUrl =
               member.profile_picture &&

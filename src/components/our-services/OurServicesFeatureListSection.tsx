@@ -124,7 +124,7 @@ export function OurServicesFeatureListSection({
       {/* Desktop / tablet: 4-column layout with icons above text and dashed dividers */}
       <section className="relative hidden bg-[#2a7a7c] -mt-8 pb-0 pt-16 text-white md:block">
         <div className="relative z-10 mx-auto max-w-[1180px] px-6">
-          <div className="grid grid-cols-2 gap-0 lg:grid-cols-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-0">
             {validFeatures.map((item, index) => {
               const icon = item.feature_icon;
               return (
@@ -134,7 +134,7 @@ export function OurServicesFeatureListSection({
                     index > 0 ? "border-l border-dashed border-white/50" : ""
                   }`}
                 >
-                  <div className="mb-4 flex h-[96px] w-[96px] flex-shrink-0 items-center justify-center lg:h-[104px] lg:w-[104px]">
+                  <div className="mb-4 flex h-[80px] w-[80px] flex-shrink-0 items-center justify-center lg:h-[104px] lg:w-[104px]">
                     {icon?.url && (
                       <Image
                         src={icon.url}
@@ -148,7 +148,7 @@ export function OurServicesFeatureListSection({
                       />
                     )}
                   </div>
-                  <p className="text-base font-normal leading-snug text-white lg:text-[18px]">
+                  <p className="text-[14px] font-normal leading-snug text-white lg:text-[18px]">
                     {item.feature_name}
                   </p>
                 </div>

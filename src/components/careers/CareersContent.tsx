@@ -196,12 +196,11 @@ export function CareersContent({
 
       {/* Desktop / tablet hero */}
       <section className="relative z-0 hidden px-8 md:block md:min-h-[70vh] lg:min-h-[80vh] lg:px-16">
-        <div className="mx-auto flex max-w-6xl items-stretch gap-10 lg:gap-14">
+          <div className="mx-auto flex max-w-6xl items-stretch gap-10 lg:gap-14">
           {/* Left text block */}
           <div className="flex-1 max-w-xl flex flex-col justify-center">
             <h1
-              className="mt-8 text-left font-semibold tracking-tight text-white"
-              style={{ fontSize: "86px", lineHeight: "77px" }}
+              className="mt-8 md:mt-[110px] lg:mt-8 text-left font-semibold tracking-tight text-white text-[50px] leading-[48px] lg:text-[86px] lg:leading-[77px]"
             >
               {(() => {
                 const text = heading.trim();

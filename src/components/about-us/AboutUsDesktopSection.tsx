@@ -68,9 +68,9 @@ export function AboutUsDesktopSection({
         </div>
       </header>
 
-      {/* Two columns: intro text left, features right */}
-      <div className="mt-16 grid grid-cols-1 gap-12 lg:mt-24 lg:grid-cols-2 lg:gap-0">
-        <div className="space-y-6 lg:pr-12 lg:border-r lg:border-white/30">
+      {/* Two columns: intro text left, features right (side-by-side from tablet up) */}
+      <div className="mt-16 grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-10 lg:mt-24 lg:gap-0">
+        <div className="space-y-6 md:pr-8 md:border-r md:border-white/30 lg:pr-12">
           {descriptionParagraphs.map((p, i) => (
             <p
               key={i}
@@ -82,7 +82,7 @@ export function AboutUsDesktopSection({
           ))}
         </div>
 
-        <div className="flex flex-col justify-center space-y-8 lg:pl-12">
+        <div className="flex flex-col justify-center space-y-8 md:pl-8 lg:pl-12">
           {features.map((item, index) => {
             const words = item.title.trim().split(/\s+/).filter(Boolean);
             const mid = Math.ceil(words.length / 2) || 1;

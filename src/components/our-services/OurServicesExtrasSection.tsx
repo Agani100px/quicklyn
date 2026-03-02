@@ -193,9 +193,9 @@ export function OurServicesExtrasSection({
         </article>
       </div>
 
-      {/* Desktop: two-column layout per image */}
+      {/* Desktop / tablet: two-column-style layout (scaled down on tablet) */}
       <div className="mx-auto hidden max-w-[1180px] px-6 md:block">
-        <h2 className="mb-8 text-center text-[96px] font-semibold tracking-normal">
+        <h2 className="mb-8 text-center text-[72px] font-semibold tracking-normal lg:text-[96px]">
           The Extras
         </h2>
 
@@ -203,14 +203,14 @@ export function OurServicesExtrasSection({
           {validExtras.map((item, index) => {
             const isActive = index === activeIndex;
             return (
-              <button
-                key={`desktop-${item.extras_heading}-${index}`}
-                type="button"
-                onClick={() => goToIndex(index)}
-                className={`border-0 bg-transparent px-4 py-2 text-[27px] capitalize transition-colors duration-200 hover:font-semibold ${
-                  isActive ? "font-semibold text-[#ffda00]" : "text-white/85"
-                }`}
-              >
+                <button
+                  key={`desktop-${item.extras_heading}-${index}`}
+                  type="button"
+                  onClick={() => goToIndex(index)}
+                  className={`border-0 bg-transparent px-4 py-2 text-[22px] capitalize transition-colors duration-200 hover:font-semibold lg:text-[27px] ${
+                    isActive ? "font-semibold text-[#ffda00]" : "text-white/85"
+                  }`}
+                >
                 {item.extras_heading}
               </button>
             );
@@ -218,13 +218,13 @@ export function OurServicesExtrasSection({
         </div>
 
         <article
-          className="relative grid grid-cols-1 gap-10 pt-[40px] transition-opacity duration-300 ease-out lg:grid-cols-[1fr_1fr]"
+          className="relative grid grid-cols-1 gap-10 pt-[40px] transition-opacity duration-300 ease-out md:grid-cols-[1fr_1fr]"
           style={{ opacity: isTransitioning ? 0 : 1 }}
         >
           {/* Left: title, icon, intro description */}
           <div className="flex flex-col">
             <div className="flex items-start gap-4">
-              <h3 className="line-clamp-2 pb-5 text-[53px] font-normal leading-[61px] text-white">
+              <h3 className="line-clamp-2 pb-5 text-[32px] font-normal leading-[40px] text-white lg:text-[53px] lg:leading-[61px]">
                 {(() => {
                   const words = extras_heading.trim().split(/\s+/);
                   const firstLine = words[0] ?? "";

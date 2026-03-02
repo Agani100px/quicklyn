@@ -130,12 +130,11 @@ export default async function OurMissionPage() {
 
       {/* Desktop / tablet: Our Mission section — two columns: text left, image right (no section background) */}
       <section className="relative z-10 hidden overflow-hidden px-6 pt-8 pb-16 md:block lg:pt-10 lg:pb-20">
-        <div className="relative z-10 mx-auto flex max-w-[1180px] flex-col items-stretch gap-10 lg:flex-row lg:items-center lg:gap-16">
+        <div className="relative z-10 mx-auto flex max-w-[1180px] flex-col items-stretch gap-10 md:flex-row md:items-start md:gap-10 lg:items-center lg:gap-16">
           <div className="flex flex-1 flex-col justify-center">
             {missionHeading && (
               <h2
-                className="font-semibold text-white"
-                style={{ fontSize: "96px", lineHeight: "86px" }}
+                className="font-semibold text-white text-[64px] leading-[60px] lg:text-[96px] lg:leading-[86px]"
               >
                 {missionHeading.split(/\s+/).map((word, i) => (
                   <span key={i} className="block">
@@ -157,7 +156,7 @@ export default async function OurMissionPage() {
             )}
           </div>
           {sectionImages.length > 0 && (
-            <div className="flex flex-1 shrink-0 justify-center lg:max-w-[50%]">
+            <div className="flex flex-1 shrink-0 justify-center md:max-w-[40%] lg:max-w-[50%]">
               <SectionImageSlider
                 images={sectionImages}
                 className="w-full max-w-md lg:max-w-full"

@@ -67,15 +67,12 @@ export function AboutUsInvestorRelations({
           transition,
         }}
       >
-        <div className="mx-auto max-w-[1180px] px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-20">
+          <div className="mx-auto max-w-[1180px] px-6 lg:px-8">
+          <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:gap-20">
             {/* Left: heading + CTA, button aligned to description bottom via flex */}
             <div className="flex h-full flex-col justify-between">
               {investorTitle && (
-                <h2
-                  className="text-left font-normal text-white"
-                  style={{ fontSize: "96px", lineHeight: "89px" }}
-                >
+                <h2 className="text-left font-normal text-white text-[64px] leading-[60px] lg:text-[96px] lg:leading-[89px]">
                   {investorTitle}
                 </h2>
               )}
@@ -93,19 +90,18 @@ export function AboutUsInvestorRelations({
             </div>
 
             {/* Right: description paragraphs */}
-            {investorParagraphs.length > 0 && (
-              <div className="space-y-5 text-left text-white/95 lg:ml-auto lg:max-w-[520px]">
-                {investorParagraphs.map((p, i) => (
-                  <p
-                    key={i}
-                    className="font-normal"
-                    style={{ fontSize: "19px", lineHeight: "32px" }}
-                  >
-                    {p}
-                  </p>
-                ))}
-              </div>
-            )}
+              {investorParagraphs.length > 0 && (
+                <div className="space-y-5 text-left text-white/95 lg:ml-auto lg:max-w-[520px]">
+                  {investorParagraphs.map((p, i) => (
+                    <p
+                      key={i}
+                      className="font-normal text-[17px] leading-[28px] lg:text-[19px] lg:leading-[32px]"
+                    >
+                      {p}
+                    </p>
+                  ))}
+                </div>
+              )}
           </div>
         </div>
       </section>

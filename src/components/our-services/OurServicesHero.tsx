@@ -96,7 +96,7 @@ export function OurServicesHero({
         <div className="relative z-10 mx-auto flex min-h-[620px] w-full max-w-[1320px] items-end justify-between px-10 pb-0 pt-36 lg:min-h-[700px] lg:px-14 lg:pb-4 lg:pt-40">
           <div className="flex w-full max-w-[520px] flex-col items-start">
             <h1
-              className="hero-text-shadow text-left font-semibold tracking-[-0.06em] text-white text-[240px] leading-[180px]"
+              className="hero-text-shadow text-left font-semibold tracking-[-0.06em] text-white text-[180px] leading-[142px] lg:text-[240px] lg:leading-[180px]"
               style={{
                 opacity: desktopIntroDone ? 1 : 0,
                 transform: desktopIntroDone ? "translateY(0)" : "translateY(-80px)",

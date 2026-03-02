@@ -44,7 +44,7 @@ export function SectionImageSlider({
 
   return (
     <div
-      className={`relative aspect-[4/3] w-full overflow-hidden rounded-2xl ${className}`}
+      className={`relative w-full overflow-hidden rounded-2xl aspect-[4/3] md:aspect-[3/4] lg:aspect-[4/3] ${className}`}
     >
       {images.map((img, i) => (
         <div
