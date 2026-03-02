@@ -38,6 +38,7 @@ export default async function HomePage() {
   return (
     <main className="min-h-screen bg-[#195b5d]">
       <HeroSection data={page.acf} header={header} />
+      <div className="-mt-[100px]">
       <ServicesSection
         background={page.acf.section2_background}
         backgroundDesktop={page.acf.section_2_background_desktop}
@@ -47,6 +48,7 @@ export default async function HomePage() {
         whyList={page.acf.why_list}
         whyIcon={page.acf.why_icon}
       />
+      </div>
       <ServiceAreasSection data={page.acf} />
       <TestimonialsSection testimonials={testimonials} />
       <FAQSection
@@ -57,7 +59,7 @@ export default async function HomePage() {
       {/* Global floating CTA button above all sections */}
       <Link
         href="/book-a-cleaning"
-        className="fixed left-1/2 z-[9999] flex h-12 w-[224px] -translate-x-1/2 items-center justify-center rounded-full bg-[#FFDA00] shadow-xl drop-shadow-[0_6px_16px_rgba(0,0,0,0.45)] transition hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-[#FFDA00] focus:ring-offset-2 focus:ring-offset-[#297476]"
+        className="fixed left-1/2 z-[99999] flex h-12 w-[224px] -translate-x-1/2 items-center justify-center rounded-full bg-[#FFDA00] shadow-xl drop-shadow-[0_6px_16px_rgba(0,0,0,0.45)] transition hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-[#FFDA00] focus:ring-offset-2 focus:ring-offset-[#297476]"
         style={{
           minWidth: "224px",
           bottom: "max(36px, env(safe-area-inset-bottom, 0px) + 32px)",

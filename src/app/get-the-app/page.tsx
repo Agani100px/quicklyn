@@ -15,16 +15,15 @@ export default async function GetTheAppPage() {
   }
 
   const acf = data.acf;
-  const headingRaw = (acf.heading ?? data.title?.rendered ?? "").trim();
-  const headingDisplay = headingRaw.endsWith("!")
-    ? headingRaw
-    : `${headingRaw} Today!`;
+  const headingDisplay =
+    (acf.heading && String(acf.heading).trim()) ||
+    (data.title?.rendered || "").trim();
   const subHeading = (acf.sub_heading ?? "").trim();
-  const discountCodeRaw = (
-    acf.discount_code ?? acf.promo_code ?? acf.code ?? ""
-  ).trim();
-  const discountCodeLabel =
-    discountCodeRaw.replace(/^USE CODE:\s*/i, "") || "QWEB15";
+  /** Code from code-only ACF field (code_only or code), for display in "Use code X to save 15%..." */
+  const codeOnly =
+    (acf.code_only ?? acf.code ?? "").trim().replace(/^USE CODE:\s*/i, "") ||
+    "QWEB15";
+  const discountCodeLabel = codeOnly;
   const googlePlayUrl = acf.image_01?.url;
   const appStoreUrl = acf.image_02?.url;
   const link01 = acf.link_01?.url ?? "#";
@@ -32,7 +31,10 @@ export default async function GetTheAppPage() {
     typeof acf.link_02 === "string"
       ? acf.link_02
       : (acf.link_02 as unknown as { url?: string })?.url ?? "#";
-  const bookingUrl = acf.booking_link?.url ?? "#";
+  const bookingUrl =
+    (acf.booking_link?.url?.trim() && acf.booking_link.url.trim() !== "#")
+      ? acf.booking_link.url.trim()
+      : "/book-a-cleaning";
   const bookingTarget = acf.booking_link?.target ?? "_self";
   const bookingText = acf.booking_text?.trim() ?? "Book A Cleaning Now";
   const description = acf.description?.trim() ?? "";

@@ -257,7 +257,10 @@ export function HomeAppDownloadSection({
   const appStoreUrl = acf.image_02?.url;
   const link01 = acf.link_01?.url || "#";
   const link02 = typeof acf.link_02 === "string" ? acf.link_02 : acf.link_02 ?? "#";
-  const bookingUrl = acf.booking_link?.url || "#";
+  const bookingUrl =
+    (acf.booking_link?.url?.trim() && acf.booking_link.url.trim() !== "#")
+      ? acf.booking_link.url.trim()
+      : "/book-a-cleaning";
   const bookingText = acf.booking_text?.trim() || "Book A Cleaning Now";
   const description = acf.description?.trim() || "";
   const bgImage = acf.background_image?.url;
@@ -306,7 +309,7 @@ export function HomeAppDownloadSection({
 
   return (
     <section
-      className={`relative isolate z-[100] mt-0 w-full overflow-x-hidden overflow-y-visible pt-48 md:pt-[7.5rem] lg:pt-[9rem] ${tightBottom ? "pb-0" : "pb-16"}`}
+      className={`relative isolate z-[250] mt-0 w-full overflow-x-hidden overflow-y-visible pt-48 md:pt-[7.5rem] lg:pt-[9rem] ${tightBottom ? "pb-0" : "pb-16"}`}
       style={
         transparentBackground
           ? undefined
@@ -433,16 +436,17 @@ export function HomeAppDownloadSection({
             </div>
           </div>
 
-          <div className="mt-2 flex flex-col items-end text-right lg:mt-4">
+          <div className="relative z-[250] mt-2 flex flex-col items-end text-right lg:mt-4">
             <p className="text-[20px] font-light uppercase tracking-wide text-white/95">OR</p>
             <Link
               href={bookingUrl}
               target={acf.booking_link?.target || "_self"}
-              className="mt-3 inline-flex items-center gap-2 text-[28px] font-semibold text-white hover:text-white/90 focus:outline-none lg:text-[30px]"
+              className="mt-3 inline-flex items-center gap-2 font-bold text-white transition-colors hover:!text-[#ffda00] focus:outline-none"
+              style={{ fontSize: "45px", lineHeight: "65px" }}
             >
               {bookingText}
               <svg
-                className="h-7 w-7"
+                className="h-8 w-8 shrink-0"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
@@ -520,18 +524,19 @@ export function HomeAppDownloadSection({
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-end pr-6 text-right">
+        <div className="relative z-[250] mt-12 flex flex-col items-end pr-6 text-right">
           <p className="text-sm font-medium uppercase tracking-wide text-white">
             OR
           </p>
           <Link
             href={bookingUrl}
             target={acf.booking_link?.target || "_self"}
-            className="mt-3 inline-flex items-center gap-2 text-[20px] font-semibold text-white hover:text-white/90 focus:outline-none"
+            className="mt-3 inline-flex items-center gap-2 font-bold text-white transition-colors hover:!text-[#ffda00] focus:outline-none"
+            style={{ fontSize: "45px", lineHeight: "65px" }}
           >
             {bookingText}
             <svg
-              className="h-5 w-5"
+              className="h-8 w-8 shrink-0"
               fill="none"
               stroke="currentColor"
               strokeWidth="2"

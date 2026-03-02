@@ -411,7 +411,7 @@ export function ServicesSection({
   }, [whyList.length]);
 
   return (
-    <section className="relative z-20 -mt-[60px] w-full overflow-x-hidden overflow-y-visible bg-transparent pb-16 pt-[100px] md:-mt-[90px] md:pt-[120px]">
+    <section className="relative z-20 -mt-[210px] w-full overflow-x-hidden overflow-y-visible bg-transparent pb-16 pt-[100px] md:-mt-[260px] md:pt-[120px]">
       {/* Background texture for section 2 */}
       {(bgUrl || bgDesktopUrl) && (
         <div className="pointer-events-none absolute inset-0 z-0">
@@ -447,7 +447,7 @@ export function ServicesSection({
 
       <div className="relative z-10 mx-auto flex w-full flex-col items-center px-6 text-center">
         {/* Counters - mobile unchanged */}
-        <div className="mx-auto mb-10 flex w-full max-w-[240px] flex-col gap-4 px-0 text-left md:hidden">
+        <div className="mx-auto mb-24 flex w-full max-w-[240px] flex-col gap-4 px-0 text-left md:hidden">
           {(counters ?? []).map((item, index) => (
             <div key={`${item.counter_text}-${index}`} className="w-full">
               {index > 0 && (
@@ -484,7 +484,7 @@ export function ServicesSection({
             const right = items.slice(mid);
             const columns = [left, right];
             return (
-              <div className="mb-8 hidden w-full max-w-[820px] md:-mt-4 md:block lg:mb-14">
+              <div className="mb-20 hidden w-full max-w-[820px] md:-mt-4 md:block lg:mb-32">
                 <div className="px-4 py-4 lg:px-6 lg:py-5">
                   <div className="flex flex-col gap-6 md:flex-row">
                     {columns.map((colItems, colIndex) => (

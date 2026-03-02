@@ -74,6 +74,9 @@ export function Footer({ data, appLink, socialLinks = [] }: FooterProps) {
   const isCareersPage = mounted && pathname === "/careers";
   const isContactUsPage = mounted && pathname === "/contact-us";
   const isGetTheAppPage = mounted && pathname === "/get-the-app";
+  const isOurServicesPage = mounted && pathname === "/our-services";
+  const isOurMissionPage = mounted && pathname === "/our-mission";
+  const isHomePage = mounted && pathname === "/";
 
   if (!data?.acf) return null;
 
@@ -83,6 +86,26 @@ export function Footer({ data, appLink, socialLinks = [] }: FooterProps) {
   const navItems = acf.footer_navigation ?? [];
   const leftNav = navItems.slice(0, 6);
   const rightNav = navItems.slice(6, 12);
+
+  /** Desktop/tablet footer menu order: 3 columns */
+  const footerMenuColumn1 = [
+    { label: "Home", href: "/" },
+    { label: "Services", href: "/our-services" },
+    { label: "Book now", href: "/book-a-cleaning" },
+    { label: "Our mission", href: "/our-mission" },
+    { label: "FAQ", href: "/#faq" },
+  ];
+  const footerMenuColumn2 = [
+    { label: "Contact us", href: "/contact-us" },
+    { label: "Blogs", href: "/blogs" },
+    { label: "Gift cards", href: "/gift-cards" },
+    { label: "Careers", href: "/careers" },
+  ];
+  const footerMenuColumn3 = [
+    { label: "About us", href: "/about-us" },
+    { label: "Privacy policy", href: "/privacy-policy" },
+    { label: "Terms & conditions", href: "/terms-and-conditions" },
+  ];
   const contactEmail = acf.contact_email?.trim() || "";
   const contactPhone = acf.contact_phone?.trim() || "";
   const subscriptionText = acf.subscription_text?.trim() || "Sign Up To Our Newsletter";
@@ -115,8 +138,8 @@ export function Footer({ data, appLink, socialLinks = [] }: FooterProps) {
   return (
     <footer
       className={`relative w-full overflow-hidden text-white ${
-        isGetTheAppPage ? "z-10 md:mt-0" : "z-[200] md:-mt-40"
-      } ${isCareersPage ? "z-20 md:-mt-[520px] lg:-mt-[620px]" : ""} ${isContactUsPage ? "md:-mt-48 lg:-mt-64" : ""}`}
+        isGetTheAppPage ? "z-10 md:mt-0" : isHomePage ? "z-[200] md:!-mt-[28rem] lg:!-mt-[30rem]" : "z-[200] md:-mt-40"
+      } ${isCareersPage ? "z-20 md:-mt-[520px] lg:-mt-[620px]" : ""} ${isContactUsPage ? "md:-mt-48 lg:-mt-64" : ""} ${isOurServicesPage ? "md:-mt-8 lg:-mt-12" : ""} ${isOurMissionPage ? "md:-mt-24 lg:-mt-28" : ""}`}
     >
       <div className="pointer-events-none absolute inset-0 z-0 hidden md:block" aria-hidden />
       {footerBgUrl && (
@@ -170,7 +193,55 @@ export function Footer({ data, appLink, socialLinks = [] }: FooterProps) {
                 )}
               </div>
 
-              <div className="mt-auto pt-12">
+              <div className="mt-auto">
+                {(contactEmail || contactPhone) && (
+                  <div className="-mt-3 mb-12 flex flex-col gap-2 text-[14px] font-medium text-white">
+                    {contactEmail && (
+                      <a
+                        href={`mailto:${contactEmail}`}
+                        className="flex items-center gap-2.5 transition hover:text-white/90"
+                      >
+                        <svg
+                          className="h-5 w-5 shrink-0 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          aria-hidden
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
+                          />
+                        </svg>
+                        {contactEmail}
+                      </a>
+                    )}
+                    {contactPhone && (
+                      <a
+                        href={`tel:${contactPhone.replace(/\s/g, "")}`}
+                        className="flex items-center gap-2.5 transition hover:text-white/90"
+                      >
+                        <svg
+                          className="h-5 w-5 shrink-0 text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          aria-hidden
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"
+                          />
+                        </svg>
+                        {contactPhone}
+                      </a>
+                    )}
+                  </div>
+                )}
                 <p className="mb-3 text-[11px] text-white/75">{subscriptionText}</p>
                 <form
                   className="flex w-full max-w-[210px] overflow-hidden rounded border border-white/35"
@@ -202,46 +273,37 @@ export function Footer({ data, appLink, socialLinks = [] }: FooterProps) {
             <div className="flex min-h-[360px] flex-col">
               <div className="grid grid-cols-3 gap-x-10 gap-y-3 pt-4 lg:gap-x-14">
                 <nav className="flex flex-col gap-3" aria-label="Footer navigation">
-                  {leftNav.map((item) => {
-                    const href = mapWordPressUrlToNextPath(item.page_link?.url);
-                    return (
-                      <Link
-                        key={item.menu_name}
-                        href={href}
-                        className="text-[12px] text-white/90 transition hover:text-white"
-                      >
-                        {item.menu_name}
-                      </Link>
-                    );
-                  })}
+                  {footerMenuColumn1.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="text-[16px] leading-[36px] text-white/90 transition hover:text-white"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
                 </nav>
-                <nav className="flex flex-col gap-3" aria-label="Footer navigation secondary">
-                  {rightNav.slice(0, Math.ceil(rightNav.length / 2)).map((item) => {
-                    const href = mapWordPressUrlToNextPath(item.page_link?.url);
-                    return (
-                      <Link
-                        key={item.menu_name}
-                        href={href}
-                        className="text-[12px] text-white/90 transition hover:text-white"
-                      >
-                        {item.menu_name}
-                      </Link>
-                    );
-                  })}
+                <nav className="mt-6 flex flex-col gap-3 lg:mt-8" aria-label="Footer navigation secondary">
+                  {footerMenuColumn2.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="text-[16px] leading-[36px] text-white/90 transition hover:text-white"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
                 </nav>
-                <nav className="flex flex-col gap-3" aria-label="Footer navigation tertiary">
-                  {rightNav.slice(Math.ceil(rightNav.length / 2)).map((item) => {
-                    const href = mapWordPressUrlToNextPath(item.page_link?.url);
-                    return (
-                      <Link
-                        key={item.menu_name}
-                        href={href}
-                        className="text-[12px] text-white/90 transition hover:text-white"
-                      >
-                        {item.menu_name}
-                      </Link>
-                    );
-                  })}
+                <nav className="mt-12 flex flex-col gap-3 lg:mt-16" aria-label="Footer navigation tertiary">
+                  {footerMenuColumn3.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="text-[16px] leading-[36px] text-white/90 transition hover:text-white"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
                 </nav>
               </div>
 
@@ -281,9 +343,9 @@ export function Footer({ data, appLink, socialLinks = [] }: FooterProps) {
                       <Image
                         src={googlePlayUrl}
                         alt="Get it on Google Play"
-                        width={124}
-                        height={40}
-                        className="h-9 w-auto object-contain"
+                        width={186}
+                        height={60}
+                        className="h-[60px] w-auto object-contain"
                         unoptimized={!!isLocal}
                       />
                     </Link>
@@ -299,9 +361,9 @@ export function Footer({ data, appLink, socialLinks = [] }: FooterProps) {
                       <Image
                         src={appStoreUrl}
                         alt="Download on the App Store"
-                        width={124}
-                        height={40}
-                        className="h-9 w-auto object-contain"
+                        width={186}
+                        height={60}
+                        className="h-[60px] w-auto object-contain"
                         unoptimized={!!isLocal}
                       />
                     </Link>
@@ -464,9 +526,9 @@ export function Footer({ data, appLink, socialLinks = [] }: FooterProps) {
                   <Image
                     src={googlePlayUrl}
                     alt="Get it on Google Play"
-                    width={140}
-                    height={48}
-                    className="h-12 w-auto object-contain"
+                    width={200}
+                    height={66}
+                    className="h-[66px] w-auto object-contain"
                     unoptimized={!!isLocal}
                   />
                 </Link>
@@ -481,9 +543,9 @@ export function Footer({ data, appLink, socialLinks = [] }: FooterProps) {
                   <Image
                     src={appStoreUrl}
                     alt="Download on the App Store"
-                    width={140}
-                    height={48}
-                    className="h-12 w-auto object-contain"
+                    width={200}
+                    height={66}
+                    className="h-[66px] w-auto object-contain"
                     unoptimized={!!isLocal}
                   />
                 </Link>

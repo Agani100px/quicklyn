@@ -61,8 +61,8 @@ export function HeroSection({ data, header }: HeroSectionProps) {
   const estimateLink = "/book-a-cleaning";
   const [isMobile, setIsMobile] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [desktopIntroDone, setDesktopIntroDone] = useState(false);
   const [mobileLoadIntroDone, setMobileLoadIntroDone] = useState(false);
+  const [desktopGradientFadedOut, setDesktopGradientFadedOut] = useState(false);
   const isLocalImage =
     bgUrl.includes("quicklyn-headless.local") ||
     bgUrl.includes("quick.rootholdings");
@@ -98,10 +98,9 @@ export function HeroSection({ data, header }: HeroSectionProps) {
     return () => clearTimeout(t);
   }, [isMobile]);
 
-  // Desktop intro: render background slightly zoomed out / rotated on first paint,
-  // then immediately snap to the final position once the page has loaded.
+  // Desktop/tablet: gradient overlay visible initially, fades out when page loads
   useEffect(() => {
-    setDesktopIntroDone(true);
+    setDesktopGradientFadedOut(true);
   }, []);
 
   // Mobile: on load show zoomed in then animate to zoomed out (no scroll or tap)
@@ -235,7 +234,7 @@ export function HeroSection({ data, header }: HeroSectionProps) {
       </section>
 
       <section className="relative hidden overflow-hidden bg-[#1a5d5f] md:block">
-        <div className="relative min-h-[900px] lg:min-h-[980px]">
+        <div className="relative min-h-[1080px] lg:min-h-[1200px]">
           <Image
             src={bgUrl}
             alt=""
@@ -245,19 +244,20 @@ export function HeroSection({ data, header }: HeroSectionProps) {
             sizes="100vw"
             unoptimized={isLocalImage}
             style={{
-              transform: desktopIntroDone
-                ? "translateX(10%) translateY(-4%) scaleX(-1) scale(1.08)"
-                : "translateX(14%) translateY(2%) scaleX(-1) scale(0.94) rotate(8deg)",
-              transition: "transform 0.4s ease-out",
+              transform: desktopGradientFadedOut
+                ? "translateY(-18%) scale(1.42) rotate(0deg)"
+                : "translateY(-8%) scale(1.15) rotate(-4deg)",
+              transition: "transform 0.6s ease-out",
               transformOrigin: "center center",
+              objectPosition: "center bottom",
             }}
           />
 
-          {/* Intro gradient: bottom-left → top-right, fades out after load */}
+          {/* Intro gradient: visible before load, fades out when page loads */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
-              opacity: desktopIntroDone ? 0 : 1,
+              opacity: desktopGradientFadedOut ? 0 : 1,
               transition: "opacity 0.45s ease-out",
               background:
                 "linear-gradient(to top right, #000000 0%, rgba(24,91,93,0.5) 100%)",
@@ -268,6 +268,8 @@ export function HeroSection({ data, header }: HeroSectionProps) {
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
+              opacity: desktopGradientFadedOut ? 0 : 1,
+              transition: "opacity 0.45s ease-out",
               background:
                 "linear-gradient(90deg, rgba(25,91,93,1) 0%, rgba(25,91,93,0) 100%)",
             }}
@@ -276,6 +278,8 @@ export function HeroSection({ data, header }: HeroSectionProps) {
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
+              opacity: desktopGradientFadedOut ? 0 : 1,
+              transition: "opacity 0.45s ease-out",
               background:
                 "linear-gradient(90deg, #206c70 0%, rgba(32,108,112,0.2) 30%, transparent 100%)",
             }}
@@ -284,6 +288,8 @@ export function HeroSection({ data, header }: HeroSectionProps) {
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
+              opacity: desktopGradientFadedOut ? 0 : 1,
+              transition: "opacity 0.45s ease-out",
               background:
                 "linear-gradient(90deg, #206c70 0%, rgba(32,108,112,0.2) 30%, transparent 100%)",
             }}
@@ -292,13 +298,15 @@ export function HeroSection({ data, header }: HeroSectionProps) {
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
+              opacity: desktopGradientFadedOut ? 0 : 1,
+              transition: "opacity 0.45s ease-out",
               background:
                 "linear-gradient(to top, rgba(25,91,93,1) 0%, rgba(25,91,93,0) 45%)",
             }}
             aria-hidden
           />
 
-          <div className="relative z-10 mx-auto flex min-h-[900px] w-full max-w-[1320px] items-center px-8 pb-24 pt-[95px] lg:min-h-[980px] lg:px-8 lg:pt-[112px]">
+          <div className="relative z-10 mx-auto flex min-h-[1080px] w-full max-w-[1320px] -mt-6 items-center px-8 pb-24 pt-0 lg:-mt-8 lg:min-h-[1200px] lg:px-8 lg:pt-0">
             <div className="grid w-full grid-cols-12 items-center gap-6 lg:gap-8">
               <div className="col-span-6 pr-2 md:-translate-y-6 lg:col-span-6 lg:-translate-y-8">
                 <h1 className="hero-text-shadow max-w-[560px] font-semibold tracking-[-0.03em] text-white lg:max-w-[560px]" style={{ fontSize: "60px", lineHeight: "59px" }}>
@@ -352,10 +360,10 @@ export function HeroSection({ data, header }: HeroSectionProps) {
               <div
                 className="relative col-span-5 h-[440px] lg:col-span-5 lg:h-[520px]"
                 style={{
-                  transform: desktopIntroDone ? "scale(1)" : "scale(0.7)",
-                  opacity: desktopIntroDone ? 1 : 0,
-                  transition: "transform 0.5s ease-out, opacity 0.5s ease-out",
+                  transform: desktopGradientFadedOut ? "scale(1)" : "scale(0.2)",
+                  opacity: desktopGradientFadedOut ? 1 : 0,
                   transformOrigin: "center center",
+                  transition: "transform 0.6s ease-out, opacity 0.6s ease-out",
                 }}
               >
                 {popImg2 && (
@@ -372,13 +380,13 @@ export function HeroSection({ data, header }: HeroSectionProps) {
                 )}
 
                 {popImg1 && (
-                  <div className="absolute left-[10%] top-[38%] z-20 -rotate-[11deg] transition-transform duration-300 hover:scale-105 lg:left-[9%] lg:top-[35%]">
+                  <div className="absolute -left-[4%] top-[38%] z-20 -rotate-[11deg] transition-transform duration-300 hover:scale-105 lg:-left-[5%] lg:top-[35%]">
                     <Image
                       src={popImg1}
                       alt=""
                       width={265}
                       height={300}
-                      className="h-auto w-[170px] lg:w-[215px]"
+                      className="h-auto w-[210px] lg:w-[270px]"
                       unoptimized={isLocalImage}
                     />
                   </div>

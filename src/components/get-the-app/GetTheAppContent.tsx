@@ -48,9 +48,6 @@ export function GetTheAppContent({
 
   const codeOnly = discountCodeLabel?.trim() || "";
 
-  const escapeRegExp = (value: string) =>
-    value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
   const handleCopyCode = async () => {
     if (!codeOnly) return;
     try {
@@ -67,43 +64,38 @@ export function GetTheAppContent({
   const renderDesktopUseCodeLine = () => {
     if (!codeOnly) return null;
 
-    const codeRegex = new RegExp(escapeRegExp(codeOnly), "i");
-    const text = `use code ${codeOnly} to save 15% instantly.`;
-    const parts = text.split(new RegExp(`(${escapeRegExp(codeOnly)})`, "i"));
-
     return (
-      <p className="mt-7 text-[24px] leading-[36px] text-white">
-        {parts.map((part, i) => {
-          if (!codeRegex.test(part)) {
-            return <span key={i}>{part}</span>;
-          }
-
-          return (
-            <button
-              key={i}
-              type="button"
-              onMouseEnter={() => setIsCopyHovered(true)}
-              onMouseLeave={() => {
-                setIsCopyHovered(false);
-                setCopyTooltipLabel("Copy");
-              }}
-              onClick={handleCopyCode}
-              className="relative mx-1 inline-flex items-center px-1.5 py-0.5 align-baseline font-semibold text-[#ffda00] focus:outline-none"
-            >
-              <span
-                className="pointer-events-none absolute inset-0 -z-10 rounded-[999px] border border-dashed border-white/55 opacity-90"
-                style={{ transform: "rotate(-8deg) scale(1.18, 1.35)" }}
-                aria-hidden
-              />
-              {part}
-              {isCopyHovered && (
-                <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded-md border border-white/20 bg-[#114b4d] px-2.5 py-1 text-[12px] font-medium leading-none text-white shadow-md">
-                  {copyTooltipLabel}
-                </span>
-              )}
-            </button>
-          );
-        })}
+      <p
+        className="mt-7 font-normal text-white"
+        style={{ fontSize: "32px", lineHeight: "46px" }}
+      >
+        Use code{" "}
+        <button
+          type="button"
+          onMouseEnter={() => setIsCopyHovered(true)}
+          onMouseLeave={() => {
+            setIsCopyHovered(false);
+            setCopyTooltipLabel("Copy");
+          }}
+          onClick={handleCopyCode}
+          className="relative mx-1 inline-flex items-center px-1.5 py-0.5 align-baseline font-bold text-[#ffda00] focus:outline-none"
+          style={{ fontSize: "36px", lineHeight: "46px" }}
+        >
+          <span
+            className="pointer-events-none absolute inset-0 -z-10 rounded-[999px] border border-dashed border-white/55 opacity-90"
+            style={{ transform: "rotate(-8deg) scale(1.18, 1.35)" }}
+            aria-hidden
+          />
+          {codeOnly}
+          {isCopyHovered && (
+            <span className="pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 rounded-md border border-white/20 bg-[#114b4d] px-2.5 py-1 text-[12px] font-medium leading-none text-white shadow-md">
+              {copyTooltipLabel}
+            </span>
+          )}
+        </button>{" "}
+        to save 15%
+        <br />
+        on your first booking.
       </p>
     );
   };
@@ -181,9 +173,9 @@ export function GetTheAppContent({
               <Image
                 src={googlePlayUrl}
                 alt="Get it on Google Play"
-                width={180}
-                height={60}
-                className="h-11 w-auto object-contain md:h-12"
+                width={248}
+                height={80}
+                className="h-16 w-auto object-contain md:h-20"
                 unoptimized={googlePlayUrl.includes("quicklyn-headless.local")}
               />
             </Link>
@@ -198,9 +190,9 @@ export function GetTheAppContent({
               <Image
                 src={appStoreUrl}
                 alt="Download on the App Store"
-                width={180}
-                height={60}
-                className="h-11 w-auto object-contain md:h-12"
+                width={248}
+                height={80}
+                className="h-16 w-auto object-contain md:h-20"
                 unoptimized={appStoreUrl.includes("quicklyn-headless.local")}
               />
             </Link>
@@ -223,7 +215,7 @@ export function GetTheAppContent({
         )}
 
         {(bookingText || description) && (
-          <div className="mt-12 flex w-full flex-col items-end text-right">
+          <div className="relative z-[250] mt-12 flex w-full flex-col items-end text-right">
             <p className="text-sm font-medium uppercase tracking-wide text-white/90">
               OR
             </p>
@@ -231,11 +223,12 @@ export function GetTheAppContent({
               href={bookingUrl}
               target={bookingTarget}
               rel="noopener noreferrer"
-              className="mt-2 inline-flex items-center gap-2 text-lg font-bold text-white hover:text-white/90 focus:outline-none focus:ring-2 focus:ring-white/50 rounded"
+              className="mt-2 inline-flex items-center gap-2 font-bold text-white transition-colors hover:!text-[#ffda00] focus:outline-none focus:ring-2 focus:ring-white/50 rounded"
+              style={{ fontSize: "45px", lineHeight: "65px" }}
             >
               {bookingText}
               <svg
-                className="h-5 w-5"
+                className="h-8 w-8 shrink-0"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"
@@ -310,7 +303,6 @@ export function GetTheAppContent({
                 active ? "opacity-100" : "opacity-0"
               }`}
             >
-              {renderSubHeading("mt-6 text-[22px] leading-[34px] text-white/90")}
               {renderDesktopUseCodeLine()}
             </div>
 
@@ -329,10 +321,10 @@ export function GetTheAppContent({
                   <Image
                     src={googlePlayUrl}
                     alt="Get it on Google Play"
-                    width={210}
-                    height={68}
-                    className="h-14 w-auto object-contain"
-                    sizes="210px"
+                    width={280}
+                    height={90}
+                    className="h-[90px] w-auto object-contain"
+                    sizes="280px"
                     unoptimized={googlePlayUrl.includes("quicklyn-headless.local")}
                   />
                 </Link>
@@ -347,10 +339,10 @@ export function GetTheAppContent({
                   <Image
                     src={appStoreUrl}
                     alt="Download on the App Store"
-                    width={210}
-                    height={68}
-                    className="h-14 w-auto object-contain"
-                    sizes="210px"
+                    width={280}
+                    height={90}
+                    className="h-[90px] w-auto object-contain"
+                    sizes="280px"
                     unoptimized={appStoreUrl.includes("quicklyn-headless.local")}
                   />
                 </Link>

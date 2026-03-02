@@ -25,7 +25,10 @@ export function AppDownloadSection({
   const appStoreUrl = acf.image_02?.url;
   const link01 = acf.link_01?.url || "#";
   const link02 = typeof acf.link_02 === "string" ? acf.link_02 : acf.link_02 ?? "#";
-  const bookingUrl = acf.booking_link?.url || "#";
+  const bookingUrl =
+    (acf.booking_link?.url?.trim() && acf.booking_link.url.trim() !== "#")
+      ? acf.booking_link.url.trim()
+      : "/book-a-cleaning";
   const bookingText = acf.booking_text?.trim() || "Book A Cleaning Now";
   const description = acf.description?.trim() || "";
   const bgImage = acf.background_image?.url;
@@ -66,7 +69,7 @@ export function AppDownloadSection({
 
   return (
     <section
-      className={`relative isolate z-[100] w-full overflow-visible bg-[#2a7a7c] ${sectionPadding} ${roundedCorners}`}
+      className={`relative isolate z-[250] w-full overflow-visible bg-[#2a7a7c] ${sectionPadding} ${roundedCorners}`}
     >
       {/* Yellow ribbon: code from app link endpoint — only when code is provided */}
       {ribbonCode && (
@@ -175,18 +178,19 @@ export function AppDownloadSection({
 
         {/* Bottom: OR, Book link, description */}
         {showBottomCta && (
-          <div className="mt-12 flex flex-col items-end text-right">
+          <div className="relative z-[250] mt-12 flex flex-col items-end text-right">
             <p className="text-sm font-medium uppercase tracking-wide text-white">
               OR
             </p>
             <Link
               href={bookingUrl}
               target={acf.booking_link?.target || "_self"}
-              className="mt-3 inline-flex items-center gap-2 text-[20px] font-semibold text-white hover:text-white/90 focus:outline-none"
+              className="mt-3 inline-flex items-center gap-2 font-bold text-white transition-colors hover:!text-[#ffda00] focus:outline-none"
+              style={{ fontSize: "45px", lineHeight: "65px" }}
             >
               {bookingText}
               <svg
-                className="h-5 w-5"
+                className="h-8 w-8 shrink-0"
                 fill="none"
                 stroke="currentColor"
                 strokeWidth="2"

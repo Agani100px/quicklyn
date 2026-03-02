@@ -302,10 +302,12 @@ export function FAQSection({ faqs, backgroundDesktop, downloadData }: FAQSection
       </div>
 
       {/* Download section nested visually inside FAQ, sharing background */}
-      <HomeAppDownloadSection
-        data={downloadData ?? null}
-        transparentBackground
-      />
+      <div className="pb-[340px]">
+        <HomeAppDownloadSection
+          data={downloadData ?? null}
+          transparentBackground
+        />
+      </div>
     </section>
   );
 }
