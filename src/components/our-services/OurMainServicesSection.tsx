@@ -316,7 +316,6 @@ function findServiceByKeywords(services: WPService[], keywords: string[]): WPSer
 }
 
 const PREFERRED_ORDER = [
-  ["deep"],
   ["apartment"],
   ["move"],
   ["airbnb"],
@@ -325,16 +324,22 @@ const PREFERRED_ORDER = [
 
 export function OurMainServicesSection({ services, appLink }: OurMainServicesSectionProps) {
   const sortedServices = useMemo(() => {
+    // Exclude Deep Cleaning entirely from the main services accordion
+    const nonDeepServices = services.filter((service) => {
+      const text = `${service.acf?.service_heading ?? ""} ${service.title?.rendered ?? ""} ${service.slug ?? ""}`.toLowerCase();
+      return !text.includes("deep");
+    });
+
     const used = new Set<number>();
     const ordered: WPService[] = [];
     for (const keywords of PREFERRED_ORDER) {
-      const match = findServiceByKeywords(services, [...keywords]);
+      const match = findServiceByKeywords(nonDeepServices, [...keywords]);
       if (match && !used.has(match.id)) {
         used.add(match.id);
         ordered.push(match);
       }
     }
-    const rest = services.filter((s) => !used.has(s.id));
+    const rest = nonDeepServices.filter((s) => !used.has(s.id));
     return [...ordered, ...rest];
   }, [services]);
 

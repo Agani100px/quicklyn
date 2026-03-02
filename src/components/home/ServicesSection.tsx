@@ -189,7 +189,7 @@ export function ServicesSection({
     scrollOffsetRef.current = snapped;
     setScrollOffsetPx(snapped);
     setActiveIndex(nearestIndex);
-  }, [services.length]);
+  }, [services.length, mobileServices.length]);
 
   useEffect(() => {
     scrollOffsetRef.current = scrollOffsetPx;
@@ -578,6 +578,10 @@ export function ServicesSection({
               const isSignature = isSignatureService(service);
               const isApartmentCard = /apartment/i.test(title);
               const isMoveInOutCard = /move/i.test(title);
+              const isDeepCleaning = /deep/i.test(title);
+              const href = isDeepCleaning
+                ? "/our-services#extras-deep-cleaning"
+                : `/our-services#service-${service.slug}`;
 
               const baseCardPos =
                 slot === "leftTop"
@@ -609,7 +613,7 @@ export function ServicesSection({
                   }}
                 >
                   <Link
-                    href={`/our-services#service-${service.slug}`}
+                    href={href}
                     className={`absolute right-3 top-3 flex h-6 w-6 items-center justify-center gap-1 overflow-hidden rounded-full text-[#1B5B5D] transition-all duration-200 ease-out hover:opacity-95 lg:h-7 lg:w-7 ${
                       isSignature ? "bg-[#FFDA00]" : "bg-white/90"
                     } group-hover:md:w-[116px] group-hover:md:pl-3 group-hover:md:pr-4`}
@@ -709,19 +713,26 @@ export function ServicesSection({
             onPointerLeave={endDrag}
             onPointerCancel={endDrag}
           >
-          {mobileServices.map((service, index) => (
-            <article
-              key={service.id}
-              className="group relative my-[20px] flex-shrink-0 select-none overflow-visible rounded-2xl bg-[#175c5e] p-5 text-left text-white transition-transform hover:-translate-y-1"
-              style={{
-                minWidth: "78%",
-                maxWidth: "78%",
-                minHeight: "180px",
-                marginLeft: index === 0 ? "20px" : undefined,
-              }}
-            >
+          {mobileServices.map((service, index) => {
+            const title = service.acf?.service_heading || service.title.rendered || "";
+            const isDeepCleaning = title.toLowerCase().includes("deep");
+            const href = isDeepCleaning
+              ? "/our-services#extras-deep-cleaning"
+              : `/our-services#service-${service.slug}`;
+
+            return (
+              <article
+                key={service.id}
+                className="group relative my-[20px] flex-shrink-0 select-none overflow-visible rounded-2xl bg-[#175c5e] p-5 text-left text-white transition-transform hover:-translate-y-1"
+                style={{
+                  minWidth: "78%",
+                  maxWidth: "78%",
+                  minHeight: "180px",
+                  marginLeft: index === 0 ? "20px" : undefined,
+                }}
+              >
               <Link
-                href={`/our-services#service-${service.slug}`}
+                href={href}
                 className="absolute right-2 top-2 z-10 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#FFDA00] p-0 text-[#1B5B5D] transition-transform group-hover:-translate-y-1 group-hover:translate-x-1"
               >
                 <svg
@@ -761,7 +772,8 @@ export function ServicesSection({
                 {service.acf?.service_description}
               </p>
             </article>
-          ))}
+          );
+          })}
           {mobileServices.length > 1 && (
             <div
               className="flex-shrink-0"

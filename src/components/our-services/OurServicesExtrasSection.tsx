@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import type { ExtrasListItem } from "@/types/wordpress";
@@ -24,6 +24,32 @@ export function OurServicesExtrasSection({
   const [activeIndex, setActiveIndex] = useState(0);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const deepAnchorRef = useRef<HTMLElement | null>(null);
+
+  // When navigated with #extras-deep-cleaning, show Deep Cleaning extra and scroll to it
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const hash = window.location.hash?.slice(1);
+    if (hash !== "extras-deep-cleaning") return;
+
+    const deepIndex = validExtras.findIndex((item) =>
+      (item.extras_heading || "").toLowerCase().includes("deep"),
+    );
+    if (deepIndex < 0) return;
+
+    setActiveIndex(deepIndex);
+    setIsExpanded(true);
+
+    const el = deepAnchorRef.current;
+    if (!el) return;
+
+    const t = window.setTimeout(() => {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 150);
+
+    return () => window.clearTimeout(t);
+  }, [validExtras]);
 
   if (!validExtras.length) return null;
 
@@ -62,7 +88,11 @@ export function OurServicesExtrasSection({
   const firstParagraph = firstParagraphRaw.replace(/<[^>]+>/g, "").trim();
 
   return (
-    <section className="bg-[#2a7a7c] pb-16 pt-10 text-white">
+    <section
+      className="bg-[#2a7a7c] pb-16 pt-10 text-white"
+      id="extras-deep-cleaning"
+      ref={deepAnchorRef}
+    >
       {/* Mobile: unchanged layout */}
       <div className="mx-auto max-w-3xl px-4 sm:px-6 md:hidden">
         <h2 className="mb-6 text-center text-[44px] font-semibold tracking-normal">
