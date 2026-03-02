@@ -63,7 +63,7 @@ export function ServiceAreasSection({ data }: ServiceAreasSectionProps) {
       desktopMapWithPinUrl.includes("quick.rootholdings"));
 
   return (
-    <section className="relative w-full overflow-hidden bg-[#297a7c] pb-20 pt-0 md:-mt-[450px] md:z-20 md:pb-0 lg:mt-0">
+    <section className="relative w-full overflow-x-hidden overflow-y-visible md:overflow-hidden bg-[#297a7c] pb-20 pt-0 md:-mt-[450px] md:z-20 md:pb-0 lg:mt-0">
       {/* Linear gradient overlays */}
       {/* Mobile: #226e71 at top fading to transparent at bottom */}
       <div
@@ -85,7 +85,7 @@ export function ServiceAreasSection({ data }: ServiceAreasSectionProps) {
       <div className="md:hidden">
         {/* Map image as right-aligned background */}
         {mapUrl && (
-          <div className="pointer-events-none absolute right-0 top-[190px] mr-[20px] h-[260px] w-[75%]">
+          <div className="pointer-events-none absolute right-0 top-[140px] mr-[20px] h-[230px] w-[75%] z-[30]">
             <Image
               src={mapUrl}
               alt={map.alt || heading || "Service areas map"}
@@ -97,14 +97,14 @@ export function ServiceAreasSection({ data }: ServiceAreasSectionProps) {
           </div>
         )}
 
-        <div className="relative z-10 mx-auto w-full max-w-4xl px-6">
+          <div className="relative z-10 mx-auto w-full max-w-4xl px-6">
           {heading && (
             <h2 className="mb-8 text-center text-[40px] font-semibold leading-[42px] text-white">
               {heading}
             </h2>
           )}
 
-          <div className="w-[50%] text-left">
+          <div className="w-[45%] text-left">
             {subHeading && (
               <p className="mb-3 text-[20px] font-normal leading-snug text-white">
                 {subHeading}
