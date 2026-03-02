@@ -6,7 +6,9 @@ import {
   getFaqs,
   getAppLink,
   getHeader,
+  getEstimateConfig,
 } from "@/lib/wordpress";
+import { GetEstimateButton } from "@/components/GetEstimateButton";
 import { HeroSection } from "@/components/home/HeroSection";
 import { ServicesSection } from "@/components/home/ServicesSection";
 import { ServiceAreasSection } from "@/components/home/ServiceAreasSection";
@@ -15,14 +17,16 @@ import { FAQSection } from "@/components/home/FAQSection";
 import { HomeAppDownloadSection } from "@/components/home/HomeAppDownloadSection";
 
 export default async function HomePage() {
-  const [page, services, testimonials, faqs, appLink, header] = await Promise.all([
-    getHomePage(),
-    getServices(),
-    getTestimonials(),
-    getFaqs(),
-    getAppLink(),
-    getHeader(),
-  ]);
+  const [page, services, testimonials, faqs, appLink, header, estimate] =
+    await Promise.all([
+      getHomePage(),
+      getServices(),
+      getTestimonials(),
+      getFaqs(),
+      getAppLink(),
+      getHeader(),
+      getEstimateConfig(),
+    ]);
 
   if (!page?.acf) {
     return (
@@ -57,18 +61,11 @@ export default async function HomePage() {
         downloadData={appLink}
       />
       {/* Global floating CTA button above all sections */}
-      <Link
-        href="/book-a-cleaning"
-        className="fixed left-1/2 z-[99999] flex h-12 w-[224px] -translate-x-1/2 items-center justify-center rounded-full bg-[#FFDA00] shadow-xl drop-shadow-[0_6px_16px_rgba(0,0,0,0.45)] transition hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-[#FFDA00] focus:ring-offset-2 focus:ring-offset-[#297476]"
-        style={{
-          minWidth: "224px",
-          bottom: "max(36px, env(safe-area-inset-bottom, 0px) + 32px)",
-        }}
-      >
-        <span className="text-base font-semibold text-[#1B5B5D]">
-          {page.acf.estimate_button_text}
-        </span>
-      </Link>
+      <GetEstimateButton
+        estimate={estimate}
+        fallbackText={page.acf.estimate_button_text}
+        fallbackHref="/book-a-cleaning"
+      />
     </main>
   );
 }

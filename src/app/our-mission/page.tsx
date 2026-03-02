@@ -5,7 +5,9 @@ import {
   getHomePage,
   getTestimonials,
   getAppLink,
+  getEstimateConfig,
 } from "@/lib/wordpress";
+import { GetEstimateButton } from "@/components/GetEstimateButton";
 import { HeroMissionText } from "@/components/our-mission/HeroMissionText";
 import { HeroHeadingLogoArrow } from "@/components/our-mission/HeroHeadingLogoArrow";
 import { HeroBackground } from "@/components/our-mission/HeroBackground";
@@ -57,6 +59,7 @@ export default async function OurMissionPage() {
   const estimateUrl = "/book-a-cleaning";
   const estimateText =
     homePage?.acf?.estimate_button_text?.trim() || "Get An Estimate";
+  const estimateConfig = await getEstimateConfig();
   const missionHeading = page.acf.sub_heading?.trim() || "Our Mission";
   const missionDescription = page.acf.description?.trim() || "";
   const sectionImage = page.acf.section_image;
@@ -282,18 +285,11 @@ export default async function OurMissionPage() {
       </main>
 
       {/* Fixed Get An Estimate button */}
-      <Link
-        href={estimateUrl}
-        className="fixed left-1/2 z-[99999] flex h-12 w-[224px] -translate-x-1/2 items-center justify-center rounded-full bg-[#FFDA00] shadow-xl drop-shadow-[0_6px_16px_rgba(0,0,0,0.45)] transition hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-[#FFDA00] focus:ring-offset-2 focus:ring-offset-[#297476]"
-        style={{
-          minWidth: "224px",
-          bottom: "max(36px, env(safe-area-inset-bottom, 0px) + 32px)",
-        }}
-      >
-        <span className="text-base font-semibold text-[#1B5B5D]">
-          {estimateText}
-        </span>
-      </Link>
+      <GetEstimateButton
+        estimate={estimateConfig}
+        fallbackText={estimateText}
+        fallbackHref={estimateUrl}
+      />
     </div>
   );
 }

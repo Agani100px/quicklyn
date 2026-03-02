@@ -292,3 +292,16 @@ export interface BookACleaningPage {
   content: { rendered: string; protected?: boolean };
   acf: BookACleaningACF;
 }
+
+export interface WPGetEstimateACF {
+  before_hover?: WPImage | null;
+  after_hover?: WPImage | null;
+  link?: WPLink | null;
+}
+
+export interface WPGetEstimate {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: WPGetEstimateACF;
+}

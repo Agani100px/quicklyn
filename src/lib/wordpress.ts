@@ -10,6 +10,7 @@ import type {
   OurMissionPage,
   AboutUsPage,
   BookACleaningPage,
+  WPGetEstimate,
   WPPostRaw,
 } from "@/types/wordpress";
 import { fallbackHomePage } from "./fallback-home";
@@ -131,6 +132,20 @@ export async function getBookACleaningPage(): Promise<BookACleaningPage | null> 
     );
     if (!res.ok) return null;
     const data = (await res.json()) as BookACleaningPage[];
+    return Array.isArray(data) && data.length > 0 ? data[0] : null;
+  } catch {
+    return null;
+  }
+}
+
+export async function getEstimateConfig(): Promise<WPGetEstimate | null> {
+  try {
+    const res = await fetch(
+      getApiUrl("/get-estimate?acf_format=standard"),
+      { next: { revalidate: 60 } },
+    );
+    if (!res.ok) return null;
+    const data = (await res.json()) as WPGetEstimate[];
     return Array.isArray(data) && data.length > 0 ? data[0] : null;
   } catch {
     return null;

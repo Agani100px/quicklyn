@@ -1,16 +1,17 @@
-import Link from "next/link";
-import { getOurServicesPage, getServices, getAppLink } from "@/lib/wordpress";
+import { getOurServicesPage, getServices, getAppLink, getEstimateConfig } from "@/lib/wordpress";
 import { OurServicesHero } from "@/components/our-services/OurServicesHero";
 import { OurMainServicesSection } from "@/components/our-services/OurMainServicesSection";
 import { OurServicesExtrasSection } from "@/components/our-services/OurServicesExtrasSection";
 import { OurServicesFeatureListSection } from "@/components/our-services/OurServicesFeatureListSection";
 import { HomeAppDownloadSection } from "@/components/home/HomeAppDownloadSection";
+import { GetEstimateButton } from "@/components/GetEstimateButton";
 
 export default async function OurServicesPage() {
-  const [page, services, appLink] = await Promise.all([
+  const [page, services, appLink, estimate] = await Promise.all([
     getOurServicesPage(),
     getServices(),
     getAppLink(),
+    getEstimateConfig(),
   ]);
 
   if (!page?.acf) {
@@ -92,18 +93,11 @@ export default async function OurServicesPage() {
       <HomeAppDownloadSection data={appLink} sectionBackgroundColor="#2a7a7c" tightBottom />
 
       {/* Floating CTA at bottom, same behaviour as home page */}
-      <Link
-        href="/book-a-cleaning"
-        className="fixed left-1/2 z-[99999] flex h-12 w-[224px] -translate-x-1/2 items-center justify-center rounded-full bg-[#FFDA00] shadow-xl drop-shadow-[0_6px_16px_rgba(0,0,0,0.45)] transition hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-[#FFDA00] focus:ring-offset-2 focus:ring-offset-[#297476]"
-        style={{
-          minWidth: "224px",
-          bottom: "max(36px, env(safe-area-inset-bottom, 0px) + 32px)",
-        }}
-      >
-        <span className="text-base font-semibold text-[#1B5B5D]">
-          Get An Estimate
-        </span>
-      </Link>
+      <GetEstimateButton
+        estimate={estimate}
+        fallbackText="Get An Estimate"
+        fallbackHref="/book-a-cleaning"
+      />
     </main>
   );
 }
